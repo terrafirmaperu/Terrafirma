@@ -1,0 +1,27 @@
+{% extends 'login/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head_login %}
+    <script src="{% static 'login/js/login.js' %}"></script>
+{% endblock %}
+{% block content %}
+    {% include 'login/partials/factora_login_box.html' %}
+    <script type="application/javascript">
+        var errors = "";
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    errors += "{{ error }}\n";
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                errors += "{{ error }}\n";
+            {% endfor %}
+            Swal.fire({
+                icon: 'error',
+                title: 'Notificación',
+                text: errors,
+            });
+        {% endif %}
+    </script>
+{% endblock %}

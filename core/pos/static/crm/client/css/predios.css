@@ -1,0 +1,45 @@
+.client-predio-card {
+    background: #f8f9fa;
+}
+
+.sale-client-predios-list .list-group-item {
+    border-left: 0;
+    border-right: 0;
+}
+
+.sale-client-predios-list .list-group-item:first-child {
+    border-top: 0;
+}
+
+.client-predio-card--locked {
+    border-color: #f0ad4e !important;
+    background: #fffdf5;
+}
+
+.client-predio-locked-badge {
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+.sale-predio-item--in-process {
+    background: #fffdf5;
+    border-radius: 6px;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+.sale-predio-in-process {
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: normal;
+    text-align: left;
+}
+
+.sale-predio-in-process-hint {
+    color: #c82333 !important;
+}
+
+.sale-predio-in-process {
+    background-color: #dc3545;
+    color: #fff !important;
+}

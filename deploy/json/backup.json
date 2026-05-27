@@ -1,0 +1,6393 @@
+[
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 4,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 4,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 4,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 4,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 5,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 5,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 5,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 5,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can view Acceso del usuario",
+    "content_type": 6,
+    "codename": "view_accessusers"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can delete Acceso del usuario",
+    "content_type": 6,
+    "codename": "delete_accessusers"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can view Dashboard",
+    "content_type": 7,
+    "codename": "view_dashboard"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view Respaldos de BD",
+    "content_type": 8,
+    "codename": "view_databasebackups"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add Respaldos de BD",
+    "content_type": 8,
+    "codename": "add_databasebackups"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can delete Respaldos de BD",
+    "content_type": 8,
+    "codename": "delete_databasebackups"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can add Tipo de Módulo",
+    "content_type": 9,
+    "codename": "add_moduletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can change Tipo de Módulo",
+    "content_type": 9,
+    "codename": "change_moduletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can delete Tipo de Módulo",
+    "content_type": 9,
+    "codename": "delete_moduletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can view Tipo de Módulo",
+    "content_type": 9,
+    "codename": "view_moduletype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can add Módulo",
+    "content_type": 10,
+    "codename": "add_module"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can change Módulo",
+    "content_type": 10,
+    "codename": "change_module"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can delete Módulo",
+    "content_type": 10,
+    "codename": "delete_module"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can view Módulo",
+    "content_type": 10,
+    "codename": "view_module"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 13,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 13,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 13,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 13,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can add Categoria",
+    "content_type": 14,
+    "codename": "add_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can change Categoria",
+    "content_type": 14,
+    "codename": "change_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can delete Categoria",
+    "content_type": 14,
+    "codename": "delete_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can view Categoria",
+    "content_type": 14,
+    "codename": "view_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can add Cliente",
+    "content_type": 15,
+    "codename": "add_client"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can change Cliente",
+    "content_type": 15,
+    "codename": "change_client"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can delete Cliente",
+    "content_type": 15,
+    "codename": "delete_client"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can view Cliente",
+    "content_type": 15,
+    "codename": "view_client"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can view Company",
+    "content_type": 16,
+    "codename": "view_company"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view Cuentas por cobrar",
+    "content_type": 17,
+    "codename": "view_ctascollect"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add Cuentas por cobrar",
+    "content_type": 17,
+    "codename": "add_ctascollect"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can delete Cuentas por cobrar",
+    "content_type": 17,
+    "codename": "delete_ctascollect"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can view Cuentas por pagar",
+    "content_type": 18,
+    "codename": "view_debtspay"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can add Cuentas por pagar",
+    "content_type": 18,
+    "codename": "add_debtspay"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can delete Cuentas por pagar",
+    "content_type": 18,
+    "codename": "delete_debtspay"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can add Gasto",
+    "content_type": 19,
+    "codename": "add_expenses"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can change Gasto",
+    "content_type": 19,
+    "codename": "change_expenses"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can delete Gasto",
+    "content_type": 19,
+    "codename": "delete_expenses"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can view Gasto",
+    "content_type": 19,
+    "codename": "view_expenses"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can add Producto",
+    "content_type": 22,
+    "codename": "add_product"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can change Producto",
+    "content_type": 22,
+    "codename": "change_product"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can delete Producto",
+    "content_type": 22,
+    "codename": "delete_product"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can view Producto",
+    "content_type": 22,
+    "codename": "view_product"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can add Promoción",
+    "content_type": 23,
+    "codename": "add_promotions"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can change Promoción",
+    "content_type": 23,
+    "codename": "change_promotions"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can delete Promoción",
+    "content_type": 23,
+    "codename": "delete_promotions"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can view Promoción",
+    "content_type": 23,
+    "codename": "view_promotions"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can add Detalle Promoción",
+    "content_type": 24,
+    "codename": "add_promotionsdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can change Detalle Promoción",
+    "content_type": 24,
+    "codename": "change_promotionsdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can delete Detalle Promoción",
+    "content_type": 24,
+    "codename": "delete_promotionsdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can view Detalle Promoción",
+    "content_type": 24,
+    "codename": "view_promotionsdetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can add Proveedor",
+    "content_type": 25,
+    "codename": "add_provider"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can change Proveedor",
+    "content_type": 25,
+    "codename": "change_provider"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can delete Proveedor",
+    "content_type": 25,
+    "codename": "delete_provider"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can view Proveedor",
+    "content_type": 25,
+    "codename": "view_provider"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can view Compras",
+    "content_type": 26,
+    "codename": "view_purchase"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can add Compras",
+    "content_type": 26,
+    "codename": "add_purchase"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can delete Compras",
+    "content_type": 26,
+    "codename": "delete_purchase"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add Detalle de Compra",
+    "content_type": 27,
+    "codename": "add_purchasedetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change Detalle de Compra",
+    "content_type": 27,
+    "codename": "change_purchasedetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete Detalle de Compra",
+    "content_type": 27,
+    "codename": "delete_purchasedetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view Detalle de Compra",
+    "content_type": 27,
+    "codename": "view_purchasedetail"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can view Ventas",
+    "content_type": 28,
+    "codename": "view_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can add Ventas",
+    "content_type": 28,
+    "codename": "add_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can delete Ventas",
+    "content_type": 28,
+    "codename": "delete_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can add Tipo de Gasto",
+    "content_type": 29,
+    "codename": "add_typeexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can change Tipo de Gasto",
+    "content_type": 29,
+    "codename": "change_typeexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Can delete Tipo de Gasto",
+    "content_type": 29,
+    "codename": "delete_typeexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Can view Tipo de Gasto",
+    "content_type": 29,
+    "codename": "view_typeexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can view Devoluciones",
+    "content_type": 31,
+    "codename": "view_devolution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can add Devoluciones",
+    "content_type": 31,
+    "codename": "add_devolution"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can delete Devoluciones",
+    "content_type": 31,
+    "codename": "delete_devolution"
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "Administrador",
+    "permissions": [
+      9,
+      10,
+      11,
+      12,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      49,
+      50,
+      48,
+      52,
+      53,
+      51,
+      89,
+      90,
+      88,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      70,
+      71,
+      72,
+      73,
+      75,
+      76,
+      74,
+      82,
+      83,
+      81,
+      84,
+      85,
+      86,
+      87,
+      22,
+      21,
+      25,
+      26,
+      24,
+      31,
+      32,
+      33,
+      34,
+      27,
+      28,
+      29,
+      30,
+      35,
+      36,
+      37,
+      38
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 2,
+  "fields": {
+    "name": "Cliente",
+    "permissions": []
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "security",
+    "model": "accessusers"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "security",
+    "model": "dashboard"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 8,
+  "fields": {
+    "app_label": "security",
+    "model": "databasebackups"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 9,
+  "fields": {
+    "app_label": "security",
+    "model": "moduletype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "security",
+    "model": "module"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 11,
+  "fields": {
+    "app_label": "security",
+    "model": "grouppermission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "security",
+    "model": "groupmodule"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "user",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "pos",
+    "model": "category"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 15,
+  "fields": {
+    "app_label": "pos",
+    "model": "client"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 16,
+  "fields": {
+    "app_label": "pos",
+    "model": "company"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 17,
+  "fields": {
+    "app_label": "pos",
+    "model": "ctascollect"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 18,
+  "fields": {
+    "app_label": "pos",
+    "model": "debtspay"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "pos",
+    "model": "expenses"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "pos",
+    "model": "paymentsctacollect"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 21,
+  "fields": {
+    "app_label": "pos",
+    "model": "paymentsdebtspay"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 22,
+  "fields": {
+    "app_label": "pos",
+    "model": "product"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 23,
+  "fields": {
+    "app_label": "pos",
+    "model": "promotions"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 24,
+  "fields": {
+    "app_label": "pos",
+    "model": "promotionsdetail"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 25,
+  "fields": {
+    "app_label": "pos",
+    "model": "provider"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 26,
+  "fields": {
+    "app_label": "pos",
+    "model": "purchase"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 27,
+  "fields": {
+    "app_label": "pos",
+    "model": "purchasedetail"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 28,
+  "fields": {
+    "app_label": "pos",
+    "model": "sale"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 29,
+  "fields": {
+    "app_label": "pos",
+    "model": "typeexpense"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 30,
+  "fields": {
+    "app_label": "pos",
+    "model": "saledetail"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 31,
+  "fields": {
+    "app_label": "pos",
+    "model": "devolution"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bu2ay6ddfazpqb33wit2um8k9cd89vcf",
+  "fields": {
+    "session_data": ".eJxtUktrFEEQzmM3xjwhRvAijnoxkPTOYzezezNqCBICYu4OPd09O21mZ4Z-BPcQ0INioG8p_681M4kETN-q6quq7_uqv_f_fFleaN8VvHGbCbUmT6wWKpEc3GIAbudeLqXsQpRY2ONfaTmtCKtKo2RKGgi5rWpyVnFRvLvDbt8bkFOdg3s7DmMRi5CyeEyjLKJRMKGM8mg89tP4UIgwoz4bjYZpHPs8Cg79bMSHQz_1wwkbTiYxuFVZZlU6lzU0vB_LmnKuhNa4LojGJAhDEvgTEkyGiC0qRo2sSnBPzmRBp6ra9072vWNmKa8UuGWpa3BbH0tSF7QUxjsn3hG4dVZZlDdnKAfc0vF7sK6PzRbBT28N4CmZNWo1qteI2mqjxJa1ZBeFgBtwvUY-uP5J2_kLfsLnlvRKog01AvIdt9Y6dt6GN7D3o6ujJFlO4dot8RTcIy4yagsDbiOTouA6YZTlAqE2dUt4rdNF1yvpDElsHvGZLKU2qtO3nXRsk0uhdOtDPyIhCZvOFSRskWi-61a1YFZJMwe3ctZlH2D7vKOXv76C3LvOX-av7va_cMtWFeB2B3WlB0zNBlxcVoVtrB_AHbmND22SYVLguTa7_WZei-bLnfbcOheaKVl3Fxt9EmomjfDoP03KK6j2-L0xGHhFpb1a4TBmKpzbk6w9eIbQjB6IbyxHC8QBbRzsyxmdIpcFPLLUjS1GMlrAb_xJOqHMyEuBwVpTk1qmRRP952K-h8pXUXKCfHDqs4d04xEHYMlf15FKcg:1mZwow:QXrX1qy9d4Ry_PfbkQDRWq5aTH3BRtjrrIurn8miV1k",
+    "expire_date": "2021-10-25T15:02:30.090Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "dx98xebkd1d6ij0cnlcry2niem9z1b08",
+  "fields": {
+    "session_data": ".eJxtUk1PFEEQhYVFPgQSxKPJqBdJYHY-Fmb3JhJCDCExEs-Tmu6enXZnpyf9QbIHEj1oJOkb7c_wV_jHrJkBJZG-Vderqvde1Zf-z09LC-27dm_sZgpGF6lRTKacOrsYOrvz4C8DMmUVJvboZ6gmwiei0pJnfgPx77LKvxCUle_usdsPGhSgCmffjqKEJSwCkowgzmOIwzEQoPFoFGTJEWNRDgE5PBxmSRLQODwK8kM6HAZZEI3JcDxOnF3lVS6yOa9dw3uN10CpZErhuDAe-WEU-WEw9sPxELGlIKC5qJx9dsFLmEix753te6fEABXS2SWuame33ld-XULFtHfpe8fObhBhUN6coBxne6cnztg-FhsEP78zgGb-rFGrUL1C1FYbpaaqOZmWzN06u9zId7Z_1lZ-d9_cx5b0Sqo0aOaKHbveOnbZhrdu72uXR0m8mrgb26OZs08oy8GU2tmnOWclVSkBUjCEmsz2cFvni3a5ghmS2DymM15xpWWnbzvt2KZXTKrWh37sR37UVK4gYYNEi127qhgxkuu5sysX3e8jbF909IrX167wboqXxav7-Wt2ycgSL2ZQCzVQZDZA29lEyPnA3VPbOOm-fv8C3NVmN1zPa9bc23nPblCmiOR1t67hByZnXDMP_gqSXgnKI_-6eJR5pVBeLbEX0QLbLnPSVO_mmM3hQEtDpgelgNZO2-czmCCVBWTDVeOJ5gRK9wPPSKVANL9iGKw3Oa54VjbRfxYWeyh7FfWmyEc_Ltr4fwC40UfR:1mcr4v:06Rh5VCY3e7rRDnSXYRYkTbLK8KY-2_F0CqzZvvM3zM",
+    "expire_date": "2021-11-02T15:31:01.796Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fy7v9mdq9tk34i6sddpi3ufwqzw5znfj",
+  "fields": {
+    "session_data": ".eJxtUk1PFEEQhYVFPgQSxKPJqBdJYHY-Fmb3JhJCDCExEs-Tmu6enXZnpyf9QbIHEj1oJOkb7c_wV_jHrJkBJZG-Vderqvde1Zf-z09LC-27dm_sZgpGF6lRTKacOrsYOrvz4C8DMmUVJvboZ6gmwiei0pJnfgPx77LKvxCUle_usdsPGhSgCmffjqKEJSwCkowgzmOIwzEQoPFoFGTJEWNRDgE5PBxmSRLQODwK8kM6HAZZEI3JcDxOnF3lVS6yOa9dw3uN10CpZErhuDAe-WEU-WEw9sPxELGlIKC5qJx9dsFLmEix753te6fEABXS2SWuame33ld-XULFtHfpe8fObhBhUN6coBxne6cnztg-FhsEP78zgGb-rFGrUL1C1FYbpaaqOZmWzN06u9zId7Z_1lZ-d9_cx5b0Sqo0aOaKHbveOnbZhrdu72uXR0m8mrgb26OZs08oy8GU2tmnOWclVSkBUjCEmsz2cFvni3a5ghmS2DymM15xpWWnbzvt2KZXTKrWh37sR37UVK4gYYNEi127qhgxkuu5sysX3e8jbF909IrX167wboqXxav7-Wt2ycgSL2ZQCzVQZDZA29lEyPnA3VPbOOm-fv8C3NVmN1zPa9bc23nPblCmiOR1t67hByZnXDMP_gqSXgnKI_-6eJR5pVBeLbEX0QLbLnPSVO_mmM3hQEtDpgelgNZO2-czmCCVBWTDVeOJ5gRK9wPPSKVANL9iGKw3Oa54VjbRfxYWeyh7FfWmyEc_Ltr4fwC40UfR:1mcqpb:j2LqjBT4uxwDxSAgKBFKDbFi7geN6Iqyglsz3PWB1l4",
+    "expire_date": "2021-11-02T15:15:11.249Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "oohyktypw28vhsfyr48hon50jowj7bvn",
+  "fields": {
+    "session_data": ".eJx1UktPFEEQ5rGLyDNBPBpHvUgCvfPYZXZvohJiCImRm5dJT3fPTsPszKQfxD2Q6EEjSd8o_681M2BI1L5V1VdV3_dVf-3_-ry80L5reO02E2pNnlgtVCI5uMUA3M6DXErZpSixsMcvaDmtCKtKo2RKGgi5q2pyVnFRvL3Hbj8YkFOdg3szDmMRi5CyeEyjLKJRMKGM8mg89tP4UIgwoz4bjYZpHPs8Cg79bMSHQz_1wwkbTiYxuFVZZlU6lzU0vB_LmnKuhNa4LojGJAhDEvgTEkyGiC0qRo2sSnBPzmRBp6ra9072vWNmKa8UuGWpa3BbH0pSF7QUxjsn3hG4dVZZlDdnKAfc0vE7sK6PzRbBT-8M4CmZNWo1qteI2mqjxJa1ZJeFgFtwvUY-uP5J2_kDvsOnlvRKog01AvIdt9Y6dt6Gt7D3raujJFlO4cYt8RTcIy4yagsDbiOTouA6YZTlAqE2dUt4rdNF1yvpDElsHvGZLKU2qtO3nXRskyuhdOtDPyIhCZvOFSRskWi-61a1YFZJMwe3ctZl_8H2WUcvf3UNuXeTv8hf3u9_7patKsDtDupKD5iaDbi4qgrbWD-Ae3Ib79skw6TAc212-828Fs2XO-25dS40U7LuLjb6KNRMGuHRP5qUV1Dt8QdjMPCKSnu1wmHMVDi3J1l78AyhGT0QX1iOFogD2jjYlzM6RS4LeGSpG1uMZLSAn_iTdEKZkVcCg7WmJrVMiyb6y8V8D5WvouQE-Zj_6bbkN6JfSRI:1mZxGg:vx0gkmY_pb3aolyiVGjSzvCAJBtZKt0l84T8fEAIshE",
+    "expire_date": "2021-10-25T15:31:10.372Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xihsl3oyfgth3h8auah27qt7cyejfx6y",
+  "fields": {
+    "session_data": ".eJx1ks9P1EAUx2HZXREEEsSjSdWLJNDtj4Xu3kRDiCEbjSRem9eZ6Xak2zYzU5I9kOhBI8nceP6_vrZgSNS5vXk_5vP9vvk6-PVhbaU91_jabsVQmyyutVCx5GhXfbS7D-4SYJeioMQ-_wLFvHRZWRglE7cpce-y2p2VXORv72t3HgzIQGdo30yCSEQiABZNIExDCP0pMODhZOIl0bEQQQoeOzoaJ1Hk8dA_9tIjPh57iRdM2Xg6jdCuyyItk6WssOF-LCvgXAmt6Tk_nLh-ELi-N3X96Zhq85KBkWWB9ulM5jBX5YFzduCcshp4qdCuSV2h3X5fuFUOhTDOheucoN1kZU3ylozkoO2dvsPaDqi5puJndwbwxF00ajWp11S13UZxXVSSXeYCb9H2G_loB2dt5w_8jp9a6GGsDRiB2a7daB27aMNb3P_W5UmSLOZ4Y3s8QfuIixTq3KB9kkqRcx0zYJmg0jqxPdrW-artF7AgiK0TvpCF1EZ1-nbijja-Ekq3PgxCN3CDpnNIwDWBZnt2XQtWK2mWaIez7vYftM87vOzVNWbOTfYie3n__q5dq1WOdm9UlXrE1GKkIRcjaGBGeA83_CwKA7Sore5ls6xE89nO-3aTC82UrLpdjT4KtZBGOPBHjXJy0M5VO8DhwslL7VSKxjBT0sS-ZE3jXkrZFA51VlYVOXjIQJFtA7mAOQGs0GalbrwwkkGOP-n76BiYkVeCgo0mJ7VM8ib6y7psn-Suk86YUMz_xNbub9KtQ6c:1mZusX:4Fumi-O1do_FmCWhyveBgdJdGc8qGwNl3uHIGkDFjpI",
+    "expire_date": "2021-10-25T12:58:05.758Z"
+  }
+},
+{
+  "model": "security.dashboard",
+  "pk": 1,
+  "fields": {
+    "name": "FACTORA POS",
+    "image": "",
+    "icon": "fas fa-shopping-cart",
+    "layout": 1,
+    "card": " ",
+    "navbar": "navbar-dark navbar-primary",
+    "brand_logo": " ",
+    "sidebar": "sidebar-light-primary"
+  }
+},
+{
+  "model": "security.moduletype",
+  "pk": 1,
+  "fields": {
+    "name": "Seguridad",
+    "icon": "fas fa-lock",
+    "is_active": true
+  }
+},
+{
+  "model": "security.moduletype",
+  "pk": 2,
+  "fields": {
+    "name": "Bodega",
+    "icon": "fas fa-boxes",
+    "is_active": true
+  }
+},
+{
+  "model": "security.moduletype",
+  "pk": 3,
+  "fields": {
+    "name": "Administrativo",
+    "icon": "fas fa-hand-holding-usd",
+    "is_active": true
+  }
+},
+{
+  "model": "security.moduletype",
+  "pk": 4,
+  "fields": {
+    "name": "Facturación",
+    "icon": "fas fa-calculator",
+    "is_active": true
+  }
+},
+{
+  "model": "security.moduletype",
+  "pk": 5,
+  "fields": {
+    "name": "Reportes",
+    "icon": "fas fa-chart-pie",
+    "is_active": true
+  }
+},
+{
+  "model": "security.module",
+  "pk": 1,
+  "fields": {
+    "url": "/security/module/type/",
+    "name": "Tipos de Módulos",
+    "moduletype": 1,
+    "description": "Permite administrar los tipos de módulos del sistema",
+    "icon": "fas fa-door-open",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      27,
+      28,
+      29,
+      30
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 2,
+  "fields": {
+    "url": "/security/module/",
+    "name": "Módulos",
+    "moduletype": 1,
+    "description": "Permite administrar los módulos del sistema",
+    "icon": "fas fa-th-large",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      31,
+      32,
+      33,
+      34
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 3,
+  "fields": {
+    "url": "/security/group/",
+    "name": "Grupos",
+    "moduletype": 1,
+    "description": "Permite administrar los grupos de usuarios del sistema",
+    "icon": "fas fa-users",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      9,
+      10,
+      11,
+      12
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 4,
+  "fields": {
+    "url": "/security/database/backups/",
+    "name": "Respaldos",
+    "moduletype": 1,
+    "description": "Permite administrar los respaldos de base de datos",
+    "icon": "fas fa-database",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      25,
+      26,
+      24
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 5,
+  "fields": {
+    "url": "/security/dashboard/update/",
+    "name": "Conf. Dashboard",
+    "moduletype": 1,
+    "description": "Permite configurar los datos de la plantilla",
+    "icon": "fas fa-tools",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 6,
+  "fields": {
+    "url": "/security/access/users/",
+    "name": "Accesos",
+    "moduletype": 1,
+    "description": "Permite administrar los accesos de los usuarios",
+    "icon": "fas fa-user-secret",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      22,
+      21
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 7,
+  "fields": {
+    "url": "/user/",
+    "name": "Usuarios",
+    "moduletype": 1,
+    "description": "Permite administrar a los administradores del sistema",
+    "icon": "fas fa-user",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      35,
+      36,
+      37,
+      38
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 8,
+  "fields": {
+    "url": "/pos/scm/provider/",
+    "name": "Proveedores",
+    "moduletype": 2,
+    "description": "Permite administrar a los proveedores de las compras",
+    "icon": "fas fa-truck",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      70,
+      71,
+      72,
+      73
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 9,
+  "fields": {
+    "url": "/pos/scm/category/",
+    "name": "Categorías",
+    "moduletype": 2,
+    "description": "Permite administrar las categorías de los productos",
+    "icon": "fas fa-truck-loading",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      39,
+      40,
+      41,
+      42
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 10,
+  "fields": {
+    "url": "/pos/scm/product/",
+    "name": "Productos",
+    "moduletype": 2,
+    "description": "Permite administrar los productos del sistema",
+    "icon": "fas fa-box",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      58,
+      59,
+      60,
+      61
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 11,
+  "fields": {
+    "url": "/pos/scm/purchase/",
+    "name": "Compras",
+    "moduletype": 2,
+    "description": "Permite administrar las compras de los productos",
+    "icon": "fas fa-dolly-flatbed",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      75,
+      76,
+      74
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 12,
+  "fields": {
+    "url": "/pos/scm/product/stock/adjustment/",
+    "name": "Ajuste de Stock",
+    "moduletype": 2,
+    "description": "Permite administrar los ajustes de stock de productos",
+    "icon": "fas fa-sliders-h",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 13,
+  "fields": {
+    "url": "/pos/frm/type/expense/",
+    "name": "Tipos de Gastos",
+    "moduletype": 3,
+    "description": "Permite administrar los tipos de gastos",
+    "icon": "fas fa-comments-dollar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      84,
+      85,
+      86,
+      87
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 14,
+  "fields": {
+    "url": "/pos/frm/expenses/",
+    "name": "Gastos",
+    "moduletype": 3,
+    "description": "Permite administrar los gastos de la compañia",
+    "icon": "fas fa-file-invoice-dollar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      54,
+      55,
+      56,
+      57
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 15,
+  "fields": {
+    "url": "/pos/frm/ctas/collect/",
+    "name": "Cuentas por cobrar",
+    "moduletype": 3,
+    "description": "Permite administrar las cuentas por cobrar de los clientes",
+    "icon": "fas fa-funnel-dollar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      49,
+      50,
+      48
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 16,
+  "fields": {
+    "url": "/pos/frm/debts/pay/",
+    "name": "Cuentas por pagar",
+    "moduletype": 3,
+    "description": "Permite administrar las cuentas por pagar de los proveedores",
+    "icon": "fas fa-money-check-alt",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      52,
+      53,
+      51
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 17,
+  "fields": {
+    "url": "/pos/crm/client/",
+    "name": "Clientes",
+    "moduletype": 4,
+    "description": "Permite administrar los clientes del sistema",
+    "icon": "fas fa-user-friends",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      43,
+      44,
+      45,
+      46
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 18,
+  "fields": {
+    "url": "/pos/crm/sale/admin/",
+    "name": "Ventas",
+    "moduletype": 4,
+    "description": "Permite administrar las ventas de los productos",
+    "icon": "fas fa-shopping-cart",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      82,
+      83,
+      81
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 19,
+  "fields": {
+    "url": "/pos/crm/sale/client/",
+    "name": "Ventas",
+    "moduletype": null,
+    "description": "Permite administrar las ventas de los productos",
+    "icon": "fas fa-shopping-cart",
+    "image": "",
+    "is_vertical": false,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 20,
+  "fields": {
+    "url": "/pos/crm/promotions/",
+    "name": "Promociones",
+    "moduletype": 4,
+    "description": "Permite administrar las promociones de los productos",
+    "icon": "far fa-calendar-check",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      62,
+      63,
+      64,
+      65
+    ]
+  }
+},
+{
+  "model": "security.module",
+  "pk": 21,
+  "fields": {
+    "url": "/reports/sale/",
+    "name": "Ventas",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de las ventas",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 22,
+  "fields": {
+    "url": "/reports/purchase/",
+    "name": "Compras",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de las compras",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 23,
+  "fields": {
+    "url": "/reports/expenses/",
+    "name": "Gastos",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de los gastos",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 24,
+  "fields": {
+    "url": "/reports/debts/pay/",
+    "name": "Cuentas por Pagar",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de las cuentas por pagar",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 25,
+  "fields": {
+    "url": "/reports/ctas/collect/",
+    "name": "Cuentas por Cobrar",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de las cuentas por cobrar",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 26,
+  "fields": {
+    "url": "/reports/results/",
+    "name": "Perdidas y Ganacias",
+    "moduletype": 5,
+    "description": "Permite ver los reportes de perdidas y ganancias",
+    "icon": "fas fa-chart-bar",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 27,
+  "fields": {
+    "url": "/user/update/password/",
+    "name": "Cambiar password",
+    "moduletype": null,
+    "description": "Permite cambiar tu password de tu cuenta",
+    "icon": "fas fa-key",
+    "image": "",
+    "is_vertical": false,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 28,
+  "fields": {
+    "url": "/user/update/profile/",
+    "name": "Editar perfil",
+    "moduletype": null,
+    "description": "Permite cambiar la información de tu cuenta",
+    "icon": "fas fa-user",
+    "image": "",
+    "is_vertical": false,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 29,
+  "fields": {
+    "url": "/pos/crm/client/update/profile/",
+    "name": "Editar perfil",
+    "moduletype": null,
+    "description": "Permite cambiar la información de tu cuenta",
+    "icon": "fas fa-user",
+    "image": "",
+    "is_vertical": false,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 30,
+  "fields": {
+    "url": "/pos/crm/company/update/",
+    "name": "Compañia",
+    "moduletype": null,
+    "description": "Permite gestionar la información de la compañia",
+    "icon": "fas fa-building",
+    "image": "",
+    "is_vertical": false,
+    "is_active": true,
+    "is_visible": true,
+    "permits": []
+  }
+},
+{
+  "model": "security.module",
+  "pk": 31,
+  "fields": {
+    "url": "/pos/crm/devolution/",
+    "name": "Devoluciones",
+    "moduletype": 4,
+    "description": "Permite administrar las devoluciones de los productos",
+    "icon": "fas fa-exchange-alt",
+    "image": "",
+    "is_vertical": true,
+    "is_active": true,
+    "is_visible": true,
+    "permits": [
+      89,
+      90,
+      88
+    ]
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 29,
+  "fields": {
+    "group": 2,
+    "module": 19
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 30,
+  "fields": {
+    "group": 2,
+    "module": 29
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 31,
+  "fields": {
+    "group": 2,
+    "module": 27
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 32,
+  "fields": {
+    "group": 1,
+    "module": 1
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 33,
+  "fields": {
+    "group": 1,
+    "module": 2
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 34,
+  "fields": {
+    "group": 1,
+    "module": 3
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 35,
+  "fields": {
+    "group": 1,
+    "module": 4
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 36,
+  "fields": {
+    "group": 1,
+    "module": 5
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 37,
+  "fields": {
+    "group": 1,
+    "module": 6
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 38,
+  "fields": {
+    "group": 1,
+    "module": 7
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 39,
+  "fields": {
+    "group": 1,
+    "module": 8
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 40,
+  "fields": {
+    "group": 1,
+    "module": 9
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 41,
+  "fields": {
+    "group": 1,
+    "module": 10
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 42,
+  "fields": {
+    "group": 1,
+    "module": 11
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 43,
+  "fields": {
+    "group": 1,
+    "module": 12
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 44,
+  "fields": {
+    "group": 1,
+    "module": 13
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 45,
+  "fields": {
+    "group": 1,
+    "module": 14
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 46,
+  "fields": {
+    "group": 1,
+    "module": 15
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 47,
+  "fields": {
+    "group": 1,
+    "module": 16
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 48,
+  "fields": {
+    "group": 1,
+    "module": 17
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 49,
+  "fields": {
+    "group": 1,
+    "module": 18
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 50,
+  "fields": {
+    "group": 1,
+    "module": 20
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 51,
+  "fields": {
+    "group": 1,
+    "module": 21
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 52,
+  "fields": {
+    "group": 1,
+    "module": 22
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 53,
+  "fields": {
+    "group": 1,
+    "module": 23
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 54,
+  "fields": {
+    "group": 1,
+    "module": 24
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 55,
+  "fields": {
+    "group": 1,
+    "module": 25
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 56,
+  "fields": {
+    "group": 1,
+    "module": 26
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 57,
+  "fields": {
+    "group": 1,
+    "module": 27
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 58,
+  "fields": {
+    "group": 1,
+    "module": 28
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 59,
+  "fields": {
+    "group": 1,
+    "module": 30
+  }
+},
+{
+  "model": "security.groupmodule",
+  "pk": 60,
+  "fields": {
+    "group": 1,
+    "module": 31
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 62,
+  "fields": {
+    "group": 1,
+    "permission": 27,
+    "module": 1
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 63,
+  "fields": {
+    "group": 1,
+    "permission": 28,
+    "module": 1
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 64,
+  "fields": {
+    "group": 1,
+    "permission": 29,
+    "module": 1
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 65,
+  "fields": {
+    "group": 1,
+    "permission": 30,
+    "module": 1
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 66,
+  "fields": {
+    "group": 1,
+    "permission": 31,
+    "module": 2
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 67,
+  "fields": {
+    "group": 1,
+    "permission": 32,
+    "module": 2
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 68,
+  "fields": {
+    "group": 1,
+    "permission": 33,
+    "module": 2
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 69,
+  "fields": {
+    "group": 1,
+    "permission": 34,
+    "module": 2
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 70,
+  "fields": {
+    "group": 1,
+    "permission": 9,
+    "module": 3
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 71,
+  "fields": {
+    "group": 1,
+    "permission": 10,
+    "module": 3
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 72,
+  "fields": {
+    "group": 1,
+    "permission": 11,
+    "module": 3
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 73,
+  "fields": {
+    "group": 1,
+    "permission": 12,
+    "module": 3
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 74,
+  "fields": {
+    "group": 1,
+    "permission": 25,
+    "module": 4
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 75,
+  "fields": {
+    "group": 1,
+    "permission": 26,
+    "module": 4
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 76,
+  "fields": {
+    "group": 1,
+    "permission": 24,
+    "module": 4
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 77,
+  "fields": {
+    "group": 1,
+    "permission": 22,
+    "module": 6
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 78,
+  "fields": {
+    "group": 1,
+    "permission": 21,
+    "module": 6
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 79,
+  "fields": {
+    "group": 1,
+    "permission": 35,
+    "module": 7
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 80,
+  "fields": {
+    "group": 1,
+    "permission": 36,
+    "module": 7
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 81,
+  "fields": {
+    "group": 1,
+    "permission": 37,
+    "module": 7
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 82,
+  "fields": {
+    "group": 1,
+    "permission": 38,
+    "module": 7
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 83,
+  "fields": {
+    "group": 1,
+    "permission": 70,
+    "module": 8
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 84,
+  "fields": {
+    "group": 1,
+    "permission": 71,
+    "module": 8
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 85,
+  "fields": {
+    "group": 1,
+    "permission": 72,
+    "module": 8
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 86,
+  "fields": {
+    "group": 1,
+    "permission": 73,
+    "module": 8
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 87,
+  "fields": {
+    "group": 1,
+    "permission": 39,
+    "module": 9
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 88,
+  "fields": {
+    "group": 1,
+    "permission": 40,
+    "module": 9
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 89,
+  "fields": {
+    "group": 1,
+    "permission": 41,
+    "module": 9
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 90,
+  "fields": {
+    "group": 1,
+    "permission": 42,
+    "module": 9
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 91,
+  "fields": {
+    "group": 1,
+    "permission": 58,
+    "module": 10
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 92,
+  "fields": {
+    "group": 1,
+    "permission": 59,
+    "module": 10
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 93,
+  "fields": {
+    "group": 1,
+    "permission": 60,
+    "module": 10
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 94,
+  "fields": {
+    "group": 1,
+    "permission": 61,
+    "module": 10
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 95,
+  "fields": {
+    "group": 1,
+    "permission": 75,
+    "module": 11
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 96,
+  "fields": {
+    "group": 1,
+    "permission": 76,
+    "module": 11
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 97,
+  "fields": {
+    "group": 1,
+    "permission": 74,
+    "module": 11
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 98,
+  "fields": {
+    "group": 1,
+    "permission": 84,
+    "module": 13
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 99,
+  "fields": {
+    "group": 1,
+    "permission": 85,
+    "module": 13
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 100,
+  "fields": {
+    "group": 1,
+    "permission": 86,
+    "module": 13
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 101,
+  "fields": {
+    "group": 1,
+    "permission": 87,
+    "module": 13
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 102,
+  "fields": {
+    "group": 1,
+    "permission": 54,
+    "module": 14
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 103,
+  "fields": {
+    "group": 1,
+    "permission": 55,
+    "module": 14
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 104,
+  "fields": {
+    "group": 1,
+    "permission": 56,
+    "module": 14
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 105,
+  "fields": {
+    "group": 1,
+    "permission": 57,
+    "module": 14
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 106,
+  "fields": {
+    "group": 1,
+    "permission": 49,
+    "module": 15
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 107,
+  "fields": {
+    "group": 1,
+    "permission": 50,
+    "module": 15
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 108,
+  "fields": {
+    "group": 1,
+    "permission": 48,
+    "module": 15
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 109,
+  "fields": {
+    "group": 1,
+    "permission": 52,
+    "module": 16
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 110,
+  "fields": {
+    "group": 1,
+    "permission": 53,
+    "module": 16
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 111,
+  "fields": {
+    "group": 1,
+    "permission": 51,
+    "module": 16
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 112,
+  "fields": {
+    "group": 1,
+    "permission": 43,
+    "module": 17
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 113,
+  "fields": {
+    "group": 1,
+    "permission": 44,
+    "module": 17
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 114,
+  "fields": {
+    "group": 1,
+    "permission": 45,
+    "module": 17
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 115,
+  "fields": {
+    "group": 1,
+    "permission": 46,
+    "module": 17
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 116,
+  "fields": {
+    "group": 1,
+    "permission": 82,
+    "module": 18
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 117,
+  "fields": {
+    "group": 1,
+    "permission": 83,
+    "module": 18
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 118,
+  "fields": {
+    "group": 1,
+    "permission": 81,
+    "module": 18
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 119,
+  "fields": {
+    "group": 1,
+    "permission": 62,
+    "module": 20
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 120,
+  "fields": {
+    "group": 1,
+    "permission": 63,
+    "module": 20
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 121,
+  "fields": {
+    "group": 1,
+    "permission": 64,
+    "module": 20
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 122,
+  "fields": {
+    "group": 1,
+    "permission": 65,
+    "module": 20
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 123,
+  "fields": {
+    "group": 1,
+    "permission": 89,
+    "module": 31
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 124,
+  "fields": {
+    "group": 1,
+    "permission": 90,
+    "module": 31
+  }
+},
+{
+  "model": "security.grouppermission",
+  "pk": 125,
+  "fields": {
+    "group": 1,
+    "permission": 88,
+    "module": 31
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-11",
+    "hour": "05:57:19.597",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-11",
+    "hour": "07:04:06.063",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 3,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-11",
+    "hour": "08:02:54.233",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 4,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-19",
+    "hour": "08:13:26.825",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 5,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-19",
+    "hour": "08:15:21.425",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "security.accessusers",
+  "pk": 6,
+  "fields": {
+    "user": 1,
+    "date_joined": "2021-10-22",
+    "hour": "06:21:58.272",
+    "localhost": "138.122.109.194",
+    "location": "Milagro, G, Ecuador"
+  }
+},
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$ikPLNH2CXuWb5PwbXfFVbf$/J5pB8ETO+C1Dg13sYskxopsjU48sudM4it+QmRSCro=",
+    "last_login": "2021-10-22T13:21:55.753Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "William Dávila",
+    "last_name": "Dávila Vargas",
+    "email": "davilawilliam93@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-10-11T12:56:35.233Z",
+    "dni": "0928363993",
+    "image": "",
+    "is_change_password": false,
+    "token": "713f8980-9048-4778-a25d-33d891e30511",
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$pI8hsNysfXKPi5BE5N8nVb$AzviSkIAIQ8y2IiK5kzcZV3SsxaH3Wn16CMg4b7kYC8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "0928745123",
+    "first_name": "Ana Gabriela",
+    "last_name": "Matute Guamán",
+    "email": "gabrielamatuteg1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2021-10-11T12:57:44.345Z",
+    "dni": "0928745123",
+    "image": "",
+    "is_change_password": false,
+    "token": "56e7034c-9c2d-4f69-94a1-d9458fb7eb6d",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "pos.company",
+  "pk": 1,
+  "fields": {
+    "name": "FACTORA POS S.A.",
+    "ruc": "0928363993001",
+    "address": "Cdla. Dager, Calle Rio Zamora entre Av.Tumbes y Av. Tarqui",
+    "mobile": "0979014551",
+    "phone": "2977557",
+    "email": "williamjair94@hotmail.com",
+    "website": "algorisoft.com",
+    "desc": "Ventas Al Por Mayor Y Por Menor En Productos para el hogar.",
+    "image": "",
+    "iva": "12.00"
+  }
+},
+{
+  "model": "pos.provider",
+  "pk": 1,
+  "fields": {
+    "name": "EXPALSA S.A.",
+    "ruc": "03026622102",
+    "mobile": "0979021212",
+    "address": "Duran",
+    "email": "expalsa@gmail.com"
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 1,
+  "fields": {
+    "name": "SCHNEIDER",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 2,
+  "fields": {
+    "name": "SIN MARCA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 3,
+  "fields": {
+    "name": "SALTA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 4,
+  "fields": {
+    "name": "QUILM",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 5,
+  "fields": {
+    "name": "KINDER",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 6,
+  "fields": {
+    "name": "NIVEA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 7,
+  "fields": {
+    "name": "REXONA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 8,
+  "fields": {
+    "name": "DOVE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 9,
+  "fields": {
+    "name": "CORONA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 10,
+  "fields": {
+    "name": "OFF",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 11,
+  "fields": {
+    "name": "TITA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 12,
+  "fields": {
+    "name": "OPERA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 13,
+  "fields": {
+    "name": "MILKA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 14,
+  "fields": {
+    "name": "TERRABUSI",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 15,
+  "fields": {
+    "name": "CRIADORES",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 16,
+  "fields": {
+    "name": "HALLS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 17,
+  "fields": {
+    "name": "TRES PLUMAS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 18,
+  "fields": {
+    "name": "SHOT",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 19,
+  "fields": {
+    "name": "TOPLINE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 20,
+  "fields": {
+    "name": "BON O BON",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 21,
+  "fields": {
+    "name": "COFLER",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 22,
+  "fields": {
+    "name": "MENTO PLUS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 23,
+  "fields": {
+    "name": "MENTOPLUS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 24,
+  "fields": {
+    "name": "CARREFOUR",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 25,
+  "fields": {
+    "name": "VAUQUITA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 26,
+  "fields": {
+    "name": "CACHAFAZ",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 27,
+  "fields": {
+    "name": "TOP LINE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 28,
+  "fields": {
+    "name": "PLUSBELLE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 29,
+  "fields": {
+    "name": "ARCOR",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 30,
+  "fields": {
+    "name": "SHIMY",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 31,
+  "fields": {
+    "name": "BELDENT",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 32,
+  "fields": {
+    "name": "MENTHOPLUS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 33,
+  "fields": {
+    "name": "DANETTE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 34,
+  "fields": {
+    "name": "CELUSAL",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 35,
+  "fields": {
+    "name": "WASSINGTON",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 36,
+  "fields": {
+    "name": "SANCORITO",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 37,
+  "fields": {
+    "name": "PIPAS",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 38,
+  "fields": {
+    "name": "UNIQUIT",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 39,
+  "fields": {
+    "name": "MAPSA",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 40,
+  "fields": {
+    "name": "BIZNIKKE",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.category",
+  "pk": 41,
+  "fields": {
+    "name": "GUAYMALLEN",
+    "inventoried": true
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 1,
+  "fields": {
+    "name": "Cerveza Botella Schneider x 1 Un",
+    "category": 1,
+    "price": "6.00",
+    "pvp": "6.72",
+    "image": "",
+    "stock": 6
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 2,
+  "fields": {
+    "name": "REJILLA COMPACTA COL",
+    "category": 2,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 62
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 3,
+  "fields": {
+    "name": "REJ.SECAVAJ.43X55CM",
+    "category": 2,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 4,
+  "fields": {
+    "name": "REJILLA AUTO 50X50CM",
+    "category": 2,
+    "price": "8.00",
+    "pvp": "8.96",
+    "image": "",
+    "stock": 13
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 5,
+  "fields": {
+    "name": "LECHE L.V.ENTERA",
+    "category": 2,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 19
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 6,
+  "fields": {
+    "name": "Trapo Piso Blanco Consorcio x 1 Un",
+    "category": 2,
+    "price": "10.00",
+    "pvp": "11.20",
+    "image": "",
+    "stock": 11
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 7,
+  "fields": {
+    "name": "Trapo Piso Gris Consorcio x 1 Un",
+    "category": 2,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 8,
+  "fields": {
+    "name": "Trapo Piso Mil Usos x 1 Un",
+    "category": 2,
+    "price": "8.00",
+    "pvp": "8.96",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 9,
+  "fields": {
+    "name": "PAÃ‘O FRANELA CALIDAD",
+    "category": 2,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 10,
+  "fields": {
+    "name": "Cerveza Blanca Botella Salta x 1 Un",
+    "category": 3,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 11,
+  "fields": {
+    "name": "ESQUELETO CERV BLANC",
+    "category": 3,
+    "price": "8.00",
+    "pvp": "8.96",
+    "image": "",
+    "stock": 27
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 12,
+  "fields": {
+    "name": "Cerveza Negra Botella Salta x 1 Un",
+    "category": 3,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 13,
+  "fields": {
+    "name": "ESQUELETO CERV NEGRA",
+    "category": 3,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 19
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 14,
+  "fields": {
+    "name": "ENVASE CERVEZA 1890",
+    "category": 4,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 15,
+  "fields": {
+    "name": "ESQUELETO CERV 1890",
+    "category": 4,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 88
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 16,
+  "fields": {
+    "name": "Huevo de Chocolate Kinder con Sorpresa Caja x 20 Gr",
+    "category": 5,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 17,
+  "fields": {
+    "name": "Desmaquillador de Ojos Bifasico en Botella Nivea x 125 Ml",
+    "category": 6,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 18,
+  "fields": {
+    "name": "Crema Facial Cuidado Nivea x 100 Ml",
+    "category": 6,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 3
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 19,
+  "fields": {
+    "name": "Desodorante Antitranspirante en Barra V8 Rexona x 50 Gr",
+    "category": 7,
+    "price": "10.00",
+    "pvp": "11.20",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 20,
+  "fields": {
+    "name": "Desodorante Stick Nutritivo Rexona x 50 Gr",
+    "category": 7,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 18
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 21,
+  "fields": {
+    "name": "Desodorante Original Dove x 50 Gr",
+    "category": 8,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 5
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 22,
+  "fields": {
+    "name": "Cerveza Corona x 335 Cc",
+    "category": 9,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 23,
+  "fields": {
+    "name": "Repelente Crema Off x 60 Gr",
+    "category": 10,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 24,
+  "fields": {
+    "name": "Galletitas BanÌƒadas con Chocolate con Relleno de Limon Terrabusi Tita x 18 Gr",
+    "category": 11,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 22
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 25,
+  "fields": {
+    "name": "Obleas Rellena Bagley Opera x 55 Gr",
+    "category": 12,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 5
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 26,
+  "fields": {
+    "name": "Obleas Rellena Bagley Opera x 92 Gr",
+    "category": 12,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 51
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 27,
+  "fields": {
+    "name": "Alfajor Mousse Triple Milka x 55 Gr",
+    "category": 13,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 28,
+  "fields": {
+    "name": "Alfajor Triple Dulce de Leche Terrabusi x 70 Gr",
+    "category": 14,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 1
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 29,
+  "fields": {
+    "name": "Whisky Criadores En Petaca x 195 Cc",
+    "category": 15,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 24
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 30,
+  "fields": {
+    "name": "Caramelos Halls Cherry Paquete x 28 Gr",
+    "category": 16,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 31,
+  "fields": {
+    "name": "Licor Crema de Dulce de Leche Tres Plumas x 200 Cc",
+    "category": 17,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 32,
+  "fields": {
+    "name": "Chocolate en Tableta Shot x 35 Gr",
+    "category": 18,
+    "price": "6.00",
+    "pvp": "6.72",
+    "image": "",
+    "stock": 58
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 33,
+  "fields": {
+    "name": "Chicles Topline Fruta Paquete x 6.7 Gr",
+    "category": 19,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 70
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 34,
+  "fields": {
+    "name": "Bombon de Leche Suelto Bon o Bon x 1 Un",
+    "category": 20,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 1
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 35,
+  "fields": {
+    "name": "Chocolate Leche M Joy Milka x 30 Gr",
+    "category": 13,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 25
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 36,
+  "fields": {
+    "name": "Chocolate con Mani Block Cofler x 110 Gr",
+    "category": 21,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 37,
+  "fields": {
+    "name": "Caramelos Mentho Plus Cherry 9 x Gr",
+    "category": 22,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 38,
+  "fields": {
+    "name": "Caramelos Miel Menthoplus x 30.6 Gr",
+    "category": 23,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 3
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 39,
+  "fields": {
+    "name": "Desodorante Roll On Crystal Rexona x 50 Ml",
+    "category": 7,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 40,
+  "fields": {
+    "name": "PanÌƒuelos Descartables Carrefour x 1 Un",
+    "category": 24,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 27
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 41,
+  "fields": {
+    "name": "Bocadito de Dulce de Leche Light Vauquita x 22 Gr",
+    "category": 25,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 42,
+  "fields": {
+    "name": "Desodorante Nutritive Roll On Rexona x 50 Ml",
+    "category": 7,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 43,
+  "fields": {
+    "name": "Chicles Topline Seven Menta Paquete x 14 Gr",
+    "category": 19,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 44,
+  "fields": {
+    "name": "Caramelos Strong Mint Paquete Halls x 28 Gr",
+    "category": 16,
+    "price": "8.00",
+    "pvp": "8.96",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 45,
+  "fields": {
+    "name": "Caramelos Mentol Paquete Halls x 28 Gr",
+    "category": 16,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 46,
+  "fields": {
+    "name": "Alfajor con BanÌƒo de Chocolate Cachafaz x 60 Gr",
+    "category": 26,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 47,
+  "fields": {
+    "name": "Alfajor Clasico Terrabusi x 50 Gr",
+    "category": 14,
+    "price": "8.00",
+    "pvp": "8.96",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 48,
+  "fields": {
+    "name": "Chicle Seven Strong Top Line 14,7 x Gr",
+    "category": 27,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 49,
+  "fields": {
+    "name": "Desodorante Roll On Invisible Plusbelle x 50 Cc",
+    "category": 28,
+    "price": "7.00",
+    "pvp": "7.84",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 50,
+  "fields": {
+    "name": "Turron Arcor x 25 Gr",
+    "category": 29,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 11
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 51,
+  "fields": {
+    "name": "Gelatina Sabor Frutilla Shimy Sancor x 110 Gr",
+    "category": 30,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 52,
+  "fields": {
+    "name": "Gelatina Sabor Manzana Shimy Sancor x 110 Gr",
+    "category": 30,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 53,
+  "fields": {
+    "name": "Desodorante en Crema en Pote Odorono Rexona x 60 Gr",
+    "category": 7,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 1
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 54,
+  "fields": {
+    "name": "Desodorante Original Dove x 85 Ml",
+    "category": 8,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 55,
+  "fields": {
+    "name": "Desodorante Anititranspirante Roll On Sensitive Rexona x 85 Ml",
+    "category": 7,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 56,
+  "fields": {
+    "name": "Desodorante Antitranspirante Roll On Invisible Rexona x 50 Gr",
+    "category": 7,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 57,
+  "fields": {
+    "name": "Desodorante Antitranspirante Roll On V8 Rexona x 50 Ml",
+    "category": 7,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 58,
+  "fields": {
+    "name": "Desodorante Cotton Rexona x 85 Ml",
+    "category": 7,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 31
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 59,
+  "fields": {
+    "name": "Antitranspirante Comprimido Active Emotion Rexona x 85 Ml",
+    "category": 7,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 3
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 60,
+  "fields": {
+    "name": "Chicles Menta Blister Beldent x 10 Gr",
+    "category": 31,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 52
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 61,
+  "fields": {
+    "name": "Chicles Menta Blister Beldent x 10 Gr",
+    "category": 31,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 62,
+  "fields": {
+    "name": "Chicles Globo Blister Beldent x 10 Gr",
+    "category": 31,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 5
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 63,
+  "fields": {
+    "name": "Mentho-Plus Free Crerry Arcor x 27 Gr",
+    "category": 32,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 64,
+  "fields": {
+    "name": "Caramelos Sabor Mentol Zero Menthoplus x 27,3",
+    "category": 32,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 65,
+  "fields": {
+    "name": "Chicles Seven Frutilla Paquete Top Line x 14.7 Gr",
+    "category": 27,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 66,
+  "fields": {
+    "name": "Postre Sabor Dulce de Leche Danette Pack 2 Un x 190 Gr",
+    "category": 33,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 67,
+  "fields": {
+    "name": "Postre Sabor Chocolate Danette Pack 2 Un x 190 Gr",
+    "category": 33,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 22
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 68,
+  "fields": {
+    "name": "Chocolate con Mani Block Cofler x 38 Gr",
+    "category": 21,
+    "price": "6.00",
+    "pvp": "6.72",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 69,
+  "fields": {
+    "name": "Sal Fina en Salero Celusal x 250 Gr",
+    "category": 34,
+    "price": "6.00",
+    "pvp": "6.72",
+    "image": "",
+    "stock": 71
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 70,
+  "fields": {
+    "name": "Pomada para zapatos Negro Lata Wassington x 60 Gr",
+    "category": 35,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 71,
+  "fields": {
+    "name": "Pomada para zapatos Marron en Lata Wassington x 60 Gr",
+    "category": 35,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 1
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 72,
+  "fields": {
+    "name": "Pomada para zapatos en lata Wassington x 60 Cc",
+    "category": 35,
+    "price": "2.00",
+    "pvp": "2.24",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 73,
+  "fields": {
+    "name": "Flan Sabor Vainilla con Caramelo Sancorito x 110 Gr",
+    "category": 36,
+    "price": "6.00",
+    "pvp": "6.72",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 74,
+  "fields": {
+    "name": "Semillas de Girasol Pipas x 18 Gr",
+    "category": 37,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 6
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 75,
+  "fields": {
+    "name": "QUITAESMALTE FORTALECEDOR UNIQUIT X 120 CC",
+    "category": 38,
+    "price": "3.00",
+    "pvp": "3.36",
+    "image": "",
+    "stock": 26
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 76,
+  "fields": {
+    "name": "Tableta de Chocolate sin Azucar Libre de Gluten Mapsa X 100 Gr",
+    "category": 39,
+    "price": "1.00",
+    "pvp": "1.12",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 77,
+  "fields": {
+    "name": "Tableta de Chocolate con Mani Biznikke x 30 Gr",
+    "category": 40,
+    "price": "5.00",
+    "pvp": "5.60",
+    "image": "",
+    "stock": 14
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 78,
+  "fields": {
+    "name": "Tableta de Dulce de Leche Vauquita Tableta x 25 Gr",
+    "category": 25,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 79,
+  "fields": {
+    "name": "Alfajor con BanÌƒo de Chocolate Blanco Guaymallen x 38 Gr",
+    "category": 41,
+    "price": "4.00",
+    "pvp": "4.48",
+    "image": "",
+    "stock": 0
+  }
+},
+{
+  "model": "pos.product",
+  "pk": 80,
+  "fields": {
+    "name": "Alfajor con BanÌƒo de Chocolate Guaymallen x 38 Gr",
+    "category": 41,
+    "price": "9.00",
+    "pvp": "10.08",
+    "image": "",
+    "stock": 2
+  }
+},
+{
+  "model": "pos.purchase",
+  "pk": 1,
+  "fields": {
+    "provider": 1,
+    "payment_condition": "contado",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "3083.36"
+  }
+},
+{
+  "model": "pos.purchase",
+  "pk": 2,
+  "fields": {
+    "provider": 1,
+    "payment_condition": "contado",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "2278.08"
+  }
+},
+{
+  "model": "pos.purchase",
+  "pk": 3,
+  "fields": {
+    "provider": 1,
+    "payment_condition": "contado",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "3263.68"
+  }
+},
+{
+  "model": "pos.purchase",
+  "pk": 4,
+  "fields": {
+    "provider": 1,
+    "payment_condition": "contado",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "1919.68"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 1,
+  "fields": {
+    "purchase": 1,
+    "product": 32,
+    "cant": 45,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "302.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 2,
+  "fields": {
+    "purchase": 1,
+    "product": 24,
+    "cant": 22,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "123.20"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 3,
+  "fields": {
+    "purchase": 1,
+    "product": 68,
+    "cant": 11,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "73.92"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 4,
+  "fields": {
+    "purchase": 1,
+    "product": 71,
+    "cant": 2,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "20.16"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 5,
+  "fields": {
+    "purchase": 1,
+    "product": 44,
+    "cant": 6,
+    "price": "8.96",
+    "dscto": "0.00",
+    "subtotal": "53.76"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 6,
+  "fields": {
+    "purchase": 1,
+    "product": 18,
+    "cant": 45,
+    "price": "7.84",
+    "dscto": "0.00",
+    "subtotal": "352.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 7,
+  "fields": {
+    "purchase": 1,
+    "product": 60,
+    "cant": 3,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "16.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 8,
+  "fields": {
+    "purchase": 1,
+    "product": 2,
+    "cant": 26,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "262.08"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 9,
+  "fields": {
+    "purchase": 1,
+    "product": 50,
+    "cant": 21,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "211.68"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 10,
+  "fields": {
+    "purchase": 1,
+    "product": 1,
+    "cant": 49,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "329.28"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 11,
+  "fields": {
+    "purchase": 1,
+    "product": 15,
+    "cant": 48,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "483.84"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 12,
+  "fields": {
+    "purchase": 1,
+    "product": 33,
+    "cant": 30,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "33.60"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 13,
+  "fields": {
+    "purchase": 1,
+    "product": 53,
+    "cant": 18,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "100.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 14,
+  "fields": {
+    "purchase": 1,
+    "product": 4,
+    "cant": 5,
+    "price": "8.96",
+    "dscto": "0.00",
+    "subtotal": "44.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 15,
+  "fields": {
+    "purchase": 1,
+    "product": 65,
+    "cant": 10,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "100.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 16,
+  "fields": {
+    "purchase": 1,
+    "product": 62,
+    "cant": 40,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "224.00"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 17,
+  "fields": {
+    "purchase": 1,
+    "product": 80,
+    "cant": 12,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "120.96"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 18,
+  "fields": {
+    "purchase": 1,
+    "product": 28,
+    "cant": 39,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "131.04"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 19,
+  "fields": {
+    "purchase": 1,
+    "product": 40,
+    "cant": 29,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "97.44"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 20,
+  "fields": {
+    "purchase": 2,
+    "product": 69,
+    "cant": 23,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "154.56"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 21,
+  "fields": {
+    "purchase": 2,
+    "product": 21,
+    "cant": 35,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "78.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 22,
+  "fields": {
+    "purchase": 2,
+    "product": 48,
+    "cant": 45,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "50.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 23,
+  "fields": {
+    "purchase": 2,
+    "product": 35,
+    "cant": 43,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "240.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 24,
+  "fields": {
+    "purchase": 2,
+    "product": 29,
+    "cant": 6,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "6.72"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 25,
+  "fields": {
+    "purchase": 2,
+    "product": 58,
+    "cant": 34,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "114.24"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 26,
+  "fields": {
+    "purchase": 2,
+    "product": 28,
+    "cant": 20,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "67.20"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 27,
+  "fields": {
+    "purchase": 2,
+    "product": 67,
+    "cant": 10,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "100.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 28,
+  "fields": {
+    "purchase": 2,
+    "product": 15,
+    "cant": 42,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "423.36"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 29,
+  "fields": {
+    "purchase": 2,
+    "product": 66,
+    "cant": 25,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "56.00"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 30,
+  "fields": {
+    "purchase": 2,
+    "product": 26,
+    "cant": 24,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "80.64"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 31,
+  "fields": {
+    "purchase": 2,
+    "product": 32,
+    "cant": 9,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "60.48"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 32,
+  "fields": {
+    "purchase": 2,
+    "product": 13,
+    "cant": 26,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "116.48"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 33,
+  "fields": {
+    "purchase": 2,
+    "product": 74,
+    "cant": 34,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "152.32"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 34,
+  "fields": {
+    "purchase": 2,
+    "product": 65,
+    "cant": 28,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "282.24"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 35,
+  "fields": {
+    "purchase": 2,
+    "product": 1,
+    "cant": 2,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "13.44"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 36,
+  "fields": {
+    "purchase": 2,
+    "product": 20,
+    "cant": 23,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "103.04"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 37,
+  "fields": {
+    "purchase": 2,
+    "product": 37,
+    "cant": 31,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "173.60"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 38,
+  "fields": {
+    "purchase": 2,
+    "product": 40,
+    "cant": 1,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "3.36"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 39,
+  "fields": {
+    "purchase": 3,
+    "product": 62,
+    "cant": 9,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "50.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 40,
+  "fields": {
+    "purchase": 3,
+    "product": 45,
+    "cant": 1,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "2.24"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 41,
+  "fields": {
+    "purchase": 3,
+    "product": 25,
+    "cant": 13,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "72.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 42,
+  "fields": {
+    "purchase": 3,
+    "product": 6,
+    "cant": 29,
+    "price": "11.20",
+    "dscto": "0.00",
+    "subtotal": "324.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 43,
+  "fields": {
+    "purchase": 3,
+    "product": 21,
+    "cant": 14,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "31.36"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 44,
+  "fields": {
+    "purchase": 3,
+    "product": 67,
+    "cant": 13,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "131.04"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 45,
+  "fields": {
+    "purchase": 3,
+    "product": 38,
+    "cant": 29,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "292.32"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 46,
+  "fields": {
+    "purchase": 3,
+    "product": 15,
+    "cant": 2,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "20.16"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 47,
+  "fields": {
+    "purchase": 3,
+    "product": 61,
+    "cant": 32,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "322.56"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 48,
+  "fields": {
+    "purchase": 3,
+    "product": 1,
+    "cant": 48,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "322.56"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 49,
+  "fields": {
+    "purchase": 3,
+    "product": 69,
+    "cant": 27,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "181.44"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 50,
+  "fields": {
+    "purchase": 3,
+    "product": 75,
+    "cant": 26,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "87.36"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 51,
+  "fields": {
+    "purchase": 3,
+    "product": 29,
+    "cant": 37,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "41.44"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 52,
+  "fields": {
+    "purchase": 3,
+    "product": 18,
+    "cant": 5,
+    "price": "7.84",
+    "dscto": "0.00",
+    "subtotal": "39.20"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 53,
+  "fields": {
+    "purchase": 3,
+    "product": 14,
+    "cant": 40,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "403.20"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 54,
+  "fields": {
+    "purchase": 3,
+    "product": 11,
+    "cant": 32,
+    "price": "8.96",
+    "dscto": "0.00",
+    "subtotal": "286.72"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 55,
+  "fields": {
+    "purchase": 3,
+    "product": 2,
+    "cant": 41,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "413.28"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 56,
+  "fields": {
+    "purchase": 3,
+    "product": 77,
+    "cant": 31,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "173.60"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 57,
+  "fields": {
+    "purchase": 3,
+    "product": 7,
+    "cant": 15,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "67.20"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 58,
+  "fields": {
+    "purchase": 4,
+    "product": 68,
+    "cant": 24,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "161.28"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 59,
+  "fields": {
+    "purchase": 4,
+    "product": 32,
+    "cant": 30,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "201.60"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 60,
+  "fields": {
+    "purchase": 4,
+    "product": 5,
+    "cant": 19,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "42.56"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 61,
+  "fields": {
+    "purchase": 4,
+    "product": 26,
+    "cant": 43,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "144.48"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 62,
+  "fields": {
+    "purchase": 4,
+    "product": 69,
+    "cant": 21,
+    "price": "6.72",
+    "dscto": "0.00",
+    "subtotal": "141.12"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 63,
+  "fields": {
+    "purchase": 4,
+    "product": 76,
+    "cant": 43,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "48.16"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 64,
+  "fields": {
+    "purchase": 4,
+    "product": 65,
+    "cant": 2,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "20.16"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 65,
+  "fields": {
+    "purchase": 4,
+    "product": 52,
+    "cant": 43,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "48.16"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 66,
+  "fields": {
+    "purchase": 4,
+    "product": 33,
+    "cant": 40,
+    "price": "1.12",
+    "dscto": "0.00",
+    "subtotal": "44.80"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 67,
+  "fields": {
+    "purchase": 4,
+    "product": 4,
+    "cant": 17,
+    "price": "8.96",
+    "dscto": "0.00",
+    "subtotal": "152.32"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 68,
+  "fields": {
+    "purchase": 4,
+    "product": 66,
+    "cant": 1,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "2.24"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 69,
+  "fields": {
+    "purchase": 4,
+    "product": 34,
+    "cant": 50,
+    "price": "3.36",
+    "dscto": "0.00",
+    "subtotal": "168.00"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 70,
+  "fields": {
+    "purchase": 4,
+    "product": 39,
+    "cant": 9,
+    "price": "7.84",
+    "dscto": "0.00",
+    "subtotal": "70.56"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 71,
+  "fields": {
+    "purchase": 4,
+    "product": 59,
+    "cant": 30,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "134.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 72,
+  "fields": {
+    "purchase": 4,
+    "product": 60,
+    "cant": 49,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "274.40"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 73,
+  "fields": {
+    "purchase": 4,
+    "product": 71,
+    "cant": 3,
+    "price": "10.08",
+    "dscto": "0.00",
+    "subtotal": "30.24"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 74,
+  "fields": {
+    "purchase": 4,
+    "product": 7,
+    "cant": 44,
+    "price": "4.48",
+    "dscto": "0.00",
+    "subtotal": "197.12"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 75,
+  "fields": {
+    "purchase": 4,
+    "product": 12,
+    "cant": 2,
+    "price": "2.24",
+    "dscto": "0.00",
+    "subtotal": "4.48"
+  }
+},
+{
+  "model": "pos.purchasedetail",
+  "pk": 76,
+  "fields": {
+    "purchase": 4,
+    "product": 64,
+    "cant": 6,
+    "price": "5.60",
+    "dscto": "0.00",
+    "subtotal": "33.60"
+  }
+},
+{
+  "model": "pos.client",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "mobile": "0979014553",
+    "birthdate": "2021-10-11",
+    "address": "Milagro, cdla. Dager avda tumbez y zamora"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 1,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "339.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "40.72",
+    "total": "380.08",
+    "cash": "380.08",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 2,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "488.32",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "58.60",
+    "total": "546.92",
+    "cash": "546.92",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 3,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "553.28",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "66.39",
+    "total": "619.67",
+    "cash": "619.67",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 4,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "1053.92",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "126.47",
+    "total": "1180.39",
+    "cash": "1180.39",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 5,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "588.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "70.56",
+    "total": "658.56",
+    "cash": "658.56",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 6,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "899.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "107.92",
+    "total": "1007.28",
+    "cash": "1007.28",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 7,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "734.72",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "88.17",
+    "total": "822.89",
+    "cash": "822.89",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 8,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "311.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "37.36",
+    "total": "348.72",
+    "cash": "456.60",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 9,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "259.84",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "31.18",
+    "total": "291.02",
+    "cash": "291.02",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.sale",
+  "pk": 10,
+  "fields": {
+    "client": 1,
+    "employee": null,
+    "payment_condition": "contado",
+    "payment_method": "efectivo",
+    "type_voucher": "ticket",
+    "date_joined": "2021-10-11",
+    "end_credit": "2021-10-11",
+    "subtotal": "309.12",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "iva": "0.12",
+    "total_iva": "37.09",
+    "total": "346.21",
+    "cash": "346.21",
+    "change": "0.00",
+    "card_number": null,
+    "titular": null,
+    "amount_debited": "0.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 1,
+  "fields": {
+    "sale": 1,
+    "product": 35,
+    "cant": 3,
+    "price": "5.60",
+    "subtotal": "16.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "16.80"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 2,
+  "fields": {
+    "sale": 1,
+    "product": 74,
+    "cant": 8,
+    "price": "4.48",
+    "subtotal": "35.84",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "35.84"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 3,
+  "fields": {
+    "sale": 1,
+    "product": 25,
+    "cant": 4,
+    "price": "5.60",
+    "subtotal": "22.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "22.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 4,
+  "fields": {
+    "sale": 1,
+    "product": 40,
+    "cant": 3,
+    "price": "3.36",
+    "subtotal": "10.08",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "10.08"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 5,
+  "fields": {
+    "sale": 1,
+    "product": 13,
+    "cant": 7,
+    "price": "4.48",
+    "subtotal": "31.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "31.36"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 6,
+  "fields": {
+    "sale": 1,
+    "product": 48,
+    "cant": 43,
+    "price": "1.12",
+    "subtotal": "48.16",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "48.16"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 7,
+  "fields": {
+    "sale": 1,
+    "product": 32,
+    "cant": 26,
+    "price": "6.72",
+    "subtotal": "174.72",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "174.72"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 8,
+  "fields": {
+    "sale": 2,
+    "product": 21,
+    "cant": 28,
+    "price": "2.24",
+    "subtotal": "62.72",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "62.72"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 9,
+  "fields": {
+    "sale": 2,
+    "product": 52,
+    "cant": 41,
+    "price": "1.12",
+    "subtotal": "45.92",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "45.92"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 10,
+  "fields": {
+    "sale": 2,
+    "product": 62,
+    "cant": 44,
+    "price": "5.60",
+    "subtotal": "246.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "246.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 11,
+  "fields": {
+    "sale": 2,
+    "product": 74,
+    "cant": 13,
+    "price": "4.48",
+    "subtotal": "58.24",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "58.24"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 12,
+  "fields": {
+    "sale": 2,
+    "product": 66,
+    "cant": 19,
+    "price": "2.24",
+    "subtotal": "42.56",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "42.56"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 13,
+  "fields": {
+    "sale": 2,
+    "product": 61,
+    "cant": 1,
+    "price": "10.08",
+    "subtotal": "10.08",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "10.08"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 14,
+  "fields": {
+    "sale": 2,
+    "product": 20,
+    "cant": 5,
+    "price": "4.48",
+    "subtotal": "22.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "22.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 15,
+  "fields": {
+    "sale": 3,
+    "product": 15,
+    "cant": 4,
+    "price": "10.08",
+    "subtotal": "40.32",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "40.32"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 16,
+  "fields": {
+    "sale": 3,
+    "product": 37,
+    "cant": 20,
+    "price": "5.60",
+    "subtotal": "112.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "112.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 17,
+  "fields": {
+    "sale": 3,
+    "product": 35,
+    "cant": 15,
+    "price": "5.60",
+    "subtotal": "84.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "84.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 18,
+  "fields": {
+    "sale": 3,
+    "product": 34,
+    "cant": 11,
+    "price": "3.36",
+    "subtotal": "36.96",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "36.96"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 19,
+  "fields": {
+    "sale": 3,
+    "product": 21,
+    "cant": 6,
+    "price": "2.24",
+    "subtotal": "13.44",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "13.44"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 20,
+  "fields": {
+    "sale": 3,
+    "product": 66,
+    "cant": 5,
+    "price": "2.24",
+    "subtotal": "11.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "11.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 21,
+  "fields": {
+    "sale": 3,
+    "product": 7,
+    "cant": 57,
+    "price": "4.48",
+    "subtotal": "255.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "255.36"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 22,
+  "fields": {
+    "sale": 4,
+    "product": 71,
+    "cant": 3,
+    "price": "10.08",
+    "subtotal": "30.24",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "30.24"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 23,
+  "fields": {
+    "sale": 4,
+    "product": 29,
+    "cant": 19,
+    "price": "1.12",
+    "subtotal": "21.28",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "21.28"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 24,
+  "fields": {
+    "sale": 4,
+    "product": 14,
+    "cant": 40,
+    "price": "10.08",
+    "subtotal": "403.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "403.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 25,
+  "fields": {
+    "sale": 4,
+    "product": 38,
+    "cant": 22,
+    "price": "10.08",
+    "subtotal": "221.76",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "221.76"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 26,
+  "fields": {
+    "sale": 4,
+    "product": 80,
+    "cant": 6,
+    "price": "10.08",
+    "subtotal": "60.48",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "60.48"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 27,
+  "fields": {
+    "sale": 4,
+    "product": 61,
+    "cant": 27,
+    "price": "10.08",
+    "subtotal": "272.16",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "272.16"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 28,
+  "fields": {
+    "sale": 4,
+    "product": 44,
+    "cant": 1,
+    "price": "8.96",
+    "subtotal": "44.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "44.80"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 29,
+  "fields": {
+    "sale": 5,
+    "product": 38,
+    "cant": 4,
+    "price": "10.08",
+    "subtotal": "40.32",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "40.32"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 30,
+  "fields": {
+    "sale": 5,
+    "product": 28,
+    "cant": 24,
+    "price": "3.36",
+    "subtotal": "80.64",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "80.64"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 31,
+  "fields": {
+    "sale": 5,
+    "product": 45,
+    "cant": 1,
+    "price": "2.24",
+    "subtotal": "2.24",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "2.24"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 32,
+  "fields": {
+    "sale": 5,
+    "product": 76,
+    "cant": 29,
+    "price": "1.12",
+    "subtotal": "32.48",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "32.48"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 33,
+  "fields": {
+    "sale": 5,
+    "product": 26,
+    "cant": 16,
+    "price": "3.36",
+    "subtotal": "53.76",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "53.76"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 34,
+  "fields": {
+    "sale": 5,
+    "product": 71,
+    "cant": 1,
+    "price": "10.08",
+    "subtotal": "10.08",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "10.08"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 35,
+  "fields": {
+    "sale": 5,
+    "product": 18,
+    "cant": 47,
+    "price": "7.84",
+    "subtotal": "368.48",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "368.48"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 36,
+  "fields": {
+    "sale": 6,
+    "product": 44,
+    "cant": 1,
+    "price": "8.96",
+    "subtotal": "8.96",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "8.96"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 37,
+  "fields": {
+    "sale": 6,
+    "product": 1,
+    "cant": 77,
+    "price": "6.72",
+    "subtotal": "517.44",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "517.44"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 38,
+  "fields": {
+    "sale": 6,
+    "product": 68,
+    "cant": 20,
+    "price": "6.72",
+    "subtotal": "134.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "134.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 39,
+  "fields": {
+    "sale": 6,
+    "product": 37,
+    "cant": 9,
+    "price": "5.60",
+    "subtotal": "50.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "50.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 40,
+  "fields": {
+    "sale": 6,
+    "product": 28,
+    "cant": 21,
+    "price": "3.36",
+    "subtotal": "70.56",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "70.56"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 41,
+  "fields": {
+    "sale": 6,
+    "product": 50,
+    "cant": 10,
+    "price": "10.08",
+    "subtotal": "100.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "100.80"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 42,
+  "fields": {
+    "sale": 6,
+    "product": 64,
+    "cant": 3,
+    "price": "5.60",
+    "subtotal": "16.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "16.80"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 43,
+  "fields": {
+    "sale": 7,
+    "product": 53,
+    "cant": 10,
+    "price": "5.60",
+    "subtotal": "56.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "56.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 44,
+  "fields": {
+    "sale": 7,
+    "product": 25,
+    "cant": 2,
+    "price": "5.60",
+    "subtotal": "11.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "11.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 45,
+  "fields": {
+    "sale": 7,
+    "product": 65,
+    "cant": 38,
+    "price": "10.08",
+    "subtotal": "383.04",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "383.04"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 46,
+  "fields": {
+    "sale": 7,
+    "product": 6,
+    "cant": 13,
+    "price": "11.20",
+    "subtotal": "145.60",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "145.60"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 47,
+  "fields": {
+    "sale": 7,
+    "product": 4,
+    "cant": 9,
+    "price": "8.96",
+    "subtotal": "80.64",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "80.64"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 48,
+  "fields": {
+    "sale": 7,
+    "product": 21,
+    "cant": 10,
+    "price": "2.24",
+    "subtotal": "22.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "22.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 49,
+  "fields": {
+    "sale": 7,
+    "product": 11,
+    "cant": 3,
+    "price": "8.96",
+    "subtotal": "35.84",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "35.84"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 50,
+  "fields": {
+    "sale": 8,
+    "product": 53,
+    "cant": 7,
+    "price": "5.60",
+    "subtotal": "39.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "39.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 51,
+  "fields": {
+    "sale": 8,
+    "product": 2,
+    "cant": 5,
+    "price": "10.08",
+    "subtotal": "50.40",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "50.40"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 52,
+  "fields": {
+    "sale": 8,
+    "product": 59,
+    "cant": 27,
+    "price": "4.48",
+    "subtotal": "120.96",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "120.96"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 53,
+  "fields": {
+    "sale": 8,
+    "product": 39,
+    "cant": 0,
+    "price": "7.84",
+    "subtotal": "0.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "0.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 54,
+  "fields": {
+    "sale": 8,
+    "product": 68,
+    "cant": 15,
+    "price": "6.72",
+    "subtotal": "100.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "100.80"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 55,
+  "fields": {
+    "sale": 8,
+    "product": 6,
+    "cant": 0,
+    "price": "11.20",
+    "subtotal": "0.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "0.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 56,
+  "fields": {
+    "sale": 8,
+    "product": 11,
+    "cant": 0,
+    "price": "8.96",
+    "subtotal": "0.00",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "0.00"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 57,
+  "fields": {
+    "sale": 9,
+    "product": 1,
+    "cant": 16,
+    "price": "6.72",
+    "subtotal": "107.52",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "107.52"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 58,
+  "fields": {
+    "sale": 9,
+    "product": 28,
+    "cant": 13,
+    "price": "3.36",
+    "subtotal": "43.68",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "43.68"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 59,
+  "fields": {
+    "sale": 9,
+    "product": 39,
+    "cant": 4,
+    "price": "7.84",
+    "subtotal": "31.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "31.36"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 60,
+  "fields": {
+    "sale": 9,
+    "product": 80,
+    "cant": 4,
+    "price": "10.08",
+    "subtotal": "40.32",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "40.32"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 61,
+  "fields": {
+    "sale": 9,
+    "product": 67,
+    "cant": 1,
+    "price": "10.08",
+    "subtotal": "10.08",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "10.08"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 62,
+  "fields": {
+    "sale": 9,
+    "product": 25,
+    "cant": 2,
+    "price": "5.60",
+    "subtotal": "11.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "11.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 63,
+  "fields": {
+    "sale": 9,
+    "product": 76,
+    "cant": 14,
+    "price": "1.12",
+    "subtotal": "15.68",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "15.68"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 64,
+  "fields": {
+    "sale": 10,
+    "product": 58,
+    "cant": 3,
+    "price": "3.36",
+    "subtotal": "10.08",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "10.08"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 65,
+  "fields": {
+    "sale": 10,
+    "product": 34,
+    "cant": 29,
+    "price": "3.36",
+    "subtotal": "127.68",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "127.68"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 66,
+  "fields": {
+    "sale": 10,
+    "product": 39,
+    "cant": 0,
+    "price": "7.84",
+    "subtotal": "7.84",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "7.84"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 67,
+  "fields": {
+    "sale": 10,
+    "product": 61,
+    "cant": 0,
+    "price": "10.08",
+    "subtotal": "20.16",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "20.16"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 68,
+  "fields": {
+    "sale": 10,
+    "product": 74,
+    "cant": 0,
+    "price": "4.48",
+    "subtotal": "31.36",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "31.36"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 69,
+  "fields": {
+    "sale": 10,
+    "product": 77,
+    "cant": 0,
+    "price": "5.60",
+    "subtotal": "95.20",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "95.20"
+  }
+},
+{
+  "model": "pos.saledetail",
+  "pk": 70,
+  "fields": {
+    "sale": 10,
+    "product": 64,
+    "cant": 0,
+    "price": "5.60",
+    "subtotal": "16.80",
+    "dscto": "0.00",
+    "total_dscto": "0.00",
+    "total": "16.80"
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 1,
+  "fields": {
+    "saledetail": 70,
+    "date_joined": "2021-10-11",
+    "cant": 3,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 2,
+  "fields": {
+    "saledetail": 69,
+    "date_joined": "2021-10-11",
+    "cant": 17,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 3,
+  "fields": {
+    "saledetail": 68,
+    "date_joined": "2021-10-11",
+    "cant": 7,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 4,
+  "fields": {
+    "saledetail": 67,
+    "date_joined": "2021-10-11",
+    "cant": 2,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 5,
+  "fields": {
+    "saledetail": 66,
+    "date_joined": "2021-10-11",
+    "cant": 1,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 6,
+  "fields": {
+    "saledetail": 65,
+    "date_joined": "2021-10-11",
+    "cant": 8,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 7,
+  "fields": {
+    "saledetail": 65,
+    "date_joined": "2021-10-11",
+    "cant": 1,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 8,
+  "fields": {
+    "saledetail": 49,
+    "date_joined": "2021-10-11",
+    "cant": 1,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 9,
+  "fields": {
+    "saledetail": 28,
+    "date_joined": "2021-10-11",
+    "cant": 4,
+    "motive": "Se dañaron"
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 10,
+  "fields": {
+    "saledetail": 56,
+    "date_joined": "2021-10-11",
+    "cant": 1,
+    "motive": "Salio dañado"
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 11,
+  "fields": {
+    "saledetail": 53,
+    "date_joined": "2021-10-11",
+    "cant": 1,
+    "motive": "Salio dañado"
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 12,
+  "fields": {
+    "saledetail": 55,
+    "date_joined": "2021-10-11",
+    "cant": 5,
+    "motive": ""
+  }
+},
+{
+  "model": "pos.devolution",
+  "pk": 13,
+  "fields": {
+    "saledetail": 53,
+    "date_joined": "2021-10-11",
+    "cant": 3,
+    "motive": ""
+  }
+}
+]

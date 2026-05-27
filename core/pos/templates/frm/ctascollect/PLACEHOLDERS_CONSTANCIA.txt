@@ -1,0 +1,30 @@
+Plantilla: constancia_pago.docx (o cualquier .docx cuyo nombre contenga "constancia" y "pago")
+
+Pie de página en el diseño (no mover en Word):
+  - Abajo izquierda: imagen de código de barras (se reemplaza al generar).
+  - Abajo derecha (cuadro de texto anclado): N° 000000001; el sistema reemplaza solo ahí, no en el encabezado.
+  - Abajo izquierda: imagen de código de barras (se regenera con cliente-contrato-venta).
+  - Barcode = código cliente + código contrato + código venta (ej. HAP00001-CT-000003-VT-000003).
+  No coloque marcadores POLARISS en el encabezado superior.
+  El cuerpo solo rellena los campos con … (puntos suspensivos).
+
+La plantilla Word usa líneas de puntos suspensivos (…) como espacios en blanco.
+El sistema reemplaza por párrafo completo los bloques que contienen:
+
+  - Datos del cliente (nombre, DNI, dirección, distrito, provincia, departamento)
+  - Monto total de la venta (número y letras)
+  - Etiqueta y monto de la cuota pagada
+  - Forma de pago y nombre del pagador
+  - Fecha de firma (párrafo con "Huancavelica" y "conformidad")
+  - Nombre y cargo al pie (párrafos finales solo con …)
+
+Pie de página y encabezado (se reemplazan al generar desde Empresa en BD):
+  - Dirección: JR. UCAYALI MZA. 42 LOTE. 10 (AL COSTADO DE UNCP) JUNIN - HUANCAYO - EL TAMBO
+  - TERRAFIRMA ASESORIA & CONSULTORIA S.A.C. RUC: 20612888141 - Celular: 921 047 681
+
+Comando para cargar estos datos en Empresa: python manage.py sync_company_constancia
+
+No modifique el texto fijo "HUANCAVELICA" ni la estructura de los párrafos del cuerpo
+si desea que el reemplazo automático siga funcionando.
+
+Para cambiar el diseño, edite constancia_pago.docx y conserve las frases ancla anteriores.

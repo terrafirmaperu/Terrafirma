@@ -1,0 +1,129 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}Contacto · {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Comuníquese con {{ site_info.brand_name }}: teléfono, correo y formulario de contacto.{% endblock %}
+
+{% block body_class %}marketing-inner-page{% endblock %}
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/marketing-pages.css' %}?v=20260536" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  {% include 'marketing/partials/page_hero.html' with page_title='Contáctanos' page_lead=page_lead page_breadcrumb='Contacto' %}
+
+  <section id="contact" class="contact section">
+    <div class="container" data-aos="fade-up">
+      <div class="row gy-4">
+        <div class="col-lg-5">
+          <div class="info-item d-flex mb-4" data-aos="fade-up">
+            <i class="bi bi-geo-alt flex-shrink-0 icon"></i>
+            <div>
+              <h3>Dirección</h3>
+              <p>{{ site_info.address }}</p>
+            </div>
+          </div>
+          <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="100">
+            <i class="bi bi-telephone flex-shrink-0 icon"></i>
+            <div>
+              <h3>Teléfonos</h3>
+              <p>
+                Celular:
+                {% if site_info.contact_tel_href %}
+                  <a href="{{ site_info.contact_tel_href }}">{{ site_info.phone_mobile }}</a>
+                {% else %}
+                  {{ site_info.phone_mobile }}
+                {% endif %}
+                <br>Fijo: {{ site_info.phone_office }}
+              </p>
+            </div>
+          </div>
+          <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="150">
+            <i class="bi bi-envelope flex-shrink-0 icon"></i>
+            <div>
+              <h3>Correo</h3>
+              <p>
+                <a href="mailto:{{ site_info.email }}">{{ site_info.email }}</a>
+              </p>
+            </div>
+          </div>
+          <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+            <i class="bi bi-clock flex-shrink-0 icon"></i>
+            <div>
+              <h3>Horario</h3>
+              <p>{{ site_info.hours }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} mb-3" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post" action="{% url 'marketing_contacto' %}" class="php-email-form" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3" role="alert">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
+
+            <div class="row gy-3">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                  <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                  <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                  <div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.service.id_for_label }}">{{ form.service.label }}</label>
+                {{ form.service }}
+                {% if form.service.errors %}
+                  <div class="text-danger small mt-1">{{ form.service.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                  <div class="text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <p class="contact-form-note mt-2 mb-3">
+              Al enviar, su consulta llegará a <strong>{{ site_info.email }}</strong>. También puede escribirnos por WhatsApp desde el botón flotante del sitio.
+            </p>
+
+            <button type="submit" class="mt-2">Enviar mensaje</button>
+          </form>
+
+          <div class="contact-map-placeholder mt-4" aria-hidden="true">
+            <span><i class="bi bi-map me-2"></i>Mapa · {{ site_info.address }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

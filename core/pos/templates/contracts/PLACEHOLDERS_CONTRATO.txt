@@ -1,0 +1,25 @@
+Plantillas de contrato Word — carpeta: core/pos/templates/contracts/
+================================================================
+
+Plantilla activa (prioridad):
+  1. contrato_Celia.docx  (o CONTRATO SRA. CELIA.docx)
+  2. contrato_base.docx   (plantilla anterior)
+
+Plantilla Celia (diseño con QR, barcode y N° en cuadros de texto)
+-----------------------------------------------------------------
+  - Abajo / lateral: QR (izquierda) y N° 000000004 en recuadro (derecha).
+    El sistema reemplaza el número según el código de contrato CT-###### → 00000000N.
+  - Pie de página: código de barras (imagen ancha).
+  - QR y barcode se generan con: código de cliente + código de venta (ej. HAP00001-VT-000003).
+  - Datos del cliente: se sustituyen los textos de muestra (nombre, DNI, celular, dirección,
+    distrito, provincia, departamento, monto total, fecha de firma).
+
+Plantilla base (marcadores Polariss, opcional)
+----------------------------------------------
+  [[POLARISS_BARCODE]]  → Código de barras + texto CT
+  [[POLARISS_WEB]]      → URL empresa
+  [[POLARISS_QR]]       → QR + leyenda empresa
+
+Compatibilidad: [[FACTORA_*]] (mismo comportamiento).
+
+Para cambiar el diseño, edite el .docx en esta carpeta y conserve las frases ancla del cuerpo.

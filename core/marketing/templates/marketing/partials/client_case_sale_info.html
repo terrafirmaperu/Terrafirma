@@ -1,0 +1,43 @@
+{% if advisory_case.sale_id and advisory_case.sale %}
+  {% with sale=advisory_case.sale %}
+    <aside class="client-case-sale-info" aria-label="Detalle de la contrata">
+      <h2 class="client-case-sale-info__title h6 text-uppercase mb-2">Su contrata</h2>
+      <dl class="client-case-sale-info__dl mb-0">
+        <div class="client-case-sale-info__row">
+          <dt>Contrato</dt>
+          <dd><code>{{ sale.contract_code|default:"—" }}</code></dd>
+        </div>
+        <div class="client-case-sale-info__row">
+          <dt>Venta</dt>
+          <dd><code>{{ sale.sale_code|default:"—" }}</code></dd>
+        </div>
+        <div class="client-case-sale-info__row">
+          <dt>Fecha</dt>
+          <dd>{{ sale.date_joined|date:"d/m/Y" }}</dd>
+        </div>
+        <div class="client-case-sale-info__row">
+          <dt>Total</dt>
+          <dd>S/ {{ sale.total }}</dd>
+        </div>
+        <div class="client-case-sale-info__row">
+          <dt>Condición</dt>
+          <dd>{{ sale.get_payment_condition_display }}</dd>
+        </div>
+      </dl>
+      {% with details=sale.saledetail_set.all %}
+        {% if details %}
+          <p class="client-case-sale-info__products-label mb-1 mt-3 small text-muted-client">Servicios contratados</p>
+          <ul class="client-case-sale-info__products list-unstyled mb-0">
+            {% for row in details %}
+              <li>
+                <strong>{{ row.product.name }}</strong>
+                {% if row.cant > 1 %}<span class="text-muted-client"> × {{ row.cant }}</span>{% endif %}
+                <span class="text-muted-client"> — S/ {{ row.total }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </aside>
+  {% endwith %}
+{% endif %}

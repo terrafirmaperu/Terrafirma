@@ -1,0 +1,36 @@
+{# Login Factora a pantalla completa: AdminLTE + logo dorado. NO marketing oscuro, NO encadena form/list/skin. #}
+{% extends 'home.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/formvalidation-1.8.0/css/formValidation.min.css' %}">
+    <script src="{% static 'lib/formvalidation-1.8.0/js/es6-shim.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/FormValidation.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/plugins/Bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/locales/es_ES.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<body class="hold-transition login-page">
+{% include 'login/partials/factora_login_box.html' %}
+<script src="{% static 'login/js/login.js' %}"></script>
+<script type="application/javascript">
+    var errors = "";
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                errors += "{{ error }}\n";
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            errors += "{{ error }}\n";
+        {% endfor %}
+        Swal.fire({
+            icon: 'error',
+            title: 'Notificación',
+            text: errors,
+        });
+    {% endif %}
+</script>
+</body>
+{% endblock %}

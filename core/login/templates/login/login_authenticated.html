@@ -1,0 +1,53 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+{% endblock %}
+
+{% block body %}
+<body class="hold-transition login-page factora-session-page">
+    <div class="login-box factora-session-box">
+        <div class="login-box-body">
+            <div class="card factora-session-card">
+                <div class="card-body login-card-body text-center">
+
+                    <div class="factora-session-brand">
+                        {% include 'login/partials/factora_brand_logo.html' %}
+                    </div>
+
+                    <div class="factora-session-user">
+                        <span class="factora-session-avatar" aria-hidden="true">
+                            {% with name=request.user.get_full_name|default:request.user.username %}
+                                {{ name|slice:":1"|upper }}
+                            {% endwith %}
+                        </span>
+                        <h1 class="factora-session-name">{{ request.user.get_full_name|default:request.user.username }}</h1>
+                        <p class="factora-session-greeting text-muted mb-0">
+                            Hola, <strong>{{ request.user.get_short_name|default:request.user.username }}</strong>
+                        </p>
+                    </div>
+
+                    <p class="factora-session-lead">
+                        Ya tienes una sesión activa en <strong>{% if dshboard %}{{ dshboard.name }}{% else %}Qori{% endif %}</strong>.
+                    </p>
+
+                    <a href="{% url 'dashboard' %}" class="btn btn-block btn-flat factora-login-gold factora-session-btn">
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        Continuar con la sesión activa
+                    </a>
+
+                    <p class="factora-session-alt mt-3 mb-0">
+                        <a href="{% url 'login_different' %}">Iniciar sesión como otro usuario</a>
+                    </p>
+
+                    <p class="factora-session-footer mt-4 mb-0">
+                        © {% now "Y" %}
+                        <strong>{% if dshboard %}{{ dshboard.name }}{% else %}Qori{% endif %}</strong>
+                        · Todos los derechos reservados
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}{{ page_title }} · {{ SITE_NAME }}{% endblock %}
+
+{% block body_class %}index-page client-portal-dark{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/client-portal-dark.css' %}?v=20260518-timeline-noclip" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  <section class="client-portal-hero section dark-background">
+    <img src="{% static 'marketing/assets/img/hero-bg.jpg' %}" alt="" class="client-portal-hero__bg" aria-hidden="true">
+
+    <div class="container client-portal-hero__content">
+      {% include 'marketing/partials/client_portal_actions.html' %}
+      <header class="client-timeline-header">
+        <p class="mb-2">
+          <a href="{% url 'cliente_avances' %}"><i class="bi bi-arrow-left"></i> Mis contratas y avances</a>
+        </p>
+        {% include 'marketing/partials/client_cases_switcher.html' %}
+        <h1>{{ advisory_case.title }}</h1>
+        {% if advisory_case.predio_summary %}
+          <p class="mb-1 text-muted-client">{{ advisory_case.predio_summary }}</p>
+        {% endif %}
+        {% include 'marketing/partials/client_case_sale_info.html' %}
+        <p class="mb-2">
+          Etapa <strong>{{ advisory_case.current_stage }}</strong> de <strong>{{ advisory_case.total_stages }}</strong>
+          · {{ timeline_meta.progress_percent }}%
+        </p>
+        <div class="progress-bar-wrap" role="progressbar"
+             aria-valuenow="{{ timeline_meta.progress_percent }}" aria-valuemin="0" aria-valuemax="100"
+             style="--timeline-progress: {{ timeline_meta.progress_percent }}%;">
+          <div class="progress-bar-fill"></div>
+        </div>
+      </header>
+
+      {% include 'marketing/partials/client_timeline.html' %}
+    </div>
+  </section>
+{% endblock %}

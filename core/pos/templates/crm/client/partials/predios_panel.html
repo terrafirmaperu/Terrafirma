@@ -1,0 +1,23 @@
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card card-outline card-secondary client-predios-panel">
+            <div class="card-header py-2">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-map-marked-alt"></i> Predios vinculados
+                </h3>
+            </div>
+            <div class="card-body py-3">
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input client-predios-toggle" id="{{ predios_toggle_id|default:'clientPrediosToggle' }}">
+                    <label class="custom-control-label" for="{{ predios_toggle_id|default:'clientPrediosToggle' }}">
+                        Vincular predio(s) a este cliente
+                    </label>
+                </div>
+                <div id="{{ predios_root_id|default:'clientPrediosRoot' }}" class="client-predios-root" style="display: none;"></div>
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add-client-predio mt-2" style="display: none;">
+                    <i class="fas fa-plus"></i> Agregar otro predio
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

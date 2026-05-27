@@ -1,0 +1,49 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}Asesorías · {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Titulación predial, asesorías municipales, topografía e ingeniería, y programas habitacionales en {{ site_info.brand_name }}.{% endblock %}
+
+{% block body_class %}marketing-inner-page{% endblock %}
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/marketing-pages.css' %}?v=20260536" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  {% include 'marketing/partials/page_hero.html' with page_title='Asesorías' page_lead=page_lead page_breadcrumb='Asesorías' %}
+
+  <section class="section">
+    <div class="container">
+      <p class="text-center mb-5" data-aos="fade-up">
+        Elija el tipo de asesoría que necesita. Cada línea incluye alcance, entregables y coordinación con las entidades que correspondan.
+      </p>
+      {% for block in advisory_sections %}
+        <article id="{{ block.slug }}" class="advisory-block row gy-4 align-items-start" data-aos="fade-up">
+          <div class="col-lg-2 col-md-3">
+            <div class="advisory-icon"><i class="bi {{ block.icon }}"></i></div>
+          </div>
+          <div class="col-lg-10 col-md-9">
+            <h2 class="h4">{{ block.title }}</h2>
+            <p class="lead fs-6">{{ block.lead }}</p>
+            <ul class="mb-3">
+              {% for point in block.items %}
+                <li>{{ point }}</li>
+              {% endfor %}
+            </ul>
+            <a href="{% url 'marketing_contacto' %}?servicio={{ block.slug }}" class="btn btn-sm btn-success">Solicitar cotización</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section light-background">
+    <div class="container text-center" data-aos="fade-up">
+      <div class="home-cta-band">
+        <h3>¿No está seguro qué servicio necesita?</h3>
+        <p class="mb-3">Envíenos una descripción breve de su predio o proyecto y le indicamos el camino más conveniente.</p>
+        <a href="{% url 'marketing_contacto' %}" class="btn btn-success px-4">Contáctanos</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

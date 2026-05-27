@@ -1,0 +1,209 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script type="application/javascript">
+        window.ctasCollectPayUrl = "{% url 'ctascollect_create' %}";
+        window.ctasCollectPrintBaseUrl = "/pos/frm/ctas/collect/print/voucher/";
+    </script>
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
+    <script src="{% static 'frm/ctascollect/js/list.js' %}?v=20260519-constancia-docx"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Cliente</th>
+    <th>Cuotas / referencia</th>
+    <th>Fecha de compra</th>
+    <th>Fecha de plazo</th>
+    <th>Deuda</th>
+    <th>Saldo</th>
+    <th>Estado</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+{% block content_list_before %}
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label>Rangos de fechas:</label>
+                <div class="input-group mb-3">
+                    {{ form.date_range }}
+                    <div class="input-group-append">
+                        <button class="btn btn-success btnSearch" type="button">
+                            <i class="fas fa-calendar-check"></i> Buscar por rangos
+                        </button>
+                        <button class="btn btn-warning btnSearchAll" type="button">
+                            <i class="fas fa-calendar-check"></i> Ver todas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div id="myModalPayQuota" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b><i class="fas fa-money-bill-wave text-success"></i> Pagar cuota</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="payQuotaCtasCollectId">
+                    <div class="form-group">
+                        <label>Cuota</label>
+                        <input type="text" class="form-control" id="payQuotaLabel" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de pago</label>
+                        <input type="date" class="form-control" id="payQuotaDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-success font-weight-bold">S/</span>
+                            </div>
+                            <input type="number" step="0.01" min="0" class="form-control" id="payQuotaAmount">
+                        </div>
+                        <small class="form-text text-muted" id="payQuotaRemainingLabel">Saldo pendiente: S/ 0.00</small>
+                    </div>
+                    <div class="form-group" id="payQuotaPaymentMethodWrap">
+                        <label>Forma de pago <span class="text-danger">*</span></label>
+                        <input type="hidden" id="payQuotaPaymentMethod" value="">
+                        <div class="factora-pay-method-grid" id="payQuotaPaymentMethodGrid" role="group" aria-label="Forma de pago de la cuota">
+                            <button type="button" class="factora-pay-card factora-pay-efectivo pay-quota-method"
+                                    data-value="efectivo" title="Efectivo" aria-pressed="false">
+                                <span class="factora-pay-card-inner">
+                                    <span class="factora-pay-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                    <span class="factora-pay-text">Efectivo</span>
+                                </span>
+                            </button>
+                            <button type="button" class="factora-pay-card factora-pay-yape pay-quota-method"
+                                    data-value="yape" title="Yape" aria-pressed="false">
+                                <span class="factora-pay-card-inner">
+                                    <span class="factora-pay-icon factora-pay-badge-y">Y</span>
+                                    <span class="factora-pay-text">Yape</span>
+                                </span>
+                            </button>
+                            <button type="button" class="factora-pay-card factora-pay-plin pay-quota-method"
+                                    data-value="plin" title="Plin" aria-pressed="false">
+                                <span class="factora-pay-card-inner">
+                                    <span class="factora-pay-icon factora-pay-badge-p">P</span>
+                                    <span class="factora-pay-text">Plin</span>
+                                </span>
+                            </button>
+                        </div>
+                        <small id="payQuotaPaymentMethodError" class="form-text text-danger" style="display: none;">
+                            Seleccione Efectivo, Yape o Plin.
+                        </small>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Detalle</label>
+                        <input type="text" class="form-control" id="payQuotaDesc" maxlength="500">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnSubmitPayQuota">
+                        <i class="fas fa-check"></i> Registrar pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalPrintQuota" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b><i class="fas fa-print"></i> Imprimir</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3">Pago registrado. Elija formato:</p>
+                    <button type="button" class="btn btn-primary btn-block" id="btnPrintQuotaTicket">
+                        <i class="fas fa-receipt"></i> Ticket
+                    </button>
+                    <button type="button" class="btn btn-info btn-block" id="btnPrintQuotaInvoice">
+                        <i class="fas fa-file-signature"></i> Constancia de pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalPayments" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b><i class="fa fa-search"></i> Cliente, plan de cuotas y pagos registrados</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div id="quotaPlanPanel" class="card card-outline card-secondary mb-3" style="display: none;">
+                            <div class="card-header py-2">
+                                <strong class="text-dark"><i class="fas fa-user"></i> Cliente y cuotas</strong>
+                            </div>
+                            <div class="card-body py-2">
+                                <p class="mb-1" id="qpClientLine"></p>
+                                <p class="mb-2 text-muted small" id="qpSaleLine"></p>
+                                <p class="mb-2 small" id="qpSummaryLine"></p>
+                                <p class="mb-1 small font-weight-bold">Plan de cuotas programadas (cada 25 días)</p>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-center" style="width: 30%;">Cuota</th>
+                                            <th class="text-center" style="width: 35%;">Fecha programada</th>
+                                            <th class="text-center" style="width: 35%;">Monto</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tblQuotaPlanBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="small font-weight-bold mb-2">Pagos registrados en cuenta</p>
+                                <table width="100%"
+                                       class="table table-bordered display nowrap"
+                                       id="tblPayments">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10%;">Nro</th>
+                                        <th style="width: 20%;">Fecha de registro</th>
+                                        <th style="width: 15%;">Valor</th>
+                                        <th style="width: 20%;">Detalles</th>
+                                        <th style="width: 28%;">Cuota pagada / imprimir</th>
+                                        <th style="width: 10%;">Opciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_list %}
+
+{% endblock %}

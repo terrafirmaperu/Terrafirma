@@ -1,0 +1,80 @@
+{% extends 'report.html' %}
+{% load static %}
+{% block head_report %}
+    <script src="{% static 'client_report/js/report.js' %}?v=20260518-clients" type="text/javascript"></script>
+{% endblock %}
+{% block content_report %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label>Tipo de ubicación del predio</label>
+                <select class="form-control" id="filterLocationType">
+                    <option value="">Todos los clientes</option>
+                    <option value="community">Con comunidad registrada</option>
+                    <option value="population_center">Con centro poblado registrado</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Comunidad</label>
+                <select class="form-control" id="filterCommunity">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Centro poblado</label>
+                <select class="form-control" id="filterPopulationCenter">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Provincia</label>
+                <select class="form-control" id="filterProvince">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Distrito</label>
+                <select class="form-control" id="filterDistrict">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <button class="btn btn-success btnSearchReport" type="button">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+            <button class="btn btn-warning btnSearchAll" type="button">
+                <i class="fas fa-users"></i> Ver todos los clientes
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <hr>
+            <table class="table table-bordered table-striped" id="tblReport" width="100%">
+                <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>DNI</th>
+                    <th>Proceso / avance</th>
+                    <th>Celular</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

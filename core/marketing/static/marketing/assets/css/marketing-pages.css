@@ -1,0 +1,193 @@
+/* Páginas institucionales Terrafirma */
+.marketing-inner-page .page-hero {
+  width: 100%;
+  min-height: 42vh;
+  position: relative;
+  padding: 100px 0 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marketing-inner-page .page-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.marketing-inner-page .page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.68) 45%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 2;
+}
+
+.marketing-inner-page .page-hero .container {
+  position: relative;
+  z-index: 3;
+}
+
+.marketing-inner-page .page-hero h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
+
+.marketing-inner-page .page-hero .lead {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  max-width: 42rem;
+}
+
+.marketing-inner-page .page-hero .lead strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.marketing-inner-page .breadcrumb-nav {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.marketing-inner-page .breadcrumb-nav a {
+  color: var(--accent-color);
+}
+
+.marketing-inner-page .breadcrumb-nav span:not(.mx-1) {
+  color: #ffffff;
+}
+
+.marketing-stat-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-color), transparent 30%);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+  height: 100%;
+}
+
+.marketing-stat-card strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--accent-color);
+  line-height: 1.1;
+}
+
+.marketing-stat-card span {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+}
+
+.mkt-service-card {
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mkt-service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.mkt-service-card .icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--accent-color), transparent 82%);
+  color: var(--accent-color);
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.mkt-service-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.mkt-portfolio-card {
+  border-left: 4px solid var(--accent-color);
+  padding: 1.25rem 1.25rem 1.25rem 1rem;
+  background: color-mix(in srgb, var(--surface-color), transparent 20%);
+  border-radius: 0 8px 8px 0;
+  height: 100%;
+}
+
+.mkt-portfolio-card .badge {
+  background: color-mix(in srgb, var(--accent-color), transparent 75%);
+  color: var(--heading-color);
+  font-weight: 600;
+}
+
+.advisory-block {
+  scroll-margin-top: 120px;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+}
+
+.advisory-block:last-child {
+  border-bottom: 0;
+}
+
+.advisory-block .advisory-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  background: color-mix(in srgb, var(--accent-color), transparent 80%);
+  color: var(--accent-color);
+}
+
+.contact-map-placeholder {
+  min-height: 260px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--default-color), transparent 94%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  border: 1px dashed color-mix(in srgb, var(--default-color), transparent 80%);
+}
+
+.contact-form-note {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.home-cta-band {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-color), transparent 70%),
+    color-mix(in srgb, var(--heading-color), transparent 20%)
+  );
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+}
+
+.home-cta-band h3 {
+  margin-bottom: 0.5rem;
+}

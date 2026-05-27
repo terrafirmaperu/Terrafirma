@@ -1,0 +1,488 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+{% load security_extras %}
+{% load static %}
+{% block head_form %}
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin-4.2.5/css/jquery.bootstrap-touchspin.css' %}"/>
+    <script src="{% static 'lib/bootstrap-touchspin-4.2.5/js/jquery.bootstrap-touchspin.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'crm/client/css/predios.css' %}?v=20260518-sale-process"/>
+    <script src="{% static 'crm/client/js/predios.js' %}?v=20260518-community"></script>
+    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260518-dup-guard"></script>
+{% endblock %}
+
+{% block content %}
+    <form id="frmSale" method="post" data-url="{% url 'sale_admin_list' %}" autocomplete="off">
+        <div class="card {{ dshboard.card }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {% if action == 'add' %}
+                        <i class="fas fa-plus"></i>
+                    {% else %}
+                        <i class="fas fa-edit"></i>
+                    {% endif %}
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    {% csrf_token %}
+                    <input type="hidden" id="action" name="action" value="{{ action }}">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-8 card p-3 pb-0">
+                            <h3 class="mb-0"><b><i class="fas fa-boxes"></i> Detalle de Venta</b></h3><br>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Búsqueda de productos:</label>
+                                        <div class="input-group input-group-search">
+                                            <input type="text" class="form-control" autocomplete="off"
+                                                   name="searchproducts"
+                                                   placeholder="Nombre del producto o categoría (mín. 2 caracteres)">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false"><i class="fas fa-tasks"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" style="cursor: pointer;">
+                                                    <a class="dropdown-item btnSearchProducts"><i class="fas fa-search"></i> Buscar
+                                                        productos</a>
+                                                    <a class="dropdown-item btnClearProducts"><i class="fas fa-times"></i> Limpiar
+                                                        búsqueda</a>
+                                                    <a class="dropdown-item btnRemoveAllProducts"><i class="fas fa-trash-alt"></i>
+                                                        Borrar todo</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <table width="100%" class="table table-bordered table-striped display nowrap"
+                                           id="tblProducts">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Eliminar</th>
+                                            <th style="width: 15%;">Producto</th>
+                                            <th style="width: 20%;">Cantidad</th>
+                                            <th style="width: 8%;">Precio</th>
+                                            <th style="width: 8%;">Subtotal</th>
+                                            <th style="width: 20%;">Dscto %</th>
+                                            <th style="width: 8%;">Valor Dscto</th>
+                                            <th style="width: 8%;">Subtotal final</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4 card p-3">
+                            <h3 class="mb-0 pb-0"><b><i class="fas fa-shopping-cart"></i> Factura</b></h3><br>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Buscar cliente:</label>
+                                        <div class="input-group input-group-search">
+                                            {{ form.client }}
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false"><i class="fas fa-tasks"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" style="cursor: pointer;">
+                                                    <a class="dropdown-item btnAddClient">
+                                                        <i class="fas fa-plus"></i> Crear cliente
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="saleClientPropertiesWrap" style="display: none;">
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-2">
+                                        <label class="control-label mb-1">
+                                            <i class="fas fa-map-marker-alt"></i> Predios vinculados al cliente
+                                        </label>
+                                        <div id="saleClientPropertiesList" class="border rounded p-2 bg-light"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Forma de pago:</label>
+                                        {{ form.payment_condition }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Método de pago:</label>
+                                        <div class="factora-pay-method-grid" role="group" aria-label="Método de pago">
+                                            <button type="button" class="factora-pay-card factora-pay-efectivo" data-value="efectivo" title="Efectivo">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                                    <span class="factora-pay-text">Efectivo</span>
+                                                </span>
+                                            </button>
+                                            <button type="button" class="factora-pay-card factora-pay-yape" data-value="yape" title="Yape">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon factora-pay-badge-y">Y</span>
+                                                    <span class="factora-pay-text">Yape</span>
+                                                </span>
+                                            </button>
+                                            <button type="button" class="factora-pay-card factora-pay-plin" data-value="plin" title="Plin">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon factora-pay-badge-p">P</span>
+                                                    <span class="factora-pay-text">Plin</span>
+                                                </span>
+                                            </button>
+                                            <button type="button" class="factora-pay-card factora-pay-tarjeta" data-value="tarjeta_debito_credito" title="Tarjeta">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon"><i class="fas fa-credit-card"></i></span>
+                                                    <span class="factora-pay-text">Tarjeta</span>
+                                                </span>
+                                            </button>
+                                            <button type="button" class="factora-pay-card factora-pay-mixto" data-value="efectivo_tarjeta" title="Efectivo y Tarjeta">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon"><i class="fas fa-hand-holding-usd"></i></span>
+                                                    <span class="factora-pay-text">Efectivo y Tarjeta</span>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        {{ form.payment_method }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Comprobante:</label>
+                                        {{ form.type_voucher }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Total a pagar:</label>
+                                        {{ form.amount }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row rowVents">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Efectivo recibido:</label>
+                                        {{ form.cash }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Cambio:</label>
+                                        {{ form.change }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row rowVents">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Número de tarjeta:</label>
+                                        {{ form.card_number }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Titular:</label>
+                                        {{ form.titular }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Monto a debitar:</label>
+                                        {{ form.amount_debited }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row rowVents">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Fecha limite de credito:</label>
+                                        {{ form.end_credit }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row rowVents">
+                                <div class="col-lg-12 mb-1">
+                                    <small class="text-muted"><i class="fas fa-info-circle"></i> Pago en cuotas (solo crédito)</small>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label class="control-label">Número de cuotas:</label>
+                                        <select name="credit_quota_count" class="form-control select_credit_quota_count">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label class="control-label">Inicial (S/):</label>
+                                        <input type="text" name="credit_down_payment" class="form-control"
+                                               autocomplete="off" value="0.00"
+                                               placeholder="0.00">
+                                        <small id="creditCuotasHelp" class="form-text text-muted"></small>
+                                        <div id="creditCuotasSchedule" class="mt-2" style="display:none;">
+                                            <small class="form-text font-weight-bold">Fechas programadas (cada 25 días):</small>
+                                            <ul id="creditCuotasScheduleList" class="list-unstyled mb-0 ml-2 small text-muted"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="credit_down_payment_method" id="credit_down_payment_method"
+                                       value="efectivo">
+                                <div class="col-lg-12 mt-2 credit-inicial-metodo-wrap" style="display: none;">
+                                    <label class="control-label">Inicial pagada con:</label>
+                                    <div class="factora-pay-method-grid factora-credit-inicial-grid" role="group"
+                                         aria-label="Método de pago de la inicial">
+                                        <button type="button" class="factora-pay-card factora-pay-efectivo credit-inicial-pay"
+                                                data-value="efectivo" title="Efectivo">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                                    <span class="factora-pay-text">Efectivo</span>
+                                                </span>
+                                        </button>
+                                        <button type="button" class="factora-pay-card factora-pay-yape credit-inicial-pay"
+                                                data-value="yape" title="Yape">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon factora-pay-badge-y">Y</span>
+                                                    <span class="factora-pay-text">Yape</span>
+                                                </span>
+                                        </button>
+                                        <button type="button" class="factora-pay-card factora-pay-plin credit-inicial-pay"
+                                                data-value="plin" title="Plin">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon factora-pay-badge-p">P</span>
+                                                    <span class="factora-pay-text">Plin</span>
+                                                </span>
+                                        </button>
+                                        <button type="button" class="factora-pay-card factora-pay-tarjeta credit-inicial-pay"
+                                                data-value="tarjeta_debito_credito" title="Tarjeta">
+                                                <span class="factora-pay-card-inner">
+                                                    <span class="factora-pay-icon"><i class="fas fa-credit-card"></i></span>
+                                                    <span class="factora-pay-text">Tarjeta</span>
+                                                </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row d-flex flex-row-reverse">
+                                <div class="col-lg-12">
+                                    <table class="table table-bordered table-sm">
+                                        <tbody>
+                                        <tr>
+                                            <td><b>BASE IMPONIBLE</b><br><small class="text-muted">Precios con IGV incluido</small></td>
+                                            <td>{{ form.subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>DESCUENTO %</b></td>
+                                            <td>{{ form.dscto }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>VALOR DESCUENTO</b></td>
+                                            <td>{{ form.total_dscto }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>IGV %</b></td>
+                                            <td>{{ form.igv }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>VALOR IGV</b></td>
+                                            <td>{{ form.total_igv }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>TOTAL A PAGAR</b></td>
+                                            <td>{{ form.total }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-flat btnCollect">
+                    <i class="fas fa-file-invoice-dollar"></i> Facturar e imprimir
+                </button>
+                <button type="button" class="btn btn-warning btn-flat btnProforma">
+                    <i class="fas fa-file-alt"></i> Crear Proforma
+                </button>
+                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+    <div id="myModalSearchProducts" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b><i class="fa fa-search"></i> Búsqueda de productos</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table width="100%" class="table table-bordered table-hover table-sm" id="tblSearchProducts">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>P./Unitario</th>
+                                <th>P./Promoción</th>
+                                <th>Agregar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalClient" class="modal fade" role="dialog">
+        <form class="form" id="frmClient" method="POST">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <b><i class="fa fa-plus"></i> Nuevo registro de un cliente</b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            {% for field in frmClient.visible_fields %}
+                                {% if forloop.first %}
+                                    <div class="row">
+                                {% endif %}
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>{{ field.label }}:</label>
+                                    {% if field|is_checkbox %}
+                                        <br>
+                                    {% endif %}
+                                    {{ field }}
+                                </div>
+                            </div>
+                            {% if forloop.last %}
+                                </div>
+                            {% elif forloop.counter|divisibleby:2 %}
+                                </div>
+                                <div class="row">
+                            {% endif %}
+                            {% endfor %}
+                            </div>
+                            {% include 'crm/client/partials/predios_panel.html' with predios_root_id='modalClientPrediosRoot' predios_toggle_id='modalClientPrediosToggle' %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-flat btn-block">
+                            <i class="fas fa-save"></i> Guardar registro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    {% include 'crm/client/partials/supervisor_predio_unlock_modal.html' %}
+    <script type="application/javascript">
+        window.SUPERVISOR_PREDIO_UNLOCK_URL = '{% url "verify_supervisor_predio_unlock" %}';
+    </script>
+    <div id="myModalContrata" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b><i class="fas fa-file-signature"></i> Generar contrata</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-2">
+                        La contrata se descargará en Word (.docx) con la misma plantilla y formato oficial.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnContrataSkip">
+                        Omitir por ahora
+                    </button>
+                    <button type="button" class="btn btn-info" id="btnContrataPrint">
+                        <i class="fas fa-file-word"></i> Descargar contrato Word
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnContrataDone">
+                        <i class="fas fa-check"></i> Finalizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ client_properties|json_script:"modal-client-properties-data" }}
+    {{ predio_type_choices|json_script:"modal-predio-type-choices" }}
+    {{ peru_departments|json_script:"modal-peru-departments-data" }}
+    {{ predio_products_catalog|json_script:"modal-predio-products-catalog" }}
+    <script type="application/javascript">
+        vents.details.igv = parseFloat('{{ igv }}');
+        $(function () {
+            vents.list_products();
+            var modalRoot = document.getElementById('modalClientPrediosRoot');
+            if (modalRoot && typeof ClientPredios !== 'undefined') {
+                var initial = [];
+                var types = [];
+                var departments = [];
+                var productsCatalog = [];
+                try {
+                    initial = JSON.parse(document.getElementById('modal-client-properties-data').textContent);
+                } catch (e) {}
+                try {
+                    types = JSON.parse(document.getElementById('modal-predio-type-choices').textContent);
+                } catch (e) {}
+                try {
+                    departments = JSON.parse(document.getElementById('modal-peru-departments-data').textContent);
+                } catch (e) {}
+                try {
+                    productsCatalog = JSON.parse(document.getElementById('modal-predio-products-catalog').textContent);
+                } catch (e) {}
+                window.__salePredioTypes = types;
+                window.__salePredioDepartments = departments;
+                window.__salePredioProducts = productsCatalog;
+                ClientPredios.init(modalRoot, {
+                    initial: initial,
+                    types: types,
+                    departments: departments,
+                    productsCatalog: productsCatalog,
+                });
+            }
+        });
+    </script>
+{% endblock %}

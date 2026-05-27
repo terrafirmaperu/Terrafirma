@@ -1,0 +1,22 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}Inicio · {{ SITE_NAME }}{% endblock %}
+
+{% block body_class %}index-page{% endblock %}
+
+{% block marketing_main %}
+  <section id="hero" class="hero section dark-background">
+    <img src="{% static 'marketing/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+      <h2>Asesoría en titulación predial</h2>
+      <p>En toda la <span class="typed" data-typed-items="Costa, Sierra, Selva"></span><span class="typed-cursor typed-cursor--blink"></span></p>
+      <div class="social-links">
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+        <a href="#"><i class="bi bi-tiktok"></i></a>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Nueva contraseña{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 style="margin-top:0;text-align:center;">{{ title }}</h2>
+  <form id="frm-change" method="post" action="">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field|add_class:'form-control' }}
+    {% endfor %}
+    <button type="submit">Guardar</button>
+  </form>
+</div>
+<script>
+document.getElementById('frm-change').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const fd = new FormData(this);
+  fetch(window.location.pathname, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+    .then(r => r.json()).then(d => {
+      if (d.error) alert(typeof d.error === 'object' ? JSON.stringify(d.error) : d.error);
+      else window.location.href = '{% url "login" %}';
+    });
+});
+</script>
+{% endblock %}

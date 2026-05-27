@@ -1,0 +1,58 @@
+{% load static %}
+<header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+    <a href="{% url 'home' %}" class="logo d-flex align-items-center" title="{{ SITE_NAME }}">
+      <img src="{% static 'marketing/assets/img/favicon.png' %}" alt="{{ SITE_NAME }}" style="height: 90px;">
+    </a>
+    <div class="d-flex align-items-center flex-shrink-0 gap-2 gap-xl-3">
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li>
+            <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Inicio</a>
+          </li>
+          <li>
+            <a href="{% url 'marketing_quienes' %}" {% if request.resolver_match.url_name == 'marketing_quienes' %}class="active"{% endif %}>Quiénes somos</a>
+          </li>
+          <li>
+            <a href="{% url 'marketing_servicios' %}" {% if request.resolver_match.url_name == 'marketing_servicios' %}class="active"{% endif %}>Proyectos en cartera</a>
+          </li>
+          <li>
+            <a href="{% url 'marketing_contacto' %}" {% if request.resolver_match.url_name == 'marketing_contacto' %}class="active"{% endif %}>Contáctanos</a>
+          </li>
+          <li class="dropdown">
+            <a href="#"><span>Asesorías</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'marketing_asesorias' %}">Titulación</a></li>
+              <li><a href="{% url 'marketing_asesorias' %}">Asesorías municipales</a></li>
+              <li><a href="{% url 'marketing_asesorias' %}">Topografía, ingeniería y seguridad</a></li>
+              <li><a href="{% url 'marketing_asesorias' %}">Fondo Mi Vivienda y Techo Propio</a></li>
+            </ul>
+          </li>
+          <li class="nav-cta">
+            <a href="{% url 'login' %}" class="btn btn-success btn-sm px-3"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Ingreso a Qori</a>
+          </li>
+          <li class="nav-cta">
+            <a href="{% if cliente_portal %}{% url 'cliente_avances' %}{% else %}{% url 'cliente_login' %}{% endif %}" class="btn btn-outline-info btn-sm px-3"><i class="bi bi-person-circle" aria-hidden="true"></i> Usuario cliente</a>
+          </li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      {% if user.is_authenticated %}
+        <div class="web-user-label d-flex align-items-center flex-shrink-0" title="{{ user.get_full_name|default:user.get_username }}">
+          <i class="bi bi-person-circle me-2" aria-hidden="true"></i>
+          <span>{{ user.get_full_name|default:user.get_username }}</span>
+        </div>
+      {% elif cliente_portal %}
+        <div class="web-user-label d-flex align-items-center flex-shrink-0 flex-wrap justify-content-end gap-2" title="{{ cliente_portal.user.get_full_name|default:cliente_portal.user.get_username }}">
+          <span class="d-inline-flex align-items-center">
+            <i class="bi bi-person-badge me-2" aria-hidden="true"></i>
+            <span>{{ cliente_portal.user.get_full_name|default:cliente_portal.user.get_username }}</span>
+          </span>
+          <a href="{% url 'cliente_logout' %}" class="btn btn-outline-light btn-sm py-0 px-2">Salir</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</header>

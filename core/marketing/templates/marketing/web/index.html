@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+      body {
+      margin: 0;
+      height: 100vh; /* que ocupe toda la pantalla */
+      display: flex;
+      justify-content: center; /* centrar horizontal */
+      align-items: center;     /* centrar vertical */
+          /* color de fondo opcional */
+    }
+
+
+      .contenedor{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; 
+
+    }
+        .circulo {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: green 5px solid;
+      display: inline-block;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      animation: girar 4s linear infinite;
+    }
+
+      #textos{
+        border: blue solid 15px;
+
+      }
+      @keyframes girar{
+        from{
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(360deg);
+        }
+      }
+
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="circulo" aria-label="círculo decorativo" style="color: red solid 30px;"></div>
+        <div id="textos">Hola mundo</div>
+    </div>
+    
+    
+</body>
+</html>

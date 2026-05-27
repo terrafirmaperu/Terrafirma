@@ -1,0 +1,17 @@
+{% load static %}
+<section class="page-hero section dark-background" aria-labelledby="page-hero-title">
+  <img src="{% static 'marketing/assets/img/hero-bg.jpg' %}" alt="">
+  <div class="container" data-aos="fade-up">
+    <h1 id="page-hero-title">{% block page_hero_title %}{{ page_title }}{% endblock %}</h1>
+    {% if page_lead %}
+      <p class="lead">{{ page_lead }}</p>
+    {% endif %}
+    {% if page_breadcrumb %}
+      <nav class="breadcrumb-nav" aria-label="Miga de pan">
+        <a href="{% url 'home' %}">Inicio</a>
+        <span class="mx-1">/</span>
+        <span>{{ page_breadcrumb }}</span>
+      </nav>
+    {% endif %}
+  </div>
+</section>

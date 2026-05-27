@@ -1,0 +1,40 @@
+/* Overrides compartidos: barra de marketing (nav CTA + usuario logueado) */
+#navmenu > ul > li.nav-cta {
+  display: flex;
+  align-items: center;
+}
+@media (min-width: 1200px) {
+  #navmenu > ul > li.nav-cta {
+    margin-left: 0.35rem;
+  }
+}
+#navmenu .nav-cta .btn i {
+  margin-right: 0.55rem;
+  vertical-align: -0.1em;
+}
+.header .web-user-label {
+  font-family: var(--nav-font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--nav-color);
+  max-width: min(240px, 32vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.header .web-user-label i {
+  font-size: 1.15rem;
+  vertical-align: -0.1em;
+  opacity: 0.92;
+}
+@media (max-width: 1199.98px) {
+  .header .web-user-label {
+    max-width: min(180px, 40vw);
+    font-size: 0.85rem;
+  }
+}
+
+/* Páginas interiores: espacio bajo header fijo */
+.marketing-inner-page .main {
+  padding-top: 120px;
+}

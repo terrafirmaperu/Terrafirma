@@ -1,0 +1,118 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}Acceso cliente · {{ SITE_NAME }}{% endblock %}
+
+{% block body_class %}marketing-inner-page client-portal-light client-portal-area client-portal-login{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/client-portal.css' %}?v=20260539" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  <div class="container-fluid client-portal-login-screen px-2 px-md-3 py-3">
+    <div class="row row-cols-1 row-cols-md-3 g-3 align-items-stretch client-portal-login-row">
+      <div class="col client-portal-login-col">
+        <div class="client-portal-login-col-inner">
+          <p class="client-portal-login-col-hint">Asesorías</p>
+          <div class="d-grid gap-3">
+            <a href="{% url 'marketing_asesorias' %}" class="client-portal-svc-card client-portal-svc-card--t1">
+              <div class="client-portal-svc-card__visual" role="presentation" aria-hidden="true"></div>
+              <div class="client-portal-svc-card__panel">
+                <div class="client-portal-svc-card__panel-bg" aria-hidden="true"></div>
+                <div class="client-portal-svc-card__inner">
+                  <span class="client-portal-svc-card__title">Título de propiedad</span>
+                  <span class="client-portal-svc-card__desc">Registro SUNARP, saneamiento y titulación de predios.</span>
+                  <span class="client-portal-svc-card__cta">Solicitar cotización</span>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'marketing_asesorias' %}" class="client-portal-svc-card client-portal-svc-card--t2">
+              <div class="client-portal-svc-card__visual" role="presentation" aria-hidden="true"></div>
+              <div class="client-portal-svc-card__panel">
+                <div class="client-portal-svc-card__panel-bg" aria-hidden="true"></div>
+                <div class="client-portal-svc-card__inner">
+                  <span class="client-portal-svc-card__title">Asesorías municipales</span>
+                  <span class="client-portal-svc-card__desc">Gestión y acompañamiento ante entidades locales.</span>
+                  <span class="client-portal-svc-card__cta">Solicitar cotización</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col client-portal-login-col">
+        <div class="client-portal-login-col-inner">
+          <p class="client-portal-login-col-hint">Asesorías</p>
+          <div class="d-grid gap-3">
+            <a href="{% url 'marketing_asesorias' %}" class="client-portal-svc-card client-portal-svc-card--t3">
+              <div class="client-portal-svc-card__visual" role="presentation" aria-hidden="true"></div>
+              <div class="client-portal-svc-card__panel">
+                <div class="client-portal-svc-card__panel-bg" aria-hidden="true"></div>
+                <div class="client-portal-svc-card__inner">
+                  <span class="client-portal-svc-card__title">Estudios topográficos e ingeniería</span>
+                  <span class="client-portal-svc-card__desc">Modelos de terreno, curvas de nivel y batimetría.</span>
+                  <span class="client-portal-svc-card__cta">Solicitar cotización</span>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'marketing_asesorias' %}" class="client-portal-svc-card client-portal-svc-card--t4">
+              <div class="client-portal-svc-card__visual" role="presentation" aria-hidden="true"></div>
+              <div class="client-portal-svc-card__panel">
+                <div class="client-portal-svc-card__panel-bg" aria-hidden="true"></div>
+                <div class="client-portal-svc-card__inner">
+                  <span class="client-portal-svc-card__title">Fondo Mi Vivienda y Techo Propio</span>
+                  <span class="client-portal-svc-card__desc">Orientación para acceder a programas habitacionales.</span>
+                  <span class="client-portal-svc-card__cta">Solicitar cotización</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col client-portal-login-col client-portal-form-col">
+        <div class="client-portal-login-col-inner client-portal-login-col-inner--form">
+          <div class="client-portal-form-stack w-100">
+            <div class="mb-3">
+              <img src="{% static 'marketing/assets/img/qori.png' %}" alt="Qori" class="client-portal-form-logo mx-auto d-block">
+            </div>
+            <h1 class="client-portal-form-page-title">Acceso para clientes</h1>
+            <p class="client-portal-form-page-lead small mb-3">Ingrese con su DNI y el código de cliente que le asignamos.</p>
+
+            <div class="client-portal-login-box">
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'info' %}info{% else %}secondary{% endif %} mb-3 py-2 small" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+
+              <form method="post" action="{% url 'cliente_login' %}" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger small mb-3">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <div class="mb-3 text-start">
+                  <label class="form-label" for="id_dni">{{ form.dni.label }}</label>
+                  {{ form.dni }}
+                  {% if form.dni.errors %}<div class="text-danger small mt-1">{{ form.dni.errors }}</div>{% endif %}
+                </div>
+                <div class="mb-4 text-start">
+                  <label class="form-label" for="id_client_code">{{ form.client_code.label }}</label>
+                  {{ form.client_code }}
+                  {% if form.client_code.errors %}<div class="text-danger small mt-1">{{ form.client_code.errors }}</div>{% endif %}
+                </div>
+                <button type="submit" class="client-portal-pill-btn client-portal-pill-btn--submit w-100">Ingresar</button>
+              </form>
+            </div>
+
+            <p class="small mt-3 mb-0">
+              <a href="{% url 'home' %}" class="client-portal-hero-link">Volver al inicio</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

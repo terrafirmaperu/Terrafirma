@@ -1,0 +1,145 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script type="application/javascript">
+        window.saleAdminListPostUrl = "{% url 'sale_admin_list' %}";
+    </script>
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
+    <script src="{% static 'crm/sale/admin/js/list.js' %}"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Cód. venta</th>
+    <th>Cód. contrato</th>
+    <th>Cliente</th>
+    <th>Forma de Pago</th>
+    <th>Método de Pago</th>
+    <th>Inicial</th>
+    <th>Comprobante</th>
+    <th>Fecha de registro</th>
+    <th>Total a pagar</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+{% block javascript_list %}
+    <div class="modal fade" id="myModalDetails" role="dialog">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b><i class="fa fa-search"></i> Detalle de la venta</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#home">
+                                    Datos de la factura
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#menu1">
+                                    Productos
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane container-fluid active" id="home">
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table width="100%"
+                                               class="table table-bordered table-striped" id="tblInvoice">
+                                            <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane container-fluid fade" id="menu1">
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table width="100%"
+                                               class="table table-bordered table-striped table-sm display nowrap" id="tblDetails">
+                                            <thead>
+                                            <tr>
+                                                <th style="width: 25%;">Producto</th>
+                                                <th style="width: 15%;">Categoría</th>
+                                                <th style="width: 10%;">Precio Unitario</th>
+                                                <th style="width: 10%;">Cantidad</th>
+                                                <th style="width: 10%;">Subtotal</th>
+                                                <th style="width: 10%;">Dscto</th>
+                                                <th style="width: 10%;">Total Dscto</th>
+                                                <th style="width: 10%;">Total</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalContract" role="dialog" aria-labelledby="myModalContractTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="myModalContractTitle">
+                        <b><i class="fas fa-file-signature"></i> Contrato</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-0 bg-light">
+                    <iframe id="contractPreviewFrame" title="Vista previa del contrato"
+                            style="width: 100%; min-height: 70vh; border: 0; display: block; background: #fff;"></iframe>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnContractDownload" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-word"></i> Descargar Word
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_list_before %}
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label>Rangos de fechas:</label>
+                <div class="input-group mb-3">
+                    {{ form.date_range }}
+                    <div class="input-group-append">
+                        <button class="btn btn-success btnSearch" type="button">
+                            <i class="fas fa-calendar-check"></i> Buscar por rangos
+                        </button>
+                        <button class="btn btn-warning btnSearchAll" type="button">
+                            <i class="fas fa-calendar-check"></i> Ver todas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+{% endblock %}

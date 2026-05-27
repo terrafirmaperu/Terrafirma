@@ -1,0 +1,313 @@
+/* Timeline portal cliente — fondo como inicio (hero oscuro + imagen) */
+
+body.client-timeline-page {
+  background-color: #000;
+}
+
+body.client-timeline-page .main {
+  padding-top: 0;
+}
+
+/* Bloque hero (igual concepto que #hero en inicio) */
+.client-timeline-hero {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 100px 0 48px;
+  overflow: hidden;
+}
+
+.client-timeline-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Capa oscura como en la portada */
+.client-timeline-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.85) 50%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+  pointer-events: none;
+}
+
+.client-timeline-hero__content {
+  position: relative;
+  z-index: 3;
+}
+
+.client-timeline-header {
+  margin-bottom: 24px;
+  max-width: 900px;
+}
+
+.client-timeline-header h1 {
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+.client-timeline-header a {
+  color: var(--accent-color, #18d26e);
+}
+
+.client-timeline-header .text-muted-client {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.client-timeline-header .progress-bar-wrap {
+  height: 6px;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.client-timeline-header .progress-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(
+    90deg,
+    #ff2b06,
+    #ff7300 20%,
+    #ffd000 45%,
+    #b8ff72 65%,
+    #79f0ff 85%,
+    #00cfff
+  );
+}
+
+/* Scroll horizontal del lienzo 1400px */
+.client-timeline-scroll-hint {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 8px;
+}
+
+.client-timeline-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 16px;
+}
+
+/* === Diseño timeline (HTML de referencia) === */
+.client-timeline-scroll .timeline-section {
+  position: relative;
+  width: 1400px;
+  min-width: 1400px;
+  height: 700px;
+  margin: 0 auto;
+  padding: 40px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+}
+
+.client-timeline-scroll .svg-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.client-timeline-scroll .svg-line path {
+  fill: none;
+  stroke: url(#gradientLine);
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.client-timeline-scroll .timeline-item {
+  position: absolute;
+  width: 220px;
+  color: #d9d9d9;
+  z-index: 15;
+}
+
+.client-timeline-scroll .timeline-item .year {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 2px solid #999;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 10px;
+  background: #111;
+  color: #d9d9d9;
+}
+
+.client-timeline-scroll .timeline-item.is-done .year {
+  border-color: #79f0ff;
+  color: #79f0ff;
+}
+
+.client-timeline-scroll .timeline-item.is-current .year {
+  border-color: #ffd000;
+  color: #ffd000;
+}
+
+.client-timeline-scroll .timeline-item h3 {
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.client-timeline-scroll .timeline-item p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #c7c7c7;
+  margin: 0;
+}
+
+.client-timeline-scroll .timeline-item__icon {
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.client-timeline-scroll .timeline-item.is-current .timeline-item__icon {
+  border-color: #ffd000;
+  color: #ffd000;
+}
+
+.client-timeline-scroll .timeline-item__accent {
+  display: block;
+  height: 3px;
+  width: 70px;
+  margin: 8px 0;
+  border-radius: 2px;
+}
+
+.client-timeline-scroll .accent-0 {
+  background: linear-gradient(90deg, #ff2b06, #ff7300);
+}
+
+.client-timeline-scroll .accent-1 {
+  background: linear-gradient(90deg, #ff7300, #ffd000);
+}
+
+.client-timeline-scroll .accent-2 {
+  background: linear-gradient(90deg, #ffd000, #b8ff72);
+}
+
+.client-timeline-scroll .accent-3 {
+  background: linear-gradient(90deg, #79f0ff, #00cfff);
+}
+
+.client-timeline-scroll .dot {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #d9d9d9;
+  border-radius: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+.client-timeline-scroll .dot.is-current {
+  background: #ffd000;
+  box-shadow: 0 0 12px rgba(255, 208, 0, 0.8);
+}
+
+.client-timeline-scroll .dot.is-done {
+  background: #79f0ff;
+}
+
+.client-timeline-scroll .big-dot {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 22px;
+  color: #111;
+  position: absolute;
+  z-index: 12;
+  transform: translateY(-50%);
+}
+
+.client-timeline-scroll .big-dot.start {
+  left: 40px;
+  top: 58%;
+  background: #ff2b06;
+  color: #111;
+  font-size: 14px;
+}
+
+.client-timeline-scroll .big-dot.end {
+  right: 40px;
+  top: 48%;
+  background: #00cfff;
+}
+
+.client-timeline-scroll .connector {
+  position: absolute;
+  width: 2px;
+  background: #8e8e8e;
+  z-index: 5;
+  transform: translateX(-50%);
+}
+
+.client-timeline-scroll .connector.is-current {
+  background: #ffd000;
+}
+
+.client-timeline-scroll .connector.is-done {
+  background: #79f0ff;
+}
+
+/* Posiciones del mockup */
+.client-timeline-scroll .item1 { top: 120px; left: 180px; }
+.client-timeline-scroll .item2 { top: 320px; left: 330px; }
+.client-timeline-scroll .item3 { top: 110px; left: 500px; }
+.client-timeline-scroll .item4 { top: 320px; left: 650px; }
+.client-timeline-scroll .item5 { top: 120px; left: 860px; }
+.client-timeline-scroll .item6 { top: 320px; left: 1050px; }
+
+.client-timeline-scroll .timeline-empty-msg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #aaa;
+  text-align: center;
+  z-index: 20;
+}
+
+/* Pantallas estrechas: escala el lienzo (se mantiene el diseño) */
+@media (max-width: 1399px) {
+  .client-timeline-scroll .timeline-section {
+    transform-origin: top left;
+    transform: scale(calc((100vw - 48px) / 1400));
+  }
+
+  .client-timeline-scroll {
+    min-height: calc(700px * ((100vw - 48px) / 1400) + 24px);
+  }
+}

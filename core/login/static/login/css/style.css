@@ -1,0 +1,165 @@
+.contact-image {
+    text-align: center;
+}
+
+.factora-brand-logo {
+    width: auto;
+    max-width: 200px;
+    height: auto;
+    max-height: 130px;
+    object-fit: contain;
+    margin: 0 auto 0.5rem;
+    display: block;
+}
+
+.factora-login-brand .factora-brand-logo {
+    max-width: 180px;
+    max-height: 120px;
+}
+
+/* —— Sesión activa (lockscreen mejorado) —— */
+.factora-session-page {
+    background: linear-gradient(145deg, #2a2418 0%, #1a1510 42%, #0f0d0a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.factora-session-box {
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem auto;
+}
+
+.factora-session-box .login-box-body {
+    background: transparent;
+    padding: 0;
+}
+
+.factora-session-card {
+    border: 0;
+    border-radius: 16px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+}
+
+.factora-session-card .login-card-body {
+    padding: 2rem 1.75rem 1.5rem;
+    background: #faf8f4;
+}
+
+.factora-session-brand {
+    margin-bottom: 1.25rem;
+}
+
+.factora-session-brand .factora-brand-logo {
+    max-width: 160px;
+    max-height: 110px;
+}
+
+.factora-session-user {
+    margin-bottom: 1rem;
+}
+
+.factora-session-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #c9a227, #a67c00);
+    color: #1a1510;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.65rem;
+    box-shadow: 0 4px 14px rgba(166, 124, 0, 0.35);
+}
+
+.factora-session-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a1510;
+    margin: 0 0 0.25rem;
+    line-height: 1.25;
+}
+
+.factora-session-greeting {
+    font-size: 0.9rem;
+    color: #6b6358 !important;
+}
+
+.factora-session-lead {
+    font-size: 0.92rem;
+    color: #4a443c;
+    margin-bottom: 1.25rem;
+    line-height: 1.45;
+}
+
+.factora-session-btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+}
+
+.factora-session-alt a {
+    color: #8b6914;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.factora-session-alt a:hover {
+    color: #5c4509;
+    text-decoration: underline;
+}
+
+.factora-session-footer {
+    font-size: 0.75rem;
+    color: #8a8278;
+    line-height: 1.4;
+}
+
+.factora-session-footer strong {
+    color: #5c4509;
+}
+
+.lockscreen-wrapper{
+    width: 450px;
+}
+
+.contact-image i {
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .login-box, .register-box {
+        width: 90%;
+        margin-top: 80px;
+    }
+}
+
+.login-box p.desc{
+    font-size: 12px;
+}
+
+/* Mismo dorado que la barra superior (factora-header-bar) — toda la zona login-page */
+.login-page .btn.factora-login-gold {
+    background: linear-gradient(105deg, #c9a227 0%, #e6c35c 28%, #f0d060 50%, #d4af37 72%, #a67c00 100%);
+    border: 1px solid rgba(101, 76, 12, 0.5);
+    color: rgba(35, 26, 8, 0.95) !important;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(139, 105, 20, 0.28);
+}
+
+.login-page .btn.factora-login-gold:hover {
+    filter: brightness(1.06);
+    color: #120d03 !important;
+    border-color: rgba(101, 76, 12, 0.65);
+}
+
+.login-page .btn.factora-login-gold:focus {
+    box-shadow: 0 0 0 0.2rem rgba(201, 162, 39, 0.35);
+}

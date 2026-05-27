@@ -1,0 +1,105 @@
+{% load static %}
+<div class="client-timeline-widget"
+     style="--timeline-progress: {{ timeline_meta.progress_percent }}%; --path-fill: {{ timeline_meta.path_fill }};">
+
+  <div class="timeline-progress-rail" aria-hidden="true">
+    <span class="timeline-progress-rail__fill"></span>
+  </div>
+
+  <p class="client-timeline-scroll-hint">
+    <i class="bi bi-arrows-expand"></i> Deslice horizontalmente si no ve todas las etapas
+  </p>
+
+  <div class="client-timeline-scroll" role="region" aria-label="Línea de tiempo del avance">
+    <div class="timeline-section-scaler">
+    <section class="timeline-section">
+
+      <svg class="svg-line" viewBox="0 0 1120 720" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="gradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff2b06"/>
+            <stop offset="20%" stop-color="#ff7300"/>
+            <stop offset="45%" stop-color="#ffd000"/>
+            <stop offset="65%" stop-color="#b8ff72"/>
+            <stop offset="85%" stop-color="#79f0ff"/>
+            <stop offset="100%" stop-color="#00cfff"/>
+          </linearGradient>
+        </defs>
+        <path class="path-track" pathLength="100" d="{{ timeline_meta.path_d }}"/>
+        <path class="path-progress path-progress--glow" pathLength="100"
+              d="{{ timeline_meta.path_d }}"
+              style="stroke-dasharray: {{ timeline_meta.path_fill }} 100;"/>
+        <path class="path-progress path-progress--main" pathLength="100"
+              d="{{ timeline_meta.path_d }}"
+              style="stroke-dasharray: {{ timeline_meta.path_fill }} 100;"/>
+      </svg>
+
+      <div class="big-dot start">Inicio</div>
+      <div class="big-dot end{% if timeline_meta.is_complete %} big-dot--complete{% endif %}">
+        {{ timeline_meta.total_stages }}
+      </div>
+
+      {% for stage in timeline_stages %}
+        <div class="dot {{ stage.status_class }}"
+             style="left: {{ stage.dot_left }}px; top: {{ stage.dot_top }}px;"></div>
+
+        <div class="connector connector--v {{ stage.status_class }}"
+             style="left: {{ stage.conn_left }}px; top: {{ stage.conn_top }}px; height: {{ stage.conn_height }}px;"></div>
+        {% if stage.conn_h_width > 0 %}
+        <div class="connector connector--h {{ stage.status_class }}"
+             style="left: {{ stage.conn_h_left }}px; top: {{ stage.conn_h_top }}px; width: {{ stage.conn_h_width }}px;"></div>
+        {% endif %}
+
+        <article class="timeline-item {{ stage.item_class }} {{ stage.placement }} {{ stage.status_class }}"
+                 {% if stage.use_inline_position %}style="top: {{ stage.item_top }}px; left: {{ stage.item_left }}px;"{% endif %}>
+          <span class="timeline-item__status">
+            {% if stage.status_class == 'is-done' %}
+              <i class="bi bi-check-circle-fill" aria-hidden="true"></i> Completada
+            {% elif stage.status_class == 'is-current' %}
+              <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> En curso
+            {% else %}
+              <i class="bi bi-circle" aria-hidden="true"></i> Pendiente
+            {% endif %}
+          </span>
+          {% if stage.placement == 'item--below' %}
+            <span class="timeline-item__year">Etapa {{ stage.order }}</span>
+            <span class="timeline-item__accent {{ stage.accent_class }}"></span>
+          {% endif %}
+          <div class="timeline-item__icon" aria-hidden="true">
+            <i class="bi {{ stage.icon }}"></i>
+          </div>
+          <h3>{{ stage.title }}</h3>
+          {% if stage.description %}
+            <p>{{ stage.description }}</p>
+          {% else %}
+            <p>
+              {% if stage.status_class == 'is-current' %}
+                Su trámite está en esta etapa.
+              {% elif stage.status_class == 'is-done' %}
+                Etapa completada.
+              {% else %}
+                Etapa pendiente.
+              {% endif %}
+            </p>
+          {% endif %}
+          {% if stage.placement == 'item--above' %}
+            <span class="timeline-item__accent {{ stage.accent_class }}"></span>
+            <span class="timeline-item__year">Etapa {{ stage.order }}</span>
+          {% endif %}
+        </article>
+      {% empty %}
+        <p class="timeline-empty-msg">
+          Aún no hay etapas visibles para usted. La oficina está registrando el avance; vuelva a consultar pronto.
+        </p>
+      {% endfor %}
+
+    </section>
+    </div>
+  </div>
+
+  <ul class="timeline-stage-legend list-unstyled d-flex flex-wrap gap-3 mb-0">
+    <li><span class="legend-dot legend-dot--done"></span> Completada</li>
+    <li><span class="legend-dot legend-dot--current"></span> En curso</li>
+    <li><span class="legend-dot legend-dot--pending"></span> Pendiente</li>
+  </ul>
+</div>

@@ -1,0 +1,7 @@
+# Imágenes opcionales para las tarjetas de servicio (login cliente).
+# Izquierda (foto contextual) y derecha (fondo detrás del panel azul) por servicio:
+#   card-t1-visual.jpg   card-t1-panel.jpg   — Titulación
+#   card-t2-visual.jpg   card-t2-panel.jpg   — Asesorías municipales
+#   card-t3-visual.jpg   card-t3-panel.jpg   — Topografía / ingeniería
+#   card-t4-visual.jpg   card-t4-panel.jpg   — Fondo Mi Vivienda / Techo Propio
+# Formatos: .jpg o .webp (ajustar nombre en client-portal.css si usas webp).

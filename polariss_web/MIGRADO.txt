@@ -1,0 +1,6 @@
+El proyecto del sitio corporativo ya está fuera de esta carpeta.
+
+Copia oficial y enlaces nuevos:
+  ..\empresa_web
+
+Puede borrar la carpeta polariss_web cuando ningún programa la tenga abierta (era solo una copia previa).

@@ -1,0 +1,10 @@
+{% extends 'marketing/base_inner.html' %}
+
+{% block head_title %}{{ page_title }} · {{ SITE_NAME }}{% endblock %}
+
+{% block inner_content %}
+  <h1 class="mb-3">{{ page_title }}</h1>
+  <p class="lead" style="color: color-mix(in srgb, var(--default-color), transparent 15%);">
+    Contenido en preparación. Para nuevas páginas, cree una plantilla que extienda <code>marketing/base_site.html</code> (o <code>base_inner.html</code>) y rellene los bloques indicados.
+  </p>
+{% endblock %}

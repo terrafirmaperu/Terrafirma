@@ -1,0 +1,23 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+   <script src="{% static 'crm/client/js/list.js' %}?v=20260509-codes"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Cód. cliente</th>
+    <th>Nombres</th>
+    <th>Número de Dni ó cédula</th>
+    <th>Teléfono</th>
+    <th>Dirección</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+{% block rows %}
+
+{% endblock %}
+
+{% block javascript_list %}
+
+{% endblock %}

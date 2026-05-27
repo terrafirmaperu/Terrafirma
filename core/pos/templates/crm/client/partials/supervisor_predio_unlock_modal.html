@@ -1,0 +1,32 @@
+<div class="modal fade" id="modalSupervisorPredioUnlock" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-user-shield"></i> Autorización del supervisor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-2">
+                    Este predio tiene <strong>contrato generado</strong> y no puede desvincularse sin autorización.
+                    Ingrese usuario y contraseña de un <strong>supervisor</strong> (administrador o usuario autorizado).
+                </p>
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" class="form-control" id="supervisor_predio_username" autocomplete="username" placeholder="Usuario supervisor">
+                </div>
+                <div class="form-group mb-0">
+                    <label>Contraseña</label>
+                    <input type="password" class="form-control" id="supervisor_predio_password" autocomplete="current-password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmSupervisorPredioUnlock">
+                    <i class="fas fa-check"></i> Autorizar desvinculación
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

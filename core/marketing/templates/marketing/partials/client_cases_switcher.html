@@ -1,0 +1,20 @@
+{% if advisory_cases|length > 1 %}
+  <nav class="client-cases-switcher mb-4" aria-label="Elija su contrata o proceso">
+    <p class="client-cases-switcher__label small text-muted-client mb-2">
+      Sus contratas y procesos — elija uno para ver en qué etapa va:
+    </p>
+    <div class="client-cases-switcher__list">
+      {% for item in advisory_cases %}
+        <a href="{% url 'cliente_avance_detalle' item.pk %}"
+           class="client-cases-switcher__item{% if item.pk == advisory_case.pk %} is-active{% endif %}">
+          {% if item.sale %}
+            <span class="client-cases-switcher__code">{{ item.sale.contract_code }}</span>
+          {% else %}
+            <span class="client-cases-switcher__code">{{ item.title|truncatechars:28 }}</span>
+          {% endif %}
+          <span class="client-cases-switcher__stage">Etapa {{ item.current_stage }}/{{ item.total_stages }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </nav>
+{% endif %}

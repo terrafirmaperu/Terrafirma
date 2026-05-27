@@ -1,0 +1,199 @@
+{% extends 'skin.html' %}
+{% load static %}
+{% block head_body %}
+    {{ block.super }}
+    <style>
+        #dni_search_results { max-height: 220px; overflow-y: auto; }
+        #dni_search_results .list-group-item { cursor: pointer; }
+        #dni_search_results .list-group-item:hover { background: #e9f5ff; }
+        .advisory-stage-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+        .advisory-stage-pill {
+            border: 2px solid #6c757d;
+            background: #fff;
+            color: #333;
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .advisory-stage-pill.is-done { border-color: #17a2b8; color: #117a8b; background: #e8f7fa; }
+        .advisory-stage-pill.is-current {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fff3cd, #ffe69c);
+            color: #856404;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.35);
+        }
+        .advisory-stage-pill.is-pending { opacity: 0.65; }
+        #stages_editor .stage-row.is-current-stage {
+            border-left: 4px solid #ffc107 !important;
+            background: #fffdf5 !important;
+        }
+        .advisory-save-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .advisory-case-type { font-size: 0.7rem; margin-right: 0.25rem; }
+        .advisory-case-contract code { color: #0056b3; }
+        #cases_list .case-item.active { border-left: 4px solid #17a2b8; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="card {{ dshboard.card }}">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-route"></i> {{ title }}</h3>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="card card-outline card-primary mb-3">
+                <div class="card-body">
+                    <h5 class="mb-3"><i class="fas fa-id-card"></i> Buscar cliente por DNI</h5>
+                    <p class="small text-muted mb-2">DNI, código de cliente o apellido (mín. 2 caracteres). Elija de la lista o pulse <strong>Buscar</strong>.</p>
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-md-5 mb-0">
+                            <label for="search_dni">DNI / documento</label>
+                            <input type="text" id="search_dni" class="form-control" maxlength="20"
+                                   placeholder="DNI, código o apellido" autocomplete="off">
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            <button type="button" class="btn btn-primary btn-block" id="btn_lookup_dni">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="dni_search_results" class="list-group mt-2 d-none"></div>
+                    <div id="dni_search_empty" class="alert alert-warning mt-2 d-none small mb-0" role="status"></div>
+                    <div id="client_summary" class="alert alert-secondary mt-3 d-none" role="status"></div>
+                </div>
+            </div>
+
+            <div id="cases_panel" class="d-none">
+                <div class="row">
+                    <div class="col-lg-5 mb-3">
+                        <div class="card card-outline card-info h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0"><i class="fas fa-map-marked-alt"></i> Procesos / contratas</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <p class="small text-muted px-3 pt-2 mb-0">
+                                    Las contratas de ventas se importan al buscar el cliente. Seleccione cada una y marque su etapa actual.
+                                </p>
+                                <ul class="list-group list-group-flush" id="cases_list"></ul>
+                            </div>
+                            {% if can_change %}
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-success btn-sm" id="btn_new_case">
+                                    <i class="fas fa-plus"></i> Nuevo terreno
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-7 mb-3">
+                        <div class="card card-outline card-warning h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0"><i class="fas fa-tasks"></i> Detalle del avance</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-light border small mb-3" id="portal_usage_help">
+                                    <strong><i class="fas fa-info-circle text-primary"></i> Cómo publicar el avance</strong>
+                                    <ol class="mb-2 pl-3 mt-2">
+                                        <li>Busque al cliente por DNI y selecciónelo.</li>
+                                        <li>Elija la contrata en la lista izquierda (o cree «Nuevo terreno»).</li>
+                                        <li>Marque la <strong>etapa actual</strong> (botones amarillos).</li>
+                                        <li>Deje activo <strong>Visible en portal cliente</strong> y, en cada etapa, <strong>Visible en portal</strong>.</li>
+                                        <li>Pulse <strong>Guardar avance</strong>.</li>
+                                        <li>El cliente ingresa en la web → <strong>Área de cliente</strong> con su DNI y código.</li>
+                                    </ol>
+                                    <p class="mb-0 text-muted">Tras guardar verá el enlace para abrir el portal del cliente.</p>
+                                </div>
+                                <div id="case_sale_panel" class="alert alert-info d-none mb-3" role="status">
+                                    <strong><i class="fas fa-file-contract"></i> Venta / contrata vinculada</strong>
+                                    <div id="case_sale_meta" class="small mt-1 mb-0"></div>
+                                </div>
+                                <form id="frmCase" autocomplete="off">
+                                    <input type="hidden" id="case_id" value="">
+                                    <input type="hidden" id="client_id" value="">
+                                    <input type="hidden" id="case_current_stage" value="1">
+                                    <div class="form-group">
+                                        <label for="case_title">Terreno / descripción del caso</label>
+                                        <input type="text" class="form-control" id="case_title" maxlength="200" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="case_predio_summary">Ubicación (resumen)</label>
+                                        <input type="text" class="form-control" id="case_predio_summary" maxlength="500">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="case_total_stages">Cantidad de etapas ({{ stage_min }}–{{ stage_max }})</label>
+                                            <input type="number" class="form-control" id="case_total_stages"
+                                                   min="{{ stage_min }}" max="{{ stage_max }}" value="5">
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label>Etapa actual — selección dinámica</label>
+                                            <p class="small text-muted mb-1">Haga clic en la etapa en la que está el trámite.</p>
+                                            <div id="stage_picker" class="advisory-stage-pills" role="group" aria-label="Etapa actual"></div>
+                                        </div>
+                                    </div>
+                                    {% if can_change %}
+                                    <div class="advisory-save-toolbar mb-3">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-save"></i> Guardar avance (publicar para el cliente)
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="case_visible" checked>
+                                            <label class="custom-control-label" for="case_visible">Visible en portal cliente</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Etapas — título y descripción (portal)</label>
+                                        <div id="stages_editor" class="border rounded p-2 bg-light" style="max-height: 300px; overflow-y: auto;"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="case_notes">Notas internas</label>
+                                        <textarea class="form-control" id="case_notes" rows="2"></textarea>
+                                    </div>
+                                    {% if can_change %}
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn_save_case">
+                                        <i class="fas fa-save"></i> Guardar avance (publicar para el cliente)
+                                    </button>
+                                    {% else %}
+                                    <div class="alert alert-danger">
+                                        <strong>No aparece el botón porque falta permiso de guardado.</strong>
+                                        Pida en Seguridad el permiso «Cambiar control de avance asesoría» para su grupo.
+                                    </div>
+                                    {% endif %}
+                                    {% if can_delete %}
+                                    <button type="button" class="btn btn-danger ml-2 d-none" id="btn_delete_case">
+                                        <i class="fas fa-trash"></i> Eliminar caso
+                                    </button>
+                                    {% endif %}
+                                </form>
+                                <p class="text-muted small mt-3 mb-0" id="form_hint">Seleccione un terreno o cree uno nuevo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.ADVISORY_CONTROL_URL = "{{ control_url|escapejs }}";
+        window.ADVISORY_STAGE_MIN = {{ stage_min }};
+        window.ADVISORY_STAGE_MAX = {{ stage_max }};
+    </script>
+    <script src="{% static 'crm/advisoryprogress/js/control.js' %}?v=20260518-can-save"></script>
+{% endblock %}

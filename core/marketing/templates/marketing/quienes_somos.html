@@ -1,0 +1,85 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}Quiénes somos · {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Conozca a {{ site_info.brand_name }}: asesoría y consultoría en titulación predial en todo el Perú.{% endblock %}
+
+{% block body_class %}marketing-inner-page{% endblock %}
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/marketing-pages.css' %}?v=20260536" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  {% include 'marketing/partials/page_hero.html' with page_title='Quiénes somos' page_lead=page_lead page_breadcrumb='Quiénes somos' %}
+
+  <section id="about" class="about section">
+    <div class="container" data-aos="fade-up">
+      <div class="row gy-4 align-items-center">
+        <div class="col-lg-5">
+          <div class="section-title">
+            <h2>Nuestra empresa</h2>
+            <div><span>{{ site_info.brand_name }}</span></div>
+          </div>
+          <p>
+            <strong>{{ site_info.legal_name }}</strong> (RUC {{ site_info.ruc }}) es una firma especializada en
+            <strong>{{ site_info.tagline|lower }}</strong>. Acompañamos a personas naturales, familias y proyectos
+            que necesitan ordenar la situación legal de sus predios con claridad y seguimiento por etapas.
+          </p>
+          <p>
+            Operamos en {{ site_info.regions }}, coordinando con municipalidades, catastro y registros públicos
+            según el caso. Nuestro equipo combina experiencia en expedientes técnicos-legal con herramientas
+            internas de control de avance para que usted siempre sepa en qué punto está su trámite.
+          </p>
+          <ul>
+            <li><i class="bi bi-check2-circle"></i> <span>Expedientes armados conforme a normativa vigente.</span></li>
+            <li><i class="bi bi-check2-circle"></i> <span>Comunicación directa con el responsable del caso.</span></li>
+            <li><i class="bi bi-check2-circle"></i> <span>Portal de cliente para consultar el avance de sus terrenos.</span></li>
+          </ul>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-3">
+            {% for stat in page_stats %}
+              <div class="col-6 col-md-4">
+                <div class="marketing-stat-card" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:50 }}">
+                  <strong>{{ stat.value }}</strong>
+                  <span>{{ stat.label }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="valores" class="section light-background">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Valores</h2>
+      <div><span>Lo que nos guía</span></div>
+    </div>
+    <div class="container">
+      <div class="row gy-4">
+        {% for item in company_values %}
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="mkt-service-card text-center">
+              <div class="icon-wrap mx-auto"><i class="bi {{ item.icon }}"></i></div>
+              <h3>{{ item.title }}</h3>
+              <p class="mb-0">{{ item.text }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container text-center" data-aos="fade-up">
+      <div class="home-cta-band">
+        <h3>¿Tiene un predio por sanear o un proyecto en cartera?</h3>
+        <p class="mb-3">Cuéntenos su caso y le orientamos sobre documentos, plazos y costos estimados.</p>
+        <a href="{% url 'marketing_contacto' %}" class="btn btn-success px-4">Solicitar información</a>
+        <a href="{% url 'cliente_login' %}" class="btn btn-outline-light px-4 ms-2">Área de cliente</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

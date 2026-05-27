@@ -1,0 +1,38 @@
+Proyecto Polariss Web — espejo de la estructura Factora
+======================================================
+
+Raíz del proyecto (junto a manage.py):
+  config/          Ajustes Django, urls principales, wsgi, db (SQLite/PostgreSQL como db.py)
+  core/            Paquete de aplicaciones (misma convención que Factora)
+  templates/       Plantillas globales (base.html, layouts compartidos)
+  static/          CSS/JS/imágenes globales
+  media/           (generado en runtime para subidas)
+  db/              Base SQLite por defecto (polariss.sqlite3)
+
+Apps bajo core/ (amplía igual que en Factora):
+  core.user        Modelo User personalizado y rutas /user/
+  core.login       Login, logout, recuperación de contraseña → /login/
+  core.security    Módulos y permisos → /security/ (urlpatterns vacío hasta que lo alimentes)
+  core.dashboard   Panel tras login → /dashboard/
+  core.website     Vistas públicas del sitio (plantillas en core/website/templates/website/)
+
+URLs principales (config/urls.py):
+  /                Sitio público (HomeView)
+  /dashboard/      Panel (requiere login)
+  /admin/          Django admin
+  /login/          Autenticación
+  /security/       Reservado para seguridad
+  /user/           Reservado para usuarios
+
+Arranque:
+  cd polariss_web
+  python -m venv .venv
+  .venv\Scripts\activate   (Windows)
+  pip install -r requirements.txt
+  python manage.py migrate
+  python manage.py createsuperuser
+  python manage.py runserver
+
+Variables útiles (opcional):
+  DJANGO_SECRET_KEY
+  EMAIL_HOST_USER, EMAIL_HOST_PASSWORD (recuperación de contraseña por correo)

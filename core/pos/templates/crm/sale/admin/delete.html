@@ -1,0 +1,179 @@
+{% extends 'skin.html' %}
+{% load static %}
+{% block content %}
+    <form class="form" method="post" action=".">
+        <div class="card {{ dshboard.card }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-ban"></i>
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    {% csrf_token %}
+                    {% if already_voided %}
+                    <p class="text-center font-weight-bold mt-3 text-muted">
+                        <i class="fas fa-check-circle fa-3x text-secondary"></i><br><br>
+                        La venta <strong>{{ object.sale_code|default:object.id }}</strong> ya fue anulada.
+                    </p>
+                    {% else %}
+                    <p class="text-center font-weight-bold mt-3">
+                        <i class="fas fa-ban fa-3x text-warning"></i><br><br>
+                        ¿Está seguro de <strong>anular</strong> la venta
+                        <code>{{ object.sale_code|default:object.id }}</code>?
+                    </p>
+                    <ul class="text-muted small">
+                        <li>No se borra el registro; queda marcada como anulada.</li>
+                        <li>Se elimina la cuenta por cobrar vinculada (si existe).</li>
+                        <li>El trámite de asesoría deja de mostrarse en el portal del cliente.</li>
+                        <li>Podrá facturar de nuevo el mismo predio/servicio si corresponde.</li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer">
+                {% if not already_voided %}
+                <button type="submit" class="btn btn-warning btn-flat">
+                    <i class="fas fa-ban"></i> Sí, anular venta
+                </button>
+                {% endif %}
+                <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
+                    <i class="fas fa-arrow-left"></i> Volver al listado
+                </a>
+            </div>
+        </div>
+    </form>
+
+    {% if not already_voided %}
+    <div class="modal fade" id="modalSupervisorDelete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-shield"></i> Autorización del supervisor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Ingrese credenciales de un <strong>superusuario</strong> para confirmar la anulación.</p>
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" id="supervisor_username" value="Neo" autocomplete="username">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="supervisor_password" autocomplete="current-password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="btnConfirmSupervisorDelete">
+                        <i class="fas fa-ban"></i> Autorizar y anular
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        function ajaxAnnulSale() {
+            $.ajax({
+                url: pathname,
+                data: {},
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    if (!request.hasOwnProperty('error')) {
+                        if (typeof message_success === 'function' && request.message) {
+                            message_success(request.message);
+                        }
+                        location.href = '{{ list_url }}';
+                        return false;
+                    }
+                    message_error(request.error);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var msg = errorThrown + ' ' + textStatus;
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                        msg = jqXHR.responseJSON.error;
+                    }
+                    message_error(msg);
+                }
+            });
+        }
+
+        $(function () {
+            $('form').on('submit', function (event) {
+                event.preventDefault();
+                $.confirm({
+                    title: 'Anular venta',
+                    theme: 'material',
+                    icon: 'fas fa-ban',
+                    content: '¿Confirma anular esta venta? No se eliminará del historial.',
+                    columnClass: 'small',
+                    typeAnimated: true,
+                    cancelButtonClass: 'btn-primary',
+                    draggable: true,
+                    dragWindowBorder: false,
+                    buttons: {
+                        info: {
+                            text: 'Sí, continuar',
+                            btnClass: 'btn-warning',
+                            action: function () {
+                                $('#supervisor_password').val('');
+                                $('#modalSupervisorDelete').modal('show');
+                            }
+                        },
+                        danger: {
+                            text: 'No',
+                            btnClass: 'btn-red',
+                            action: function () {}
+                        },
+                    }
+                });
+            });
+
+            $('#btnConfirmSupervisorDelete').on('click', function () {
+                var u = $('#supervisor_username').val();
+                var p = $('#supervisor_password').val();
+                var $btn = $(this);
+                $btn.prop('disabled', true);
+                $.ajax({
+                    url: '{% url "verify_supervisor_delete" %}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        supervisor_username: u,
+                        supervisor_password: p
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp.success) {
+                            $('#modalSupervisorDelete').modal('hide');
+                            ajaxAnnulSale();
+                        } else {
+                            message_error(resp.error || 'No se pudo autorizar.');
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        var msg = errorThrown + ' ' + textStatus;
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            msg = xhr.responseJSON.error;
+                        }
+                        message_error(msg);
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}

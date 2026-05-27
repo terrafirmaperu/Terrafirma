@@ -1,0 +1,159 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
+    <script src="{% static 'frm/cash/js/list.js' %}"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Estado</th>
+    <th>Apertura</th>
+    <th>Monto inicial</th>
+    <th>Cierre</th>
+    <th>Contado</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+{% block javascript_list %}
+
+{% endblock %}
+
+{% block content_list_before %}
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label>Rangos de fechas (por fecha de apertura):</label>
+                <div class="input-group mb-3">
+                    {{ form.date_range }}
+                    <div class="input-group-append">
+                        <button class="btn btn-success btnSearch" type="button">
+                            <i class="fas fa-calendar-check"></i> Buscar por rangos
+                        </button>
+                        <button class="btn btn-warning btnSearchAll" type="button">
+                            <i class="fas fa-calendar-check"></i> Ver todas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills" id="cashResumeTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab-sales-link" data-toggle="pill" href="#tab-sales" role="tab">
+                                Facturación y Ventas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-pays-link" data-toggle="pill" href="#tab-pays" role="tab">
+                                Pagos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <strong>Resumen del turno (sesión de caja)</strong>
+                        <span class="text-muted" id="cashReportDate"></span>
+                        <div class="small text-muted" id="cashScopeMessage">
+                            Los importes corresponden solo a la caja abierta por usted. Al cerrar caja y abrir una nueva, estos totales vuelven a cero para el siguiente turno.
+                        </div>
+                    </div>
+                    <div class="mb-2 text-muted small">
+                        <span id="cashSessionStatus">Sin sesión abierta</span>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-sales" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-6 col-12 mb-2">
+                                    <div class="small-box bg-info">
+                                        <div class="inner">
+                                            <h4 id="salesCount">0</h4>
+                                            <p>Ventas (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-12 mb-2">
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h4 id="salesTotal">S/ 0.00</h4>
+                                            <p>Total facturado (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-2">
+                                    <div class="small-box bg-primary">
+                                        <div class="inner">
+                                            <h4 id="salesCash">S/ 0.00</h4>
+                                            <p>Efectivo (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="small-box bg-purple">
+                                        <div class="inner">
+                                            <h4 id="salesYape">S/ 0.00</h4>
+                                            <p>Yape (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="small-box bg-orange">
+                                        <div class="inner">
+                                            <h4 id="salesPlin">S/ 0.00</h4>
+                                            <p>Plin (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="small-box bg-navy">
+                                        <div class="inner">
+                                            <h4 id="salesTarjeta">S/ 0.00</h4>
+                                            <p>Tarjeta (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="small-box bg-secondary">
+                                        <div class="inner">
+                                            <h4 id="salesMixtoTarjeta">S/ 0.00</h4>
+                                            <p>Mixto — parte tarjeta (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab-pays" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-2">
+                                    <div class="small-box bg-warning">
+                                        <div class="inner">
+                                            <h4 id="paysCount">0</h4>
+                                            <p>Pagos a cuentas por cobrar (esta sesión)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-2">
+                                    <div class="small-box bg-teal">
+                                        <div class="inner">
+                                            <h4 id="paysTotal">S/ 0.00</h4>
+                                            <p>Cobros de deuda en esta sesión (no duplica la inicial de ventas al crédito)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

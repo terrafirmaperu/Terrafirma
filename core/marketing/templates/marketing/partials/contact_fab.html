@@ -1,0 +1,39 @@
+<div class="contact-fab" id="contact-fab" data-contact-fab>
+  <div class="contact-fab__menu" id="contact-fab-menu" role="menu" aria-label="Canales de contacto" hidden>
+    {% if site_info.contact_whatsapp_href %}
+      <a href="{{ site_info.contact_whatsapp_href }}"
+         class="contact-fab__action contact-fab__action--whatsapp"
+         role="menuitem"
+         target="_blank"
+         rel="noopener noreferrer"
+         title="WhatsApp">
+        <i class="bi bi-whatsapp" aria-hidden="true"></i>
+        <span class="contact-fab__label">WhatsApp</span>
+      </a>
+    {% endif %}
+    <a href="{{ site_info.contact_form_href }}"
+       class="contact-fab__action contact-fab__action--form"
+       role="menuitem"
+       title="Formulario de contacto">
+      <i class="bi bi-envelope-paper" aria-hidden="true"></i>
+      <span class="contact-fab__label">Contacto</span>
+    </a>
+    {% if site_info.contact_tel_href %}
+      <a href="{{ site_info.contact_tel_href }}"
+         class="contact-fab__action contact-fab__action--call"
+         role="menuitem"
+         title="Llamar a {{ site_info.brand_name }}">
+        <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+        <span class="contact-fab__label">Llamar</span>
+      </a>
+    {% endif %}
+  </div>
+  <button type="button"
+          class="contact-fab__toggle d-flex align-items-center justify-content-center"
+          aria-expanded="false"
+          aria-controls="contact-fab-menu"
+          aria-label="Abrir opciones de contacto">
+    <i class="bi bi-chat-dots-fill contact-fab__icon contact-fab__icon--open" aria-hidden="true"></i>
+    <i class="bi bi-x-lg contact-fab__icon contact-fab__icon--close" aria-hidden="true"></i>
+  </button>
+</div>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Recuperar contraseña{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 style="margin-top:0;text-align:center;">{{ title }}</h2>
+  <form id="frm-reset" method="post" action="">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field|add_class:'form-control' }}
+    {% endfor %}
+    <button type="submit">Enviar enlace</button>
+  </form>
+  <p style="text-align:center;margin-top:1rem;"><a href="{% url 'login' %}">Volver al login</a></p>
+</div>
+<script>
+document.getElementById('frm-reset').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const fd = new FormData(this);
+  fetch(this.action || window.location.pathname, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+    .then(r => r.json()).then(d => { alert(d.error ? d.error : 'Si el usuario existe, revise su correo.'); })
+    .catch(() => alert('Error de red'));
+});
+</script>
+{% endblock %}

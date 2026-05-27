@@ -1,0 +1,99 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'crm/client/css/predios.css' %}?v=20260518"/>
+    <script src="{% static 'crm/client/js/predios.js' %}?v=20260518-community"></script>
+    <script src="{% static 'crm/client/js/form.js' %}?v=20260518"></script>
+{% endblock %}
+
+{% block content %}
+    <form class="form" method="post" action="." enctype="multipart/form-data" id="frmForm" data-url="{{ list_url }}" autocomplete="off">
+        <div class="card {{ dshboard.card }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {% if action == 'add' %}
+                        <i class="fas fa-plus"></i>
+                    {% else %}
+                        <i class="fas fa-edit"></i>
+                    {% endif %}
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    <input type="hidden" name="action" id="action" value="{{ action }}">
+                    {% csrf_token %}
+                    {% if action == 'edit' and instance.client_code %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Código de cliente</label>
+                                <input type="text" class="form-control" value="{{ instance.client_code }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        {% for field in form.visible_fields %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ field.label }}:</label>
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% include 'crm/client/partials/predios_panel.html' %}
+                </div>
+            </div>
+            {{ client_properties|json_script:"client-properties-data" }}
+            {{ predio_type_choices|json_script:"predio-type-choices" }}
+            {{ peru_departments|json_script:"peru-departments-data" }}
+            {{ predio_products_catalog|json_script:"predio-products-catalog" }}
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-flat">
+                    <i class="fas fa-save"></i> Guardar registro
+                </button>
+                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+    {% include 'crm/client/partials/supervisor_predio_unlock_modal.html' %}
+    <script>
+        window.SUPERVISOR_PREDIO_UNLOCK_URL = '{% url "verify_supervisor_predio_unlock" %}';
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var root = document.getElementById('clientPrediosRoot');
+            if (!root || typeof ClientPredios === 'undefined') {
+                return;
+            }
+            var initial = [];
+            var types = [];
+            var departments = [];
+            var productsCatalog = [];
+            try {
+                initial = JSON.parse(document.getElementById('client-properties-data').textContent);
+            } catch (e) {}
+            try {
+                types = JSON.parse(document.getElementById('predio-type-choices').textContent);
+            } catch (e) {}
+            try {
+                departments = JSON.parse(document.getElementById('peru-departments-data').textContent);
+            } catch (e) {}
+            try {
+                productsCatalog = JSON.parse(document.getElementById('predio-products-catalog').textContent);
+            } catch (e) {}
+            ClientPredios.init(root, {
+                initial: initial,
+                types: types,
+                departments: departments,
+                productsCatalog: productsCatalog,
+            });
+        });
+    </script>
+{% endblock %}

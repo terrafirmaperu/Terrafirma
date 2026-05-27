@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Impresión rápida de contrata</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #111; }
+        .header { border-bottom: 1px solid #ddd; margin-bottom: 10px; padding-bottom: 6px; }
+        .header h4 { margin: 0; font-size: 16px; }
+        .header small { color: #666; }
+        .content { white-space: pre-wrap; line-height: 1.45; font-size: 12px; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h4>Contrata - Impresión rápida</h4>
+    <small>Venta N° {{ sale.nro }} - Cliente: {{ sale.client.user.get_full_name }}</small>
+</div>
+<div class="content">{{ preview_text }}</div>
+<script>
+    window.addEventListener('load', function () {
+        setTimeout(function () { window.print(); }, 200);
+    });
+</script>
+</body>
+</html>

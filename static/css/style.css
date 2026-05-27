@@ -1,0 +1,497 @@
+.breadcrumb {
+    background-color: white !important;
+    padding: 5px 20px !important;
+    margin-bottom: 0;
+    list-style: none;
+    border: 1px solid #e9ecef;
+}
+
+.breadcrumb a {
+    color: #4a4a4a;;
+    font-weight: 400;
+}
+
+.btn {
+    color: white !important;
+}
+
+.card-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.card .card-header .card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.table-bordered {
+    border: 0 !important;
+}
+
+table.table-bordered.dataTable tbody td {
+    border-bottom-width: 1px !important;
+}
+
+/* ========== Tablas de listado (DataTables) — compactas y refinadas ========== */
+.fact-table-shell {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    background: #fff;
+}
+
+.fact-table-shell .dataTables_wrapper {
+    padding: 0.35rem 0.65rem 0.65rem;
+    font-size: 0.8125rem;
+}
+
+.fact-table-shell table.factora-list-table {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    margin-bottom: 0;
+    color: rgba(28, 32, 40, 0.92);
+}
+
+.fact-table-shell table.factora-list-table thead th {
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    color: rgba(35, 26, 8, 0.82);
+    background: linear-gradient(180deg, rgba(230, 195, 92, 0.28) 0%, rgba(201, 162, 39, 0.14) 100%);
+    border-bottom: 2px solid rgba(101, 76, 12, 0.18) !important;
+    vertical-align: middle;
+    padding: 0.45rem 0.55rem;
+    white-space: nowrap;
+}
+
+.fact-table-shell table.factora-list-table tbody td {
+    padding: 0.42rem 0.55rem;
+    vertical-align: middle;
+    border-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+.fact-table-shell table.factora-list-table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(248, 249, 251, 0.92);
+}
+
+.fact-table-shell table.factora-list-table tbody tr:hover {
+    background-color: rgba(230, 195, 92, 0.12) !important;
+}
+
+.fact-table-shell table.factora-list-table .btn-xs {
+    font-size: 0.72rem;
+    padding: 0.18rem 0.42rem;
+    line-height: 1.2;
+}
+
+.fact-table-shell table.factora-list-table small.text-muted {
+    font-size: 0.72rem;
+}
+
+/* Paginación y filtros DataTables dentro del shell */
+.fact-table-shell .dataTables_length,
+.fact-table-shell .dataTables_filter,
+.fact-table-shell .dataTables_info,
+.fact-table-shell .dataTables_processing {
+    font-size: 0.8125rem;
+    color: rgba(28, 32, 40, 0.78);
+}
+
+.fact-table-shell .dataTables_length select {
+    font-size: 0.8125rem !important;
+    padding: 0.22rem 1.75rem 0.22rem 0.45rem;
+    border-radius: 6px;
+    border-color: rgba(15, 23, 42, 0.12);
+}
+
+.fact-table-shell .dataTables_filter input {
+    font-size: 0.8125rem !important;
+    padding: 0.28rem 0.55rem;
+    border-radius: 6px;
+    border-color: rgba(15, 23, 42, 0.12);
+    margin-left: 0.35rem;
+}
+
+.fact-table-shell .dataTables_paginate .page-link {
+    font-size: 0.78rem;
+    padding: 0.28rem 0.55rem;
+    border-radius: 6px !important;
+    margin: 0 2px;
+    color: rgba(35, 26, 8, 0.85);
+}
+
+.fact-table-shell .dataTables_paginate .page-item.active .page-link {
+    background: linear-gradient(105deg, #c9a227 0%, #e6c35c 55%, #d4af37 100%);
+    border-color: rgba(101, 76, 12, 0.35);
+    color: #1c1410 !important;
+    font-weight: 600;
+}
+
+.panel-module {
+    min-height: 480px;
+}
+
+.sbox {
+    webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+    -ms-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+    -o-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+}
+
+.panel-module .icon {
+    padding-top: 12px;
+    width: 150px;
+    float: left;
+    height: 180px;
+    background: #ffffff26;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    border-radius: 5px;
+    transition: width 2s;
+    text-align: center;
+}
+
+.panel-module .icon .iconname {
+    font-weight: bold;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    font-size: 14px;
+    line-height: 10px;
+}
+
+.panel-module .icon .iconimage {
+    width: 100%;
+    text-align: center;
+}
+
+.panel-module .icon:hover {
+    background: #cdcdcd;
+    cursor: pointer;
+}
+
+.panel-module img {
+    height: 70px;
+    margin-top: 15px;
+    border-bottom: 1px solid #9E9E9E;
+    padding-bottom: 10px;
+}
+
+.pd {
+    padding: 5px;
+}
+
+.panel-module .icon .icondesc {
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.panel-module .icon .iconname .tituloicon {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.panel-module a {
+    color: #222222;
+}
+
+.nav-info-user li a {
+    color: #0c0c0c;
+    font-weight: 500;
+}
+
+.nav-info-user li a span {;
+    font-weight: normal;
+}
+
+.control-sidebar-content hr {
+    border-color: #dee2e6;
+}
+
+.password-progress {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.nav-info-user .nav-item span {
+    font-size: 13px;
+}
+
+.input-group-search .dropdown-item:active {
+    background-color: #dee2e6;
+}
+
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+
+.dataTables_scrollHeadInner table {
+    width: 100% !important;
+}
+
+.form-control-checkbox {
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+@media (min-width: 768px) {
+    .modal-xl {
+        width: 90%;
+        max-width: 1200px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .control-sidebar-open .control-sidebar, .control-sidebar-open .control-sidebar::before {
+        right: 0;
+        display: block;
+    }
+}
+
+.tooltip-inner {
+    font-size: 13px !important;
+    text-align: left;
+}
+
+/* ========== Factora — barra superior con fondo dorado ========== */
+.main-header.factora-header-bar {
+    background: linear-gradient(105deg, #c9a227 0%, #e6c35c 28%, #f0d060 50%, #d4af37 72%, #a67c00 100%) !important;
+    border-bottom: 2px solid rgba(101, 76, 12, 0.45) !important;
+    box-shadow: 0 3px 14px rgba(139, 105, 20, 0.28);
+}
+
+/* Texto e iconos legibles sobre el dorado */
+.main-header.factora-header-bar .navbar-brand,
+.main-header.factora-header-bar .nav-link {
+    color: rgba(35, 26, 8, 0.92) !important;
+    font-weight: 600;
+}
+
+.main-header.factora-header-bar .navbar-brand:hover,
+.main-header.factora-header-bar .nav-link:hover,
+.main-header.factora-header-bar .nav-link:focus {
+    color: #120d03 !important;
+    background-color: rgba(255, 255, 255, 0.22);
+    border-radius: 4px;
+}
+
+.main-header.factora-header-bar .navbar-toggler {
+    border-color: rgba(35, 26, 8, 0.35);
+    color: rgba(35, 26, 8, 0.9);
+}
+
+/* Icono hamburguesa Bootstrap sobre fondo claro */
+.main-header.factora-header-bar.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(35, 26, 8, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ========== Ventas — selector visual de método de pago ========== */
+.factora-pay-method-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.15rem;
+}
+
+.factora-pay-method-grid.is-disabled {
+    pointer-events: none;
+    opacity: 0.48;
+    filter: grayscale(0.35);
+}
+
+.factora-pay-card {
+    flex: 1 1 calc(50% - 0.65rem);
+    min-width: 120px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    background: #f8f9fa;
+    color: rgba(20, 24, 32, 0.95) !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .factora-pay-card {
+        flex: 1 1 calc(20% - 0.65rem);
+        min-width: 110px;
+    }
+}
+
+.factora-pay-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+}
+
+.factora-pay-card:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.45);
+}
+
+.factora-pay-card.active {
+    border-color: rgba(101, 76, 12, 0.55);
+    box-shadow: 0 4px 16px rgba(201, 162, 39, 0.35);
+}
+
+.factora-pay-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.factora-pay-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.52rem 0.7rem;
+}
+
+.factora-pay-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.35);
+    color: inherit;
+}
+
+.factora-pay-badge-y,
+.factora-pay-badge-p {
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+}
+
+.factora-pay-text {
+    font-weight: 600;
+    font-size: 0.82rem;
+    line-height: 1.25;
+}
+
+/* Efectivo — verde */
+.factora-pay-efectivo {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 45%, #43a047 100%);
+    color: #fff !important;
+    border-color: rgba(27, 94, 32, 0.5);
+}
+
+.factora-pay-efectivo::before {
+    background: #a5d6a7;
+}
+
+.factora-pay-efectivo .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.factora-pay-efectivo.active {
+    border-color: #c8e6c9;
+    box-shadow: 0 4px 18px rgba(46, 125, 50, 0.45);
+}
+
+/* Yape — morado */
+.factora-pay-yape {
+    background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 40%, #8e24aa 100%);
+    color: #fff !important;
+    border-color: rgba(74, 20, 140, 0.45);
+}
+
+.factora-pay-yape::before {
+    background: #e1bee7;
+}
+
+.factora-pay-yape .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+}
+
+.factora-pay-yape.active {
+    border-color: #e1bee7;
+    box-shadow: 0 4px 18px rgba(142, 36, 170, 0.5);
+}
+
+/* Plin — naranja */
+.factora-pay-plin {
+    background: linear-gradient(135deg, #bf360c 0%, #e65100 42%, #f57c00 100%);
+    color: #fff !important;
+    border-color: rgba(191, 54, 12, 0.45);
+}
+
+.factora-pay-plin::before {
+    background: #ffe0b2;
+}
+
+.factora-pay-plin .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+}
+
+.factora-pay-plin.active {
+    border-color: #ffe0b2;
+    box-shadow: 0 4px 18px rgba(245, 124, 0, 0.45);
+}
+
+/* Tarjeta — azul */
+.factora-pay-tarjeta {
+    background: linear-gradient(135deg, #0d47a1 0%, #1565c0 45%, #1976d2 100%);
+    color: #fff !important;
+    border-color: rgba(13, 71, 161, 0.45);
+}
+
+.factora-pay-tarjeta::before {
+    background: #bbdefb;
+}
+
+.factora-pay-tarjeta .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.factora-pay-tarjeta.active {
+    border-color: #bbdefb;
+    box-shadow: 0 4px 18px rgba(25, 118, 210, 0.45);
+}
+
+/* Mixto — verde + azul */
+.factora-pay-mixto {
+    background: linear-gradient(115deg, #1b5e20 0%, #2e7d32 32%, #1565c0 68%, #0d47a1 100%);
+    color: #fff !important;
+    border-color: rgba(21, 101, 192, 0.4);
+}
+
+.factora-pay-mixto::before {
+    background: #fff9c4;
+}
+
+.factora-pay-mixto .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+}
+
+.factora-pay-mixto.active {
+    border-color: #fff9c4;
+    box-shadow: 0 4px 18px rgba(46, 125, 50, 0.35), 0 4px 18px rgba(13, 71, 161, 0.3);
+}

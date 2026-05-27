@@ -1,0 +1,76 @@
+{% extends 'marketing/base_site.html' %}
+{% load static %}
+
+{% block head_title %}{{ page_title }} · {{ SITE_NAME }}{% endblock %}
+
+{% block body_class %}index-page client-portal-dark{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'marketing/assets/css/client-portal-dark.css' %}?v=20260533" rel="stylesheet">
+{% endblock %}
+
+{% block marketing_main %}
+  <section class="client-portal-hero section dark-background">
+    <img src="{% static 'marketing/assets/img/hero-bg.jpg' %}" alt="" class="client-portal-hero__bg" aria-hidden="true">
+
+    <div class="container client-portal-hero__content py-4">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} mb-3" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% include 'marketing/partials/client_portal_actions.html' %}
+      <header class="client-portal-page-header mb-4">
+        <h1>{{ page_title }}</h1>
+        <p class="text-muted-client small mb-3">
+          Cada contrata de sus asesorías aparece aquí. Elija una para ver en qué etapa va y el detalle de su trámite.
+        </p>
+        <p class="client-portal-greeting">
+          Hola, <strong>{{ portal_client.user.get_full_name|default:portal_client.user.get_username }}</strong>
+        </p>
+        <p class="client-portal-meta">
+          Código de cliente: <code>{{ portal_client.client_code }}</code>
+        </p>
+      </header>
+
+      {% if advisory_cases %}
+        <div class="row g-4 client-portal-cases-grid">
+          {% for case in advisory_cases %}
+            <div class="col-md-6 col-lg-4">
+              <article class="case-card h-100 d-flex flex-column">
+                {% if case.sale %}
+                  <p class="case-card__contract mb-1">
+                    <span class="case-card__badge">{{ case.sale.contract_code }}</span>
+                    <span class="case-card__date text-muted-client">{{ case.sale.date_joined|date:"d/m/Y" }}</span>
+                  </p>
+                {% endif %}
+                <h2 class="h5 case-card__title">{{ case.title }}</h2>
+                {% if case.predio_summary %}
+                  <p class="case-card__meta">{{ case.predio_summary }}</p>
+                {% endif %}
+                <p class="case-card__progress-label">
+                  Avance: <strong>Etapa {{ case.current_stage }} de {{ case.total_stages }}</strong>
+                </p>
+                <div class="case-card__progress-bar" role="progressbar"
+                     aria-valuenow="{{ case.progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+                  <span style="width: {{ case.progress_percent }}%;"></span>
+                </div>
+                <a href="{% url 'cliente_avance_detalle' case.pk %}" class="btn btn-portal-timeline mt-auto align-self-start">
+                  Ver detalle y avance
+                </a>
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="client-portal-empty">
+          <p class="mb-2">Aún no hay trámites publicados en su cuenta.</p>
+          <p class="mb-0">Cuando Qori Terrafirma registre el avance de su saneamiento, lo verá aquí.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

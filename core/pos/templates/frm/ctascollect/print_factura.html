@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago de cuota - Factura</title>
+    <style>
+        body {
+            font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+            color: #000;
+            margin: 0;
+            padding: 12px;
+            font-size: 12px;
+        }
+        .title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+        .muted { color: #444; }
+        .logo-wrap { text-align: center; margin-bottom: 6px; }
+        .logo-wrap img { width: 70px; height: 70px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 6px; }
+        th { background: #f3f3f3; }
+        .right { text-align: right; }
+    </style>
+</head>
+<body>
+<div class="logo-wrap">
+    <img src="{{ company.get_image }}" alt="logo">
+</div>
+<div class="title">{{ company.name }}</div>
+<div class="muted" style="text-align:center;">
+    {{ company.address }} - RUC: {{ company.ruc }}
+</div>
+
+<h3 style="margin: 12px 0 6px 0;">Comprobante de pago de cuota</h3>
+
+<p style="margin: 0;"><strong>Recibo N°:</strong> {{ payment.id }}</p>
+<p style="margin: 0;"><strong>Fecha:</strong> {{ payment.date_joined|date:'Y-m-d' }}</p>
+<p style="margin: 0;"><strong>Venta:</strong> {{ sale.nro }}</p>
+<p style="margin: 0;"><strong>Cliente:</strong> {{ sale.client.user.get_full_name }} ({{ sale.client.user.dni }})</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Concepto</th>
+        <th>Detalle</th>
+        <th class="right">Monto</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Pago de cuota</td>
+        <td>{{ payment.desc }}</td>
+        <td class="right">S/ {{ payment.valor|floatformat:2 }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="right"><strong>Saldo pendiente</strong></td>
+        <td class="right"><strong>S/ {{ ctas.saldo|floatformat:2 }}</strong></td>
+    </tr>
+    </tbody>
+</table>
+<p class="muted" style="margin-top: 14px; text-align: center;">Gracias por su pago. Conserve este comprobante.</p>
+</body>
+</html>

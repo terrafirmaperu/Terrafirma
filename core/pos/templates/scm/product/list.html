@@ -1,0 +1,20 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <link rel="stylesheet" href="{% static 'lib/formvalidation-1.8.0/css/formValidation.min.css' %}">
+    <script src="{% static 'lib/formvalidation-1.8.0/js/es6-shim.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/FormValidation.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/plugins/Bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/formvalidation-1.8.0/js/locales/es_ES.min.js' %}"></script>
+    <script src="{% static 'scm/product/js/list.js' %}"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Nombre</th>
+    <th>Categoría</th>
+    <th>Costo de Inversión</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+

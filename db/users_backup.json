@@ -1,0 +1,15 @@
+[
+  {
+    "username": "Neo",
+    "dni": "46200203",
+    "email": "seo.cristhian@gmail.com",
+    "first_name": "Cristhian Plinio",
+    "last_name": "CHANCHA CALDERON",
+    "is_active": true,
+    "is_staff": true,
+    "is_superuser": true,
+    "is_change_password": false,
+    "groups": ["Administrador"],
+    "password_hash": "pbkdf2_sha256$260000$wl51zoIOAnFuz1mqJRLEAr$MlIHSzIpbHmwxl0FTcuZofC7h/2NuRpvnyXqfl2hd0M="
+  }
+]

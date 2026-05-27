@@ -1,0 +1,12 @@
+{% extends 'marketing/base_site.html' %}
+{% comment %}Páginas con cabecera fija + contenido bajo el menú (no portada).{% endcomment %}
+
+{% block body_class %}marketing-inner-page{% endblock %}
+
+{% block marketing_main %}
+  <section class="section">
+    <div class="container py-5" data-aos="fade-up">
+      {% block inner_content %}{% endblock %}
+    </div>
+  </section>
+{% endblock %}

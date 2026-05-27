@@ -1,0 +1,48 @@
+{% load static %}
+{% comment %}
+Jerarquía (Factora-style): base_site → partials (header/footer/scripts) → base_inner → inicio / stub.
+Solo documentación para quien edita plantillas; no debe verse en el navegador.
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{% block head_title %}{{ SITE_NAME }}{% endblock %}</title>
+  {% block meta %}
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+  {% endblock %}
+
+  <link href="{% static 'marketing/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'marketing/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="{% static 'marketing/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'marketing/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'marketing/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'marketing/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'marketing/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+
+  <link href="{% static 'marketing/assets/css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'marketing/assets/css/site-layout.css' %}" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+  {% include 'marketing/partials/header_nav.html' %}
+
+  <main class="main">
+    {% block marketing_main %}{% endblock %}
+  </main>
+
+  {% include 'marketing/partials/footer_site.html' %}
+
+  {% include 'marketing/partials/scripts_site.html' %}
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
