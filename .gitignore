@@ -141,7 +141,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Solo carpetas lib de Python en la raíz (no ignorar static/lib del frontend)
+/lib/
 lib64/
 parts/
 sdist/
@@ -203,6 +204,7 @@ celerybeat-schedule.*
 # Environments
 .env
 .env.deploy
+.do/app-spec.local.yaml
 .venv
 env/
 venv/
