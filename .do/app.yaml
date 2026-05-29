@@ -5,6 +5,12 @@
 name: terrafirma
 region: nyc
 
+domains:
+  - domain: terrafirmaperu.com
+    type: PRIMARY
+  - domain: www.terrafirmaperu.com
+    type: ALIAS
+
 services:
   - name: web
     github:
