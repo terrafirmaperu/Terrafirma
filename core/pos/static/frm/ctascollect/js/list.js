@@ -361,6 +361,9 @@ function getData(all) {
                 render: function (data, type, row) {
                     var buttons = '<a rel="payments" class="btn bg-blue btn-xs btn-flat"><i class="fas fa-dollar-sign"></i></a> ';
                     var qp = computeQuotaProgress(row);
+                    if (qp && row.sale && row.sale.id) {
+                        buttons += '<a rel="payment_schedule" class="btn btn-info btn-xs btn-flat" title="Descargar cronograma de pagos"><i class="fas fa-calendar-alt"></i></a> ';
+                    }
                     if (qp && row.state) {
                         buttons += '<a rel="pay_quota" class="btn btn-success btn-xs btn-flat" title="Pagar cuota"><i class="fas fa-dollar-sign"></i></a> ';
                     } else if (qp && !row.state) {
@@ -490,6 +493,14 @@ $(function () {
             var tr = tblCtasCollect.cell($(this).closest('td, li')).index(),
                 row = tblCtasCollect.row(tr.row).data();
             openPayQuotaModal(row);
+        })
+        .on('click', 'a[rel="payment_schedule"]', function () {
+            $('.tooltip').remove();
+            var tr = tblCtasCollect.cell($(this).closest('td, li')).index(),
+                row = tblCtasCollect.row(tr.row).data();
+            if (row && row.sale && row.sale.id) {
+                window.open('/pos/crm/sale/print/payment-schedule/' + row.sale.id + '/', '_blank');
+            }
         })
         .on('click', 'a[rel="payments"]', function () {
             $('.tooltip').remove();

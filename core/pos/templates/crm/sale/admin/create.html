@@ -215,7 +215,33 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Fecha limite de credito:</label>
-                                        {{ form.end_credit }}
+                                        <div style="display:none;">
+                                            {{ form.end_credit }}
+                                        </div>
+                                        <div class="custom-control custom-switch mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="toggleCustomEndCredit"
+                                                   name="custom_end_credit_enabled" value="1">
+                                            <label class="custom-control-label" for="toggleCustomEndCredit">
+                                                Cambiar fecha límite manualmente
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <input type="number" name="end_credit_year" class="form-control"
+                                                       min="2000" max="2100" placeholder="Año" autocomplete="off">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" name="end_credit_month" class="form-control"
+                                                       min="1" max="12" placeholder="Mes" autocomplete="off">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" name="end_credit_day" class="form-control"
+                                                       min="1" max="31" placeholder="Día" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <small class="form-text text-muted">
+                                            Si no habilita el cambio manual, el sistema calcula la fecha por cuotas cada 25 días.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -226,13 +252,9 @@
                                 <div class="col-lg-5">
                                     <div class="form-group">
                                         <label class="control-label">Número de cuotas:</label>
-                                        <select name="credit_quota_count" class="form-control select_credit_quota_count">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                        </select>
+                                        <input type="number" name="credit_quota_count"
+                                               class="form-control select_credit_quota_count"
+                                               min="1" max="60" step="1" value="1" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-lg-7">
@@ -243,7 +265,7 @@
                                                placeholder="0.00">
                                         <small id="creditCuotasHelp" class="form-text text-muted"></small>
                                         <div id="creditCuotasSchedule" class="mt-2" style="display:none;">
-                                            <small class="form-text font-weight-bold">Fechas programadas (cada 25 días):</small>
+                                            <small class="form-text font-weight-bold">Fechas programadas:</small>
                                             <ul id="creditCuotasScheduleList" class="list-unstyled mb-0 ml-2 small text-muted"></ul>
                                         </div>
                                     </div>
@@ -368,6 +390,7 @@
     </div>
     <div id="myModalClient" class="modal fade" role="dialog">
         <form class="form" id="frmClient" method="POST">
+            <input type="hidden" name="existing_client_id" id="modal_existing_client_id" value="">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -439,6 +462,9 @@
                     </button>
                     <button type="button" class="btn btn-info" id="btnContrataPrint">
                         <i class="fas fa-file-word"></i> Descargar contrato Word
+                    </button>
+                    <button type="button" class="btn btn-success" id="btnCronogramaPrint" style="display: none;">
+                        <i class="fas fa-calendar-alt"></i> Descargar cronograma de pagos
                     </button>
                     <button type="button" class="btn btn-primary" id="btnContrataDone">
                         <i class="fas fa-check"></i> Finalizar

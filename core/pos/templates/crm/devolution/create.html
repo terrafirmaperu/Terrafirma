@@ -9,7 +9,10 @@
     <script src="{% static 'lib/bootstrap-touchspin-4.2.5/js/jquery.bootstrap-touchspin.js' %}"></script>
     <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
-    <script src="{% static 'crm/devolution/js/form.js' %}"></script>
+    <script src="{% static 'crm/devolution/js/form.js' %}?v=20260528-refund-auth"></script>
+    <script type="application/javascript">
+        window.SUPERVISOR_REFUND_AUTH_URL = '{% url "verify_supervisor_delete" %}';
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -52,7 +55,7 @@
                             <th style="width: 5%;">Nro</th>
                             <th style="width: 35%;">Producto</th>
                             <th style="width: 15%;">Cantidad comprada</th>
-                            <th style="width: 15%;">Cantidad devolver</th>
+                            <th style="width: 15%;">Cantidad a cancelar</th>
                             <th style="width: 25%;">Motivo</th>
                             <th style="width: 5%;">Estado</th>
                         </tr>
@@ -63,7 +66,7 @@
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-flat">
-                    <i class="fas fa-save"></i> Guardar registro
+                    <i class="fas fa-save"></i> Guardar cancelación
                 </button>
                 <a href="{{ list_url }}" class="btn btn-danger btn-flat">
                     <i class="fas fa-times"></i> Cancelar
@@ -71,5 +74,43 @@
             </div>
         </div>
     </form>
+    <div class="modal fade" id="modalRefundAuthorization" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-cash-register"></i> Retorno de dinero en caja
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">
+                        Esta venta registra pagos por:
+                        <strong class="text-danger" id="refundPaidAmountLabel">S/ 0.00</strong>
+                    </p>
+                    <p class="text-muted small">
+                        Para continuar con la cancelación, confirme el retorno de dinero en caja
+                        con autorización de supervisor.
+                    </p>
+                    <div class="form-group">
+                        <label>Usuario supervisor</label>
+                        <input type="text" class="form-control" id="refund_supervisor_username" autocomplete="username">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="refund_supervisor_password" autocomplete="current-password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnAuthorizeRefund">
+                        <i class="fas fa-check"></i> Autorizar y continuar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

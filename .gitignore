@@ -3,12 +3,13 @@
 *.pot
 *.pyc
 __pycache__/
-*/migrations/*
-**/migrations/*
 */logs/*
-config/*
-staticfiles/*
+!logs/.gitkeep
+staticfiles/
+config/local.py
+config/*.local.py
 db.sqlite3
+db/*.sqlite3
 media
 .idea
 

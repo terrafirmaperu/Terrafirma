@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from django.contrib.auth.models import Group
@@ -98,14 +98,24 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
         try:
             type = self.request.POST['type']
             obj = self.request.POST['obj'].strip()
+            client_id = self.request.POST.get('client_id') or self.request.POST.get('existing_client_id') or None
             if type == 'dni':
-                if User.objects.filter(dni=obj):
+                qs = User.objects.filter(dni=obj)
+                if client_id:
+                    qs = qs.exclude(client__id=client_id)
+                if qs.exists():
                     data['valid'] = False
             elif type == 'mobile':
-                if Client.objects.filter(mobile=obj):
+                qs = Client.objects.filter(mobile=obj)
+                if client_id:
+                    qs = qs.exclude(pk=client_id)
+                if qs.exists():
                     data['valid'] = False
             elif type == 'email':
-                if obj and User.objects.filter(email__iexact=obj).exists():
+                qs = User.objects.filter(email__iexact=obj)
+                if client_id:
+                    qs = qs.exclude(client__id=client_id)
+                if obj and qs.exists():
                     data['valid'] = False
         except:
             pass
@@ -176,8 +186,30 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                             quota_count = int(request.POST.get('credit_quota_count', '1'))
                         except (ValueError, TypeError):
                             quota_count = 1
-                        quota_count = max(1, min(5, quota_count))
-                        sale.end_credit = sale.date_joined + timedelta(days=25 * quota_count)
+                        quota_count = max(1, min(60, quota_count))
+                        sale_joined = sale.date_joined
+                        sale_date = sale_joined.date() if hasattr(sale_joined, 'date') else sale_joined
+                        custom_end_credit = (request.POST.get('custom_end_credit_enabled') or '').strip() in (
+                            '1', 'true', 'on', 'yes'
+                        )
+                        if custom_end_credit:
+                            end_credit_raw = (request.POST.get('end_credit') or '').strip()
+                            try:
+                                end_credit = datetime.strptime(end_credit_raw, '%Y-%m-%d').date()
+                            except ValueError:
+                                raise ValueError('La fecha límite de crédito no es válida.')
+                            diff_days = (end_credit - sale_date).days
+                            if diff_days <= 0:
+                                raise ValueError('La fecha límite debe ser posterior a la fecha de venta.')
+                            if diff_days == 1:
+                                raise ValueError('El plazo de crédito no puede ser de 1 solo día.')
+                            if diff_days < quota_count:
+                                raise ValueError(
+                                    f'Para {quota_count} cuota(s), el plazo debe ser al menos de {quota_count} día(s).'
+                                )
+                        else:
+                            end_credit = sale_date + timedelta(days=25 * quota_count)
+                        sale.end_credit = end_credit
                         try:
                             inicial = Decimal(
                                 str(request.POST.get('credit_down_payment', '0') or '0').replace(',', '.')
@@ -281,6 +313,7 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                         'sale_code': sale.sale_code or '',
                         'contract_code': sale.contract_code or '',
                         'contract_docx_basename': sale.contract_docx_basename(),
+                        'payment_condition': sale.payment_condition,
                     }
             elif action == 'validate_sale_products':
                 try:
@@ -356,22 +389,64 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
             elif action == 'validate_client':
                 return self.validate_client()
             elif action == 'lookup_dni':
-                payload = lookup_dni_data(request.POST.get('dni', ''))
+                dni = (request.POST.get('dni') or '').strip()
+                existing_client = (
+                    Client.objects.filter(user__dni=dni)
+                    .select_related('user')
+                    .prefetch_related(
+                        Prefetch(
+                            'properties',
+                            queryset=ClientProperty.objects.select_related(
+                                'product', 'product__category',
+                            ).order_by('order', 'id'),
+                        ),
+                    )
+                    .first()
+                )
+                if existing_client:
+                    item = existing_client.toJSON()
+                    item['text'] = '{} / {}'.format(
+                        existing_client.user.get_full_name(),
+                        existing_client.user.dni,
+                    )
+                    return JsonResponse({
+                        'success': True,
+                        'existing_client': True,
+                        'client': item,
+                    })
+                payload = lookup_dni_data(dni)
                 if payload.get('error'):
                     return JsonResponse({'success': False, 'error': payload['error']})
                 return JsonResponse({'success': True, 'data': payload})
             elif action == 'create_client':
                 with transaction.atomic():
-                    user = User()
+                    existing_client_id = request.POST.get('existing_client_id') or ''
+                    if existing_client_id:
+                        client = (
+                            Client.objects.select_for_update()
+                            .select_related('user')
+                            .get(pk=int(existing_client_id))
+                        )
+                        user = client.user
+                        dni = (request.POST.get('dni') or '').strip()
+                        if dni and user.dni != dni and User.objects.filter(dni=dni).exclude(pk=user.pk).exists():
+                            data['error'] = 'El número de Dni o cédula ya se encuentra registrado'
+                            return HttpResponse(json.dumps(data), content_type='application/json')
+                    else:
+                        user = User()
+                        user.dni = request.POST['dni']
+                        user.username = user.dni
+                        user.create_or_update_password(user.dni)
+                        client = Client()
+
                     user.first_name = request.POST['first_name']
                     user.last_name = request.POST['last_name']
                     user.dni = request.POST['dni']
-                    user.username = user.dni
-                    user.create_or_update_password(user.dni)
+                    if not user.username:
+                        user.username = user.dni
                     user.email = (request.POST.get('email') or '').strip()
                     user.save()
 
-                    client = Client()
                     client.user_id = user.id
                     client.mobile = request.POST['mobile']
                     client.department = (request.POST.get('department') or '').strip()
@@ -389,8 +464,9 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                         data['error'] = str(exc)
                         return HttpResponse(json.dumps(data), content_type='application/json')
 
-                    group = Group.objects.get(pk=settings.GROUPS.get('client'))
-                    user.groups.add(group)
+                    if not existing_client_id:
+                        group = Group.objects.get(pk=settings.GROUPS.get('client'))
+                        user.groups.add(group)
 
                     data = (
                         Client.objects.prefetch_related('properties')
@@ -398,6 +474,7 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                         .get(pk=client.id)
                         .toJSON()
                     )
+                    data['text'] = '{} / {}'.format(client.user.get_full_name(), client.user.dni)
             elif action == 'create_proforma':
                 ventsjson = json.loads(request.POST['vents'])
                 template = get_template('crm/sale/print/proforma.html')

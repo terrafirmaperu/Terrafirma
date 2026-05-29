@@ -212,6 +212,8 @@ def find_duplicate_predio_sales(client_id, products_payload):
             if props.count() != 1:
                 continue
             prop = props.first()
+            if prop.contract_locked_at or predio_sale_process_info(prop).get('in_process'):
+                continue
             sale = find_existing_sale_for_predio_property(prop)
             label = (prop.label or '').strip() or property_summary_line(client_property_to_dict(prop))
 

@@ -506,7 +506,7 @@ class DevolutionForm(ModelForm):
     sale = forms.ChoiceField(widget=forms.Select(attrs={
         'class': 'form-control select2',
         'style': 'width: 100%;'
-    }))
+    }), choices=())
 
 
 class CashRegisterSessionOpenForm(ModelForm):

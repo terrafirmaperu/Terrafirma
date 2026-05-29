@@ -86,6 +86,7 @@ urlpatterns = [
     path('crm/sale/admin/delete/<int:pk>/', SaleAdminDeleteView.as_view(), name='sale_admin_delete'),
     path('crm/sale/print/voucher/<int:pk>/', SalePrintVoucherView.as_view(), name='sale_print_ticket'),
     path('crm/sale/print/contract/<int:pk>/', SalePrintContractView.as_view(), name='sale_print_contract'),
+    path('crm/sale/print/payment-schedule/<int:pk>/', SalePrintPaymentScheduleView.as_view(), name='sale_print_payment_schedule'),
     path('crm/sale/print/contract/preview/<int:pk>/', SalePrintContractPreviewView.as_view(), name='sale_print_contract_preview'),
     path('crm/sale/print/contract/quick/<int:pk>/', SalePrintContractQuickView.as_view(), name='sale_print_contract_quick'),
     path('crm/sale/client/', SaleClientListView.as_view(), name='sale_client_list'),

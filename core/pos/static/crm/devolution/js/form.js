@@ -2,6 +2,52 @@ var fv;
 var input_datejoined;
 var select_sale;
 var tblProducts = null;
+var pendingCancellationParameters = null;
+
+function submitCancellationParameters(parameters) {
+    submit_formdata_with_ajax('Notificación',
+        '¿Estas seguro de realizar la siguiente acción?',
+        pathname,
+        parameters,
+        function () {
+            location.href = fv.form.getAttribute('data-url');
+        },
+    );
+}
+
+function requestRefundAuthorization(parameters) {
+    $.ajax({
+        url: pathname,
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        data: {
+            action: 'sale_payment_summary',
+            sale: select_sale.val()
+        },
+        success: function (resp) {
+            if (resp && resp.error) {
+                message_error(resp.error);
+                return;
+            }
+            var paid = parseFloat(String(resp.paid_amount || '0').replace(',', '.'));
+            if (isNaN(paid) || paid <= 0 || !resp.requires_authorization) {
+                submitCancellationParameters(parameters);
+                return;
+            }
+            pendingCancellationParameters = parameters;
+            $('#refundPaidAmountLabel').text('S/ ' + paid.toFixed(2));
+            $('#refund_supervisor_username').val('');
+            $('#refund_supervisor_password').val('');
+            $('#modalRefundAuthorization').modal('show');
+        },
+        error: function () {
+            message_error('No se pudo verificar cuánto ha pagado esta venta.');
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', function (e) {
     const form = document.getElementById('frmForm');
@@ -82,18 +128,28 @@ document.addEventListener('DOMContentLoaded', function (e) {
             parameters.append('action', $('input[name="action"]').val());
             var products = devolution.getProducts();
             if (products.length === 0) {
-                message_error('Debe tener al menos un item seleccionado');
+                message_error('Debe tener al menos un item seleccionado para cancelar');
                 return false;
             }
+            for (var i = 0; i < products.length; i++) {
+                if (!products[i].motive || $.trim(products[i].motive) === '') {
+                    message_error('Ingrese el motivo de cada cancelación seleccionada.');
+                    return false;
+                }
+                if (parseInt(products[i].amount_return) <= 0 || parseInt(products[i].amount_return) > parseInt(products[i].cant)) {
+                    message_error('La cantidad a cancelar debe ser válida.');
+                    return false;
+                }
+            }
+            if (!tblProducts) {
+                message_error('Seleccione una venta y cargue sus productos.');
+                return false;
+            }
+            if (input_datejoined.val()) {
+                parameters.set('date_joined', input_datejoined.val());
+            }
             parameters.append('products', JSON.stringify(products));
-            submit_formdata_with_ajax('Notificación',
-                '¿Estas seguro de realizar la siguiente acción?',
-                pathname,
-                parameters,
-                function () {
-                    location.href = fv.form.getAttribute('data-url');
-                },
-            );
+            requestRefundAuthorization(parameters);
         });
 });
 
@@ -150,7 +206,7 @@ var devolution = {
                     class: 'text-center',
                     render: function (data, type, row) {
                         if (row.cant > 0) {
-                            return '<input type="text" class="form-control" name="motive" disabled placeholder="Ingrese una descripción" autocomplete="off">';
+                            return '<input type="text" class="form-control" name="motive" disabled placeholder="Motivo de la cancelación" autocomplete="off">';
                         }
                         return '---';
                     }
@@ -184,6 +240,9 @@ var devolution = {
         });
     },
     getProducts: function () {
+        if (!tblProducts) {
+            return [];
+        }
         return tblProducts.rows().data().toArray().filter(value => value.state === 1 && value.amount_return > 0);
     }
 }
@@ -192,11 +251,6 @@ $(function () {
 
     input_datejoined = $('input[name="date_joined"]');
     select_sale = $('select[name="sale"]');
-
-    $('.select2').select2({
-        theme: 'bootstrap4',
-        language: "es"
-    });
 
     select_sale.select2({
         theme: "bootstrap4",
@@ -222,8 +276,8 @@ $(function () {
                 };
             },
         },
-        placeholder: 'Ingrese una descripción',
-        minimumInputLength: 1,
+        placeholder: 'Busque por venta, contrato, cliente o DNI',
+        minimumInputLength: 0,
     })
         .on('select2:select', function (e) {
             fv.revalidateField('sale');
@@ -245,6 +299,50 @@ $(function () {
         fv.revalidateField('date_joined');
     });
 
+    $('#btnAuthorizeRefund').on('click', function () {
+        var username = $('#refund_supervisor_username').val();
+        var password = $('#refund_supervisor_password').val();
+        if (!username || !password) {
+            message_error('Ingrese usuario y contraseña del supervisor.');
+            return;
+        }
+        var $btn = $(this);
+        $btn.prop('disabled', true);
+        $.ajax({
+            url: window.SUPERVISOR_REFUND_AUTH_URL || '/security/verify-supervisor-delete/',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {
+                supervisor_username: username,
+                supervisor_password: password
+            },
+            success: function (resp) {
+                if (!resp || !resp.success) {
+                    message_error((resp && resp.error) || 'No se pudo autorizar.');
+                    return;
+                }
+                $('#modalRefundAuthorization').modal('hide');
+                if (pendingCancellationParameters) {
+                    submitCancellationParameters(pendingCancellationParameters);
+                    pendingCancellationParameters = null;
+                }
+            },
+            error: function (xhr) {
+                var msg = 'No se pudo autorizar.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    msg = xhr.responseJSON.error;
+                }
+                message_error(msg);
+            },
+            complete: function () {
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+
     $('#tblProducts tbody')
         .off()
         .on('change', 'input[name="amount_return"]', function () {
@@ -263,7 +361,10 @@ $(function () {
             var row = tblProducts.row(tr.row).data();
             row.state = state ? 1 : 0;
             row.amount_return = state ? 1 : 0;
+            if (!state) {
+                row.motive = '';
+            }
             $(tblProducts.row(tr.row).node()).find('input[name="amount_return"]').prop('disabled', !state);
-            $(tblProducts.row(tr.row).node()).find('input[name="motive"]').prop('disabled', !state);
+            $(tblProducts.row(tr.row).node()).find('input[name="motive"]').prop('disabled', !state).val(state ? row.motive : '');
         });
 });

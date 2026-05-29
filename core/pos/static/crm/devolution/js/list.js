@@ -3,9 +3,10 @@ var input_daterange;
 var select_sale;
 
 function getData(all) {
+    var saleValue = select_sale.val() || '';
     var parameters = {
         'action': 'search',
-        'sale': select_sale.val(),
+        'sale': saleValue,
         'start_date': input_daterange.data('daterangepicker').startDate.format('YYYY-MM-DD'),
         'end_date': input_daterange.data('daterangepicker').endDate.format('YYYY-MM-DD'),
     };
@@ -70,9 +71,31 @@ $(function () {
             getData(false);
         });
 
-    $('.select2').select2({
-        theme: 'bootstrap4',
-        language: "es"
+    select_sale.select2({
+        theme: "bootstrap4",
+        language: 'es',
+        allowClear: true,
+        ajax: {
+            delay: 250,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            url: pathname,
+            data: function (params) {
+                return {
+                    term: params.term || '',
+                    action: 'search_sale'
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: Array.isArray(data) ? data : []
+                };
+            },
+        },
+        placeholder: 'Busque por venta, contrato, cliente o DNI',
+        minimumInputLength: 0
     });
 
     select_sale.on('change', function () {

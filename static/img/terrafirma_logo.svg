@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 190" role="img" aria-label="TERRAFIRMA">
+  <rect width="520" height="190" fill="white"/>
+  <g transform="translate(18 18)" fill="none" stroke="#16522f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M74 8c-38 18-63 54-63 94 0 31 15 58 38 75"/>
+    <path d="M22 106h112"/>
+    <path d="M47 106V70l32-24 32 24v36"/>
+    <path d="M60 106V82h38v24"/>
+    <path d="M114 55c20-12 42-13 58-5-2 19-19 38-45 43-11-14-15-26-13-38z" fill="#16522f"/>
+    <path d="M127 88c-10 20-12 39-9 58"/>
+    <circle cx="132" cy="24" r="10"/>
+    <path d="M132 2v9M132 37v9M110 24h9M145 24h9M116 8l7 7M141 33l7 7M148 8l-7 7M123 33l-7 7"/>
+  </g>
+  <g fill="#1e2e2b" font-family="Arial, Helvetica, sans-serif">
+    <text x="195" y="88" font-size="45" font-weight="700" letter-spacing="2">TERRAFIRMA</text>
+    <text x="198" y="122" font-size="18" letter-spacing="3">SANEAMIENTO Y ASESORIAS</text>
+  </g>
+</svg>

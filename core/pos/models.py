@@ -82,7 +82,7 @@ class Company(models.Model):
     def get_image(self):
         if self.image:
             return '{}{}'.format(settings.MEDIA_URL, self.image)
-        return '{}{}'.format(settings.STATIC_URL, 'img/default/empty.png')
+        return '{}{}'.format(settings.STATIC_URL, 'img/terrafirma_logo.svg')
 
     def get_igv(self):
         return format(self.igv, '.2f')
@@ -708,7 +708,7 @@ class CtasCollect(models.Model):
     def get_quota_plan(self):
         """
         Plan de pagos: inicial (si aplica) y cuotas 1..N sobre (total - inicial),
-        con fecha programada cada 25 días a partir de la fecha de venta.
+        con fechas distribuidas hasta la fecha límite registrada.
         """
         from datetime import timedelta
 
@@ -732,9 +732,14 @@ class CtasCollect(models.Model):
                 'due_date': base_date.strftime('%Y-%m-%d'),
             })
         amounts = _split_amount_in_equal_quotas(financed, n)
+        end_date = sale.end_credit
+        diff_days = (end_date - base_date).days if end_date and base_date else 25 * n
+        if diff_days <= 0:
+            diff_days = 25 * n
         for i in range(1, n + 1):
             amt = amounts[i - 1] if i - 1 < len(amounts) else Decimal('0.00')
-            due = base_date + timedelta(days=25 * i)
+            step_days = round((diff_days * i) / n)
+            due = base_date + timedelta(days=step_days)
             plan.append({
                 'num': i,
                 'label': 'Cuota {}'.format(i),
@@ -1050,13 +1055,13 @@ class Devolution(models.Model):
         return item
 
     class Meta:
-        verbose_name = 'Devolución'
-        verbose_name_plural = 'Devoluciones'
+        verbose_name = 'Cancelación'
+        verbose_name_plural = 'Cancelaciones'
         default_permissions = ()
         permissions = (
-            ('view_devolution', 'Can view Devoluciones'),
-            ('add_devolution', 'Can add Devoluciones'),
-            ('delete_devolution', 'Can delete Devoluciones'),
+            ('view_devolution', 'Can view Cancelaciones'),
+            ('add_devolution', 'Can add Cancelaciones'),
+            ('delete_devolution', 'Can delete Cancelaciones'),
         )
         ordering = ['-id']
 

@@ -2,8 +2,9 @@ Plantillas de contrato Word — carpeta: core/pos/templates/contracts/
 ================================================================
 
 Plantilla activa (prioridad):
-  1. contrato_Celia.docx  (o CONTRATO SRA. CELIA.docx)
-  2. contrato_base.docx   (plantilla anterior)
+  1. CONTRATO NOTARIAL - FINAL.docx
+  2. contrato_Celia.docx  (o CONTRATO SRA. CELIA.docx)
+  3. contrato_base.docx   (plantilla anterior)
 
 Plantilla Celia (diseño con QR, barcode y N° en cuadros de texto)
 -----------------------------------------------------------------
@@ -23,3 +24,78 @@ Plantilla base (marcadores Polariss, opcional)
 Compatibilidad: [[FACTORA_*]] (mismo comportamiento).
 
 Para cambiar el diseño, edite el .docx en esta carpeta y conserve las frases ancla del cuerpo.
+
+Firma y sello fijos
+-------------------
+El bloque izquierdo de firma, sello y logo de TERRAFIRMA debe permanecer siempre como
+imagen fija dentro de la plantilla Word. No colocar marcadores sobre esa imagen ni usarla
+para QR/código de barras. El sistema solo debe completar los datos del cliente/predio/venta
+y mantener esa firma/sello en el lado izquierdo.
+
+Marcadores recomendados para Word
+---------------------------------
+Puede escribirlos en la plantilla como {{MARCADOR}} o [[MARCADOR]].
+
+Cliente:
+  {{CLIENTE_NOMBRE}}
+  {{CLIENTE_DNI}}
+  {{CLIENTE_CELULAR}}
+  {{CLIENTE_DIRECCION}}
+  {{CLIENTE_DEPARTAMENTO}}
+  {{CLIENTE_PROVINCIA}}
+  {{CLIENTE_DISTRITO}}
+  {{CODIGO_CLIENTE}}
+
+Venta / contrato:
+  {{CODIGO_VENTA}}
+  {{CODIGO_CONTRATO}}
+  {{FECHA_VENTA}}
+  {{FECHA_CONTRATO}}
+  {{FECHA_FIRMA}}
+  {{MONTO_TOTAL}}
+  {{MONTO_TOTAL_LETRAS}}
+  {{CREDITO_INICIAL}}
+  {{PRIMER_PAGO}}
+  {{SALDO_CREDITO}}
+  {{NUMERO_CUOTAS}}
+  {{FECHA_LIMITE_CREDITO}}
+  {{FORMA_PAGO}}
+  {{METODO_PAGO}}
+  {{SERVICIO}}
+  {{ASESOR}}
+
+Empresa:
+  {{EMPRESA_NOMBRE}}
+  {{EMPRESA_RUC}}
+  {{EMPRESA_DIRECCION}}
+  {{EMPRESA_CELULAR}}
+  {{EMPRESA_TELEFONO}}
+  {{EMPRESA_EMAIL}}
+  {{EMPRESA_WEB}}
+  {{EMPRESA_DESCRIPCION}}
+
+Predio vinculado a la venta:
+  {{PREDIO_COMUNIDAD}}
+  {{PREDIO_CENTRO_POBLADO}}
+  {{PREDIO_DEPARTAMENTO}}
+  {{PREDIO_PROVINCIA}}
+  {{PREDIO_DISTRITO}}
+  {{PREDIO_DIRECCION}}
+  {{PREDIO_LOTE}}
+  {{PREDIO_MANZANA}}
+  {{PREDIO_PARTIDA}}
+  {{PREDIO_TIPO}}
+  {{PREDIO_AREA}}
+  {{PREDIO_PERIMETRO}}
+
+Cronograma de pagos:
+  Plantilla: core/pos/templates/contracts/Cronograma.docx
+  Use los mismos marcadores de Cliente, Venta, Empresa y Predio.
+  Para indicar dónde insertar la tabla de cuotas, escriba:
+  {{CRONOGRAMA_TABLA}}
+
+  Si no coloca {{CRONOGRAMA_TABLA}}, el sistema agregará la tabla al final del documento.
+
+  El QR y el código de barras del cronograma se generan igual que en la contrata:
+  código de cliente + código de venta. Si el modelo viene de la contrata, conserve
+  las imágenes base del QR/barra para que el sistema las reemplace automáticamente.

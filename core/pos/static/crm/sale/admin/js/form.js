@@ -5,6 +5,7 @@ var fvClient;
 var pendingRedirectAfterContrata = null;
 var pendingContractSaleId = null;
 var pendingContractDocxBasename = null;
+var pendingContractPaymentCondition = null;
 
 var select_client;
 /*var input_birthdate;*/
@@ -21,6 +22,10 @@ var tblProducts;
 
 var input_searchproducts;
 var input_endcredit;
+var input_endcredit_year;
+var input_endcredit_month;
+var input_endcredit_day;
+var input_custom_endcredit_enabled;
 var inputs_vents;
 
 var vents = {
@@ -166,6 +171,7 @@ var vents = {
         var listEl = document.getElementById('saleClientPropertiesList');
         var props = (listEl && listEl._salePredioProps) ? listEl._salePredioProps : [];
         var blocked = null;
+        var availableForProduct = [];
         props.forEach(function (p) {
             if (blocked) {
                 return;
@@ -177,9 +183,26 @@ var vents = {
                 return;
             }
             if (String(p.product_id) === String(item.id) && (p.in_process || p.contract_locked)) {
-                blocked = p;
+                return;
+            }
+            if (String(p.product_id) === String(item.id) && !(p.in_process || p.contract_locked)) {
+                availableForProduct.push(p);
             }
         });
+        if (!item.client_property_id && availableForProduct.length > 0) {
+            var selectPredioMsg = 'Este cliente tiene predios disponibles para este servicio. Agregue el producto desde "Predios vinculados" para asociarlo al predio correcto.';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Seleccione el predio',
+                    text: selectPredioMsg,
+                    confirmButtonText: 'Entendido',
+                });
+            } else if (typeof message_error === 'function') {
+                message_error(selectPredioMsg);
+            }
+            return false;
+        }
         if (blocked) {
             var alertText = blocked.block_message || blocked.process_label ||
                 'Este predio ya tiene venta y asesoría en el sistema. No puede generar la misma asesoría otra vez.';
@@ -200,6 +223,27 @@ var vents = {
         return true;
     },
 };
+
+function parseIsoDateOnly(iso) {
+    if (!iso) return null;
+    var parts = String(iso).split('-');
+    if (parts.length !== 3) return null;
+    var y = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10);
+    var d = parseInt(parts[2], 10);
+    if (isNaN(y) || isNaN(m) || isNaN(d)) return null;
+    var dt = new Date(y, m - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== (m - 1) || dt.getDate() !== d) return null;
+    dt.setHours(0, 0, 0, 0);
+    return dt;
+}
+
+function toIsoDateOnly(dt) {
+    var y = dt.getFullYear();
+    var m = String(dt.getMonth() + 1).padStart(2, '0');
+    var d = String(dt.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+}
 
 function validateSaleProductsBeforeSave(done) {
     var clientId = $('select[name="client"]').val();
@@ -291,6 +335,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                                 return {
                                     obj: frmClient.querySelector('[name="dni"]').value,
                                     type: 'dni',
+                                        client_id: $('#modal_existing_client_id').val() || '',
                                     action: 'validate_client'
                                 };
                             },
@@ -315,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                                 return {
                                     obj: frmClient.querySelector('[name="mobile"]').value,
                                     type: 'mobile',
+                                    client_id: $('#modal_existing_client_id').val() || '',
                                     action: 'validate_client'
                                 };
                             },
@@ -338,6 +384,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                                 return {
                                     obj: frmClient.querySelector('[name="email"]').value,
                                     type: 'email',
+                                    client_id: $('#modal_existing_client_id').val() || '',
                                     action: 'validate_client'
                                 };
                             },
@@ -442,7 +489,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
             submit_formdata_with_ajax('Notificación', '¿Estas seguro de realizar la siguiente acción?', pathname,
                 parameters,
                 function (request) {
-                    var newOption = new Option(request.user.full_name + ' / ' + request.user.dni, request.id, false, true);
+                    var optionText = request.text || (request.user.full_name + ' / ' + request.user.dni);
+                    select_client.find('option[value="' + request.id + '"]').remove();
+                    var newOption = new Option(optionText, request.id, false, true);
                     select_client.append(newOption).trigger('change');
                     var listEl = document.getElementById('saleClientPropertiesList');
                     if (request && request.id && listEl && window.ClientPredios) {
@@ -504,6 +553,40 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         date: {
                             format: 'YYYY-MM-DD',
                             message: 'La fecha no es válida'
+                        },
+                        callback: {
+                            callback: function (input) {
+                                if ($('select[name="payment_condition"]').val() !== 'credito') {
+                                    return {valid: true};
+                                }
+                                if (!$('#toggleCustomEndCredit').is(':checked')) {
+                                    return {valid: true};
+                                }
+                                var endRaw = (input.value || '').trim();
+                                if (!endRaw) {
+                                    return {valid: false, message: 'La fecha es obligatoria'};
+                                }
+                                var base = parseIsoDateOnly(current_date);
+                                var end = parseIsoDateOnly(endRaw);
+                                if (!base || !end) {
+                                    return {valid: false, message: 'La fecha no es válida'};
+                                }
+                                var daysDiff = Math.round((end.getTime() - base.getTime()) / 86400000);
+                                if (daysDiff <= 0) {
+                                    return {valid: false, message: 'Debe ser posterior a la fecha de venta'};
+                                }
+                                if (daysDiff === 1) {
+                                    return {valid: false, message: 'El plazo no puede ser de 1 solo día'};
+                                }
+                                var n = parseInt(($('input[name="credit_quota_count"]').val() || '1').trim(), 10) || 1;
+                                if (daysDiff < n) {
+                                    return {
+                                        valid: false,
+                                        message: 'Para ' + n + ' cuota(s), el plazo debe ser al menos de ' + n + ' día(s)'
+                                    };
+                                }
+                                return {valid: true};
+                            }
                         }
                     }
                 },
@@ -673,7 +756,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             parameters.append('titular', input_titular.val());
             parameters.append('dscto', $('input[name="dscto"]').val());
             parameters.append('amount_debited', input_amountdebited.val());
-            parameters.append('credit_quota_count', $('select[name="credit_quota_count"]').val());
+            parameters.append('credit_quota_count', $('input[name="credit_quota_count"]').val());
             parameters.append('credit_down_payment', $('input[name="credit_down_payment"]').val());
             parameters.append('credit_down_payment_method', $('#credit_down_payment_method').val());
             if (vents.details.products.length === 0) {
@@ -716,6 +799,12 @@ function openContrataModal(saleData, urlrefresh) {
     var saleId = saleData && saleData.id ? saleData.id : '—';
     pendingContractSaleId = saleId;
     pendingContractDocxBasename = (saleData && saleData.contract_docx_basename) ? saleData.contract_docx_basename : null;
+    pendingContractPaymentCondition = saleData && saleData.payment_condition ? saleData.payment_condition : null;
+    if (pendingContractPaymentCondition === 'credito') {
+        $('#btnCronogramaPrint').show();
+    } else {
+        $('#btnCronogramaPrint').hide();
+    }
     $('#myModalContrata').modal('show');
 }
 
@@ -741,6 +830,63 @@ function contractDocxFilenameFromXhr(xhr, saleId, suggestedBasename) {
         return String(suggestedBasename);
     }
     return 'CONTRATO_' + saleId + '.docx';
+}
+
+function scheduleDocxFilenameFromXhr(xhr, saleId) {
+    var disp = xhr.getResponseHeader('Content-Disposition');
+    if (disp) {
+        var m = disp.match(/filename\*=UTF-8''([^;]+)/i)
+            || disp.match(/filename="([^"]+)"/i)
+            || disp.match(/filename=([^;\s]+)/i);
+        if (m) {
+            try {
+                return decodeURIComponent(m[1].replace(/"/g, '').trim());
+            } catch (e) {
+                return m[1].replace(/"/g, '').trim();
+            }
+        }
+    }
+    var xf = xhr.getResponseHeader('X-Schedule-Filename');
+    if (xf && xf.trim()) {
+        return xf.trim();
+    }
+    return 'CRONOGRAMA_PAGOS_' + saleId + '.docx';
+}
+
+function downloadBlobFile(blob, filename) {
+    var u = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = u;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(u);
+}
+
+function downloadPaymentSchedule(saleId) {
+    if (!saleId || saleId === '—' || pendingContractPaymentCondition !== 'credito') {
+        return;
+    }
+    $.ajax({
+        url: '/pos/crm/sale/print/payment-schedule/' + saleId + '/',
+        type: 'GET',
+        xhrFields: { responseType: 'blob' },
+        success: function (blob, status, xhr) {
+            if (xhr.status === 204) {
+                return;
+            }
+            var ct = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+            if (ct.indexOf('text/html') >= 0 || ct.indexOf('text/plain') >= 0) {
+                alert('No se pudo descargar el cronograma de pagos.');
+                return;
+            }
+            downloadBlobFile(blob, scheduleDocxFilenameFromXhr(xhr, saleId));
+        },
+        error: function () {
+            alert('No se pudo descargar el cronograma de pagos.');
+        }
+    });
 }
 
 function finalizeContrataFlow() {
@@ -769,14 +915,7 @@ function printContrataDraft() {
                 return;
             }
             var fname = contractDocxFilenameFromXhr(xhr, saleId, suggested);
-            var u = window.URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = u;
-            a.download = fname;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(u);
+            downloadBlobFile(blob, fname);
         },
         error: function () {
             alert('No se pudo descargar el contrato.');
@@ -801,6 +940,10 @@ $(function () {
     select_client = $('select[name="client"]');
     /*input_birthdate = $('input[name="birthdate"]');*/
     input_endcredit = $('input[name="end_credit"]');
+    input_endcredit_year = $('input[name="end_credit_year"]');
+    input_endcredit_month = $('input[name="end_credit_month"]');
+    input_endcredit_day = $('input[name="end_credit_day"]');
+    input_custom_endcredit_enabled = $('#toggleCustomEndCredit');
     select_paymentcondition = $('select[name="payment_condition"]');
     select_paymentmethod = $('select[name="payment_method"]');
     // Solo la grilla de "método de pago" de contado lleva is-disabled en crédito; no la de inicial.
@@ -902,6 +1045,49 @@ $(function () {
         }
     };
 
+    function getSaleBaseDate() {
+        return parseIsoDateOnly(current_date) || new Date();
+    }
+
+    function setCreditEndDateInputs(isoDate) {
+        var dt = parseIsoDateOnly(isoDate);
+        if (!dt) return;
+        if (input_endcredit_year.length) input_endcredit_year.val(dt.getFullYear());
+        if (input_endcredit_month.length) input_endcredit_month.val(dt.getMonth() + 1);
+        if (input_endcredit_day.length) input_endcredit_day.val(dt.getDate());
+        if (input_endcredit.length) input_endcredit.val(toIsoDateOnly(dt));
+    }
+
+    function isCustomEndCreditEnabled() {
+        return !!(input_custom_endcredit_enabled.length && input_custom_endcredit_enabled.is(':checked'));
+    }
+
+    function syncCustomEndCreditUi() {
+        var enabled = isCustomEndCreditEnabled() && select_paymentcondition.val() === 'credito';
+        input_endcredit_year.prop('disabled', !enabled);
+        input_endcredit_month.prop('disabled', !enabled);
+        input_endcredit_day.prop('disabled', !enabled);
+    }
+
+    function syncCreditEndDateHiddenFromParts() {
+        if (!input_endcredit.length) return null;
+        var y = parseInt((input_endcredit_year.val() || '').trim(), 10);
+        var m = parseInt((input_endcredit_month.val() || '').trim(), 10);
+        var d = parseInt((input_endcredit_day.val() || '').trim(), 10);
+        if (isNaN(y) || isNaN(m) || isNaN(d)) {
+            input_endcredit.val('');
+            return null;
+        }
+        var dt = new Date(y, m - 1, d);
+        if (dt.getFullYear() !== y || dt.getMonth() !== (m - 1) || dt.getDate() !== d) {
+            input_endcredit.val('');
+            return null;
+        }
+        var iso = toIsoDateOnly(dt);
+        input_endcredit.val(iso);
+        return dt;
+    }
+
     window.updateCreditCuotasHelp = function () {
         var help = $('#creditCuotasHelp');
         var scheduleWrap = $('#creditCuotasSchedule');
@@ -922,44 +1108,58 @@ $(function () {
         if (isNaN(inicial) || raw === '') {
             inicial = 0;
         }
-        var n = parseInt($('select[name="credit_quota_count"]').val(), 10) || 1;
+        var n = parseInt($('input[name="credit_quota_count"]').val(), 10) || 1;
+        n = Math.max(1, Math.min(60, n));
+        $('input[name="credit_quota_count"]').val(n);
         var restante = Math.max(0, total - inicial);
         var porCuota = n > 0 ? restante / n : restante;
+
+        var baseDt = getSaleBaseDate();
+        var customEnabled = isCustomEndCreditEnabled();
+        var endDt = null;
+        if (customEnabled) {
+            endDt = syncCreditEndDateHiddenFromParts();
+        }
+        if (!endDt) {
+            endDt = new Date(baseDt.getTime() + 25 * n * 86400000);
+            if (!customEnabled) {
+                setCreditEndDateInputs(toIsoDateOnly(endDt));
+            }
+        }
+        var diffDays = Math.round((endDt.getTime() - baseDt.getTime()) / 86400000);
+        var avgDays = n > 0 ? (diffDays / n) : 0;
+        var lastDueDate = toIsoDateOnly(endDt);
         help.text(
             'Saldo después de la inicial: S/ ' + restante.toFixed(2) +
-            ' · Referencia por cuota (~): S/ ' + porCuota.toFixed(2)
+            ' · Referencia por cuota (~): S/ ' + porCuota.toFixed(2) +
+            (customEnabled
+                ? ' · Intervalo promedio: ' + avgDays.toFixed(1) + ' días (manual)'
+                : ' · Intervalo fijo: 25 días')
         );
-
-        var baseDate = $('input[name="date_joined"]').val();
-        var dt = baseDate ? new Date(baseDate + 'T00:00:00') : new Date();
-        if (isNaN(dt.getTime())) dt = new Date();
-        var lastDueDate = null;
 
         if (scheduleWrap.length && scheduleList.length) {
             scheduleList.empty();
             for (var i = 1; i <= n; i++) {
-                var due = new Date(dt.getTime() + (25 * i) * 86400000);
-                var dd = String(due.getDate()).padStart(2, '0');
-                var mm = String(due.getMonth() + 1).padStart(2, '0');
-                var yyyy = due.getFullYear();
-                var dateStr = yyyy + '-' + mm + '-' + dd;
-                if (i === n) lastDueDate = dateStr;
+                var due;
+                if (customEnabled) {
+                    var stepDays = Math.round((diffDays * i) / n);
+                    due = new Date(baseDt.getTime() + (stepDays * 86400000));
+                } else {
+                    due = new Date(baseDt.getTime() + (25 * i) * 86400000);
+                }
+                var dateStr = toIsoDateOnly(due);
                 var label = 'Cuota ' + i + ': ' + dateStr +
                     ' — S/ ' + porCuota.toFixed(2);
                 scheduleList.append('<li><i class="fas fa-calendar-alt text-info mr-1"></i>' + label + '</li>');
             }
             scheduleWrap.show();
-        } else {
-            var lastDue = new Date(dt.getTime() + (25 * n) * 86400000);
-            var ld = String(lastDue.getDate()).padStart(2, '0');
-            var lm = String(lastDue.getMonth() + 1).padStart(2, '0');
-            lastDueDate = lastDue.getFullYear() + '-' + lm + '-' + ld;
         }
 
-        if (lastDueDate && input_endcredit.length) {
-            input_endcredit.datetimepicker('date', lastDueDate);
+        if (!customEnabled && lastDueDate && input_endcredit.length) {
+            input_endcredit.val(lastDueDate);
         }
 
+        syncCustomEndCreditUi();
         window.syncCreditInicialMethodUi();
     };
 
@@ -1164,6 +1364,65 @@ $(function () {
     var modalDniInput = modalClientForm.find('input[name="dni"]');
     var modalFirstNameInput = modalClientForm.find('input[name="first_name"]');
     var modalLastNameInput = modalClientForm.find('input[name="last_name"]');
+    var modalExistingClientInput = $('#modal_existing_client_id');
+
+    function syncSaleClientSelection(clientData) {
+        if (!clientData || !clientData.id) {
+            return;
+        }
+        var text = clientData.text || (
+            clientData.user
+                ? ((clientData.user.full_name || '') + ' / ' + (clientData.user.dni || '')).trim()
+                : ''
+        );
+        var newOption = new Option(text, clientData.id, false, true);
+        select_client.find('option[value="' + clientData.id + '"]').remove();
+        select_client.append(newOption).trigger('change');
+        var wrap = $('#saleClientPropertiesWrap');
+        var listEl = document.getElementById('saleClientPropertiesList');
+        if (listEl && window.ClientPredios) {
+            wrap.show();
+            ClientPredios.renderSalePropertiesList(listEl, clientData);
+        }
+        fvSale.revalidateField('client');
+    }
+
+    function fillExistingClientForm(clientData) {
+        if (!clientData || !clientData.id) {
+            return;
+        }
+        modalExistingClientInput.val(clientData.id);
+        if (clientData.user) {
+            modalClientForm.find('[name="first_name"]').val(clientData.user.first_name || '');
+            modalClientForm.find('[name="last_name"]').val(clientData.user.last_name || '');
+            modalClientForm.find('[name="dni"]').val(clientData.user.dni || '');
+            modalClientForm.find('[name="email"]').val(clientData.user.email || '');
+        }
+        modalClientForm.find('[name="mobile"]').val(clientData.mobile || '');
+        modalClientForm.find('[name="department"]').val(clientData.department || '').trigger('change');
+        modalClientForm.find('[name="province"]').val(clientData.province || '');
+        modalClientForm.find('[name="district"]').val(clientData.district || '');
+        modalClientForm.find('[name="address"]').val(clientData.address || '');
+
+        var modalRoot = document.getElementById('modalClientPrediosRoot');
+        if (modalRoot && window.ClientPredios) {
+            ClientPredios.init(modalRoot, {
+                initial: clientData.properties || [],
+                types: window.__salePredioTypes || [],
+                departments: window.__salePredioDepartments || [],
+                productsCatalog: window.__salePredioProducts || [],
+            });
+        }
+        syncSaleClientSelection(clientData);
+        ['first_name', 'last_name', 'dni', 'email', 'mobile', 'department', 'province', 'district', 'address'].forEach(function (field) {
+            try {
+                fvClient.revalidateField(field);
+            } catch (e) {}
+        });
+        if (typeof toastr !== 'undefined') {
+            toastr.info('Cliente registrado cargado. Puede agregar o actualizar sus predios.');
+        }
+    }
 
     if (modalDniInput.length && !modalClientForm.find('.btnLookupDni').length) {
         if (!modalDniInput.parent().hasClass('input-group')) {
@@ -1203,6 +1462,10 @@ $(function () {
                     message_error(resp.error || 'No se pudieron obtener los datos del DNI');
                     return;
                 }
+                if (resp.existing_client && resp.client) {
+                    fillExistingClientForm(resp.client);
+                    return;
+                }
                 var data = resp.data || {};
                 modalFirstNameInput.val(data.first_name || '');
                 modalLastNameInput.val(data.last_name || '');
@@ -1221,6 +1484,7 @@ $(function () {
     });
 
     $('#myModalClient').on('hidden.bs.modal', function () {
+        modalExistingClientInput.val('');
         fvClient.resetForm(true);
         var modalRoot = document.getElementById('modalClientPrediosRoot');
         if (modalRoot && window.ClientPredios) {
@@ -1243,6 +1507,9 @@ $(function () {
 
     $('#btnContrataPrint').on('click', function () {
         printContrataDraft();
+    });
+    $('#btnCronogramaPrint').on('click', function () {
+        downloadPaymentSchedule(pendingContractSaleId);
     });
     $('#btnContrataDone, #btnContrataSkip').on('click', function () {
         finalizeContrataFlow();
@@ -1288,6 +1555,9 @@ $(function () {
             switch (id) {
                 case "contado":
                     fvSale.disableValidator('end_credit');
+                    if (input_custom_endcredit_enabled.length) {
+                        input_custom_endcredit_enabled.prop('checked', false);
+                    }
                     fvSale.enableValidator('payment_method');
                     select_paymentmethod.prop('disabled', false).val('efectivo').trigger('change');
                     payMethodGrid.removeClass('is-disabled');
@@ -1306,6 +1576,7 @@ $(function () {
                     window.updateCreditCuotasHelp();
                     break;
             }
+            syncCustomEndCreditUi();
         });
 
     select_paymentmethod.on('change', function () {
@@ -1429,17 +1700,27 @@ $(function () {
         }
     });
 
-    input_endcredit.datetimepicker({
-        useCurrent: false,
-        format: 'YYYY-MM-DD',
-        locale: 'es',
-        keepOpen: false,
-        minDate: current_date
+    if (input_endcredit_year.length && input_endcredit_month.length && input_endcredit_day.length) {
+        var initialEnd = parseIsoDateOnly(input_endcredit.val());
+        if (!initialEnd) {
+            var fallback = new Date(getSaleBaseDate().getTime() + 25 * 86400000);
+            initialEnd = fallback;
+        }
+        setCreditEndDateInputs(toIsoDateOnly(initialEnd));
+        input_endcredit_year.add(input_endcredit_month).add(input_endcredit_day).on('change blur keyup', function () {
+            syncCreditEndDateHiddenFromParts();
+            fvSale.revalidateField('end_credit');
+            window.updateCreditCuotasHelp();
+        });
+    }
+
+    input_custom_endcredit_enabled.on('change', function () {
+        syncCustomEndCreditUi();
+        window.updateCreditCuotasHelp();
+        fvSale.revalidateField('end_credit');
     });
 
-    input_endcredit.datetimepicker('date', input_endcredit.val());
-
-    input_endcredit.on('change.datetimepicker', function (e) {
+    input_endcredit.on('change', function () {
         fvSale.revalidateField('end_credit');
     });
 
@@ -1517,9 +1798,10 @@ $(function () {
 
     window.syncCreditInicialMethodUi();
 
-    $('select[name="credit_quota_count"]').on('change', function () {
+    $('input[name="credit_quota_count"]').on('change keyup blur', function () {
         window.updateCreditCuotasHelp();
         fvSale.revalidateField('credit_down_payment');
+        fvSale.revalidateField('end_credit');
     });
 
     $('input[name="credit_down_payment"]').on('change blur keyup', function () {
@@ -1530,6 +1812,7 @@ $(function () {
     });
 
     updatePayMethodCardsActive();
+    syncCustomEndCreditUi();
 
     $('i[data-field="client"]').hide();
     $('i[data-field="searchproducts"]').hide();
