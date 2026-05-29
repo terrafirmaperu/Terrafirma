@@ -25,10 +25,13 @@ def get_dashboard():
 
 
 def get_layout():
-    objs = Dashboard.objects.filter()
-    if objs.exists():
-        objs = objs[0]
-        if objs.layout == 1:
-            return 'vtcbody.html'
-        return 'hztbody.html'
+    try:
+        objs = Dashboard.objects.filter()
+        if objs.exists():
+            objs = objs[0]
+            if objs.layout == 1:
+                return 'vtcbody.html'
+            return 'hztbody.html'
+    except Exception:
+        pass
     return 'hztbody.html'
