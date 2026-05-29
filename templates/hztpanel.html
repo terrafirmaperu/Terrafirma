@@ -37,7 +37,7 @@
                         <div class="card-body" style="display: block;">
                             <div class="container-fluid panel-module">
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    {% for m in request.session.group.id|getmoduletype %}
+                                    {% for m in session_group.id|getmoduletype %}
                                         <li class="nav-item">
                                             <a class="nav-link{% if forloop.first %} active{% endif %}"
                                                data-toggle="tab" href="#tab{{ forloop.counter }}">
@@ -48,7 +48,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     <br>
-                                    {% for mt in request.session.group.id|getmoduletype %}
+                                    {% for mt in session_group.id|getmoduletype %}
                                         <div id="tab{{ forloop.counter }}"
                                              class="tab-pane{% if forloop.first %} active{% endif %}">
                                             {% for m in mt.get_modules_vertical %}

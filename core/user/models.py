@@ -52,8 +52,10 @@ class User(AbstractUser):
     def get_group_id_session(self):
         try:
             request = get_current_request()
-            return int(request.session['group'].id)
-        except:
+            from core.security.session_group import get_group_from_session
+            group = get_group_from_session(request)
+            return int(group.pk) if group else 0
+        except Exception:
             return 0
 
     def set_group_session(self):
@@ -62,9 +64,9 @@ class User(AbstractUser):
             groups = request.user.groups.all()
             if groups:
                 request.session['infobyip'] = self.infobyip(request)
-                if 'group' not in request.session:
-                    request.session['group'] = groups[0]
-        except:
+                from core.security.session_group import set_group_id_in_session
+                set_group_id_in_session(request, groups[0])
+        except Exception:
             pass
 
     def create_or_update_password(self, password):

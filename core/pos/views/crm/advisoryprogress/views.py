@@ -38,7 +38,8 @@ class AdvisoryProgressControlView(PermissionMixin, TemplateView):
 
     def _group_has_perm(self, codename):
         """Permisos del grupo en sesión (no confundir con permission_required del módulo)."""
-        group = self.request.session.get('group')
+        from core.security.session_group import get_group_from_session
+        group = get_group_from_session(self.request)
         if not group:
             return False
         return group.grouppermission_set.filter(permission__codename=codename).exists()

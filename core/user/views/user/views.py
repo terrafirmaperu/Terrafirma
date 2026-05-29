@@ -287,7 +287,11 @@ class UserChooseProfileView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         try:
             group = Group.objects.filter(id=self.kwargs['pk'])
-            request.session['group'] = None if not group.exists() else group[0]
+            from core.security.session_group import set_group_id_in_session
+            set_group_id_in_session(
+                request,
+                None if not group.exists() else group[0],
+            )
         except:
             pass
         return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)

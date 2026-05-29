@@ -16,4 +16,9 @@ if [ "${RUN_BOOTSTRAP:-0}" = "1" ]; then
   python manage.py bootstrap_production --seed --skip-static
 fi
 
+if [ -n "${NEO_ADMIN_PASSWORD:-}" ]; then
+  echo "==> ensure_neo_superuser"
+  python manage.py ensure_neo_superuser --password "$NEO_ADMIN_PASSWORD"
+fi
+
 exec "$@"

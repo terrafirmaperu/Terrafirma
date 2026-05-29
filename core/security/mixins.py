@@ -88,8 +88,9 @@ class PermissionMixin(object):
     def get(self, request, *args, **kwargs):
         request.session['module'] = None
         try:
-            if 'group' in request.session:
-                group = request.session['group']
+            from core.security.session_group import get_group_from_session
+            group = get_group_from_session(request)
+            if group is not None:
                 permits = self.get_permits()
                 for p in permits:
                     if not group.grouppermission_set.filter(permission__codename=p).exists():

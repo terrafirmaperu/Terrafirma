@@ -24,8 +24,8 @@
                     </a>
                 </li>
                 <li class="nav-header">Módulos</li>
-                {% if request.session.group %}
-                {% for mt in request.session.group.id|getmoduletype %}
+                {% if session_group %}
+                {% for mt in session_group.id|getmoduletype %}
                     <li class="nav-item has-treeview">
                         <a class="nav-link">
                             <i class="nav-icon {{ mt.icon }}"></i>
@@ -46,7 +46,7 @@
                         </ul>
                     </li>
                 {% endfor %}
-                {% for m in request.session.group.id|getmodulehorizontal %}
+                {% for m in session_group.id|getmodulehorizontal %}
                     <li class="nav-item">
                         <a href="{{ m.url }}" class="nav-link">
                             <i class="nav-icon {{ m.icon }}"></i>
