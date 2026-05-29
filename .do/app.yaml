@@ -24,7 +24,7 @@ services:
         scope: RUN_TIME
         type: SECRET
       - key: DJANGO_ALLOWED_HOSTS
-        value: terrafirmaperu.com,www.terrafirmaperu.com
+        value: terrafirmaperu.com,www.terrafirmaperu.com,.ondigitalocean.app
       - key: DJANGO_PUBLIC_HOST
         value: terrafirmaperu.com
       - key: DATABASE_URL
