@@ -1,5 +1,6 @@
 # DigitalOcean App Platform — ajuste name, repo y dominio antes de desplegar.
 # Docs: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+# El token API va solo en .env.deploy (nunca en este archivo).
 
 name: terrafirma
 region: nyc
@@ -10,7 +11,6 @@ services:
       repo: terrafirmaperu/Terrafirma
       branch: main
       deploy_on_push: true
-    source_dir: app
     environment_slug: python
     http_port: 8080
     instance_count: 1
@@ -50,7 +50,7 @@ databases:
   - name: db
     engine: PG
     version: "15"
-    production: true
+    production: false
 
 # Tras el primer deploy, en la consola de la app:
 #   python manage.py migrate --noinput
