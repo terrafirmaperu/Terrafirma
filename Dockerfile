@@ -23,7 +23,8 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+# En build no hay variables de DO; producción las define en runtime.
+RUN DJANGO_SETTINGS_MODULE=config.settings python manage.py collectstatic --noinput
 
 EXPOSE 8080
 

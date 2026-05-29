@@ -20,6 +20,17 @@ if not _allowed:
     raise ValueError('Defina DJANGO_ALLOWED_HOSTS (ej. terrafirmaperu.com,www.terrafirmaperu.com)')
 ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()]
 
+# Dominio asignado por App Platform (ej. terrafirma-xxxxx.ondigitalocean.app)
+_app_domain = os.environ.get('APP_DOMAIN', '').strip()
+if _app_domain and _app_domain not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(_app_domain)
+_app_url = os.environ.get('APP_URL', '').strip()
+if _app_url:
+    from urllib.parse import urlparse
+    _host = urlparse(_app_url if '://' in _app_url else 'https://' + _app_url).hostname
+    if _host and _host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_host)
+
 DATABASES = __import__('config.db', fromlist=['get_databases']).get_databases()
 
 # HTTPS detrás de nginx / balanceador DigitalOcean
