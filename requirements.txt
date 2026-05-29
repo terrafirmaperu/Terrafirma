@@ -1,5 +1,5 @@
 # Dependencias Factora (mismo contenido que deploy/requirements.txt).
-arabic-reshaper==2.1.1
+arabic-reshaper>=3.0.0
 asgiref==3.4.1
 cairocffi==1.2.0
 CairoSVG==2.5.0
@@ -34,7 +34,6 @@ urllib3==1.26.2
 WeasyPrint==52.2
 webencodings==0.5.1
 python-docx==0.8.11
-num2words==0.5.13
 qrcode[pil]==7.4.2
 python-barcode[images]==0.15.1
 Pillow>=9.5.0,<11
