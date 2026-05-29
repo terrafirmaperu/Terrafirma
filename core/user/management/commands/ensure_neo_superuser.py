@@ -37,6 +37,7 @@ class Command(BaseCommand):
         user.is_active = True
         user.is_staff = True
         user.is_superuser = True
+        user.is_change_password = False
         user.set_password(pwd)
         user.save()
         from django.contrib.auth.models import Group

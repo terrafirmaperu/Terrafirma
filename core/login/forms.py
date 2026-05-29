@@ -1,6 +1,23 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from core.user.models import User
+
+
+class CaseInsensitiveAuthenticationForm(AuthenticationForm):
+    """Acepta neo/Neo y evita espacios accidentales en usuario o contraseña."""
+
+    def clean_username(self):
+        username = (self.cleaned_data.get('username') or '').strip()
+        if not username:
+            return username
+        user = User.objects.filter(username__iexact=username).first()
+        if user:
+            return user.username
+        return username
+
+    def clean_password(self):
+        return (self.cleaned_data.get('password') or '').strip()
 
 
 class ResetPasswordForm(forms.Form):

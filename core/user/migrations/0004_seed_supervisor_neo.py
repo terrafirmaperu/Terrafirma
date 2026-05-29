@@ -4,19 +4,19 @@ from django.db import migrations
 
 def create_supervisor_neo(apps, schema_editor):
     User = apps.get_model('user', 'User')
-    User.objects.update_or_create(
-        username='Neo',
-        defaults={
-            'dni': '0000000000001',
-            'email': 'neo@factora.local',
-            'first_name': 'Supervisor',
-            'last_name': 'Sistema',
-            'is_active': True,
-            'is_staff': True,
-            'is_superuser': True,
-            'password': make_password('lafamilia123456789'),
-        },
-    )
+    defaults = {
+        'dni': '0000000000001',
+        'email': 'neo@factora.local',
+        'first_name': 'Supervisor',
+        'last_name': 'Sistema',
+        'is_active': True,
+        'is_staff': True,
+        'is_superuser': True,
+    }
+    user, created = User.objects.update_or_create(username='Neo', defaults=defaults)
+    if created:
+        user.password = make_password('lafamilia123456789')
+        user.save(update_fields=['password'])
 
 
 def noop_reverse(apps, schema_editor):

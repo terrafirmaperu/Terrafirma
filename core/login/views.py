@@ -4,7 +4,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse
@@ -13,13 +12,13 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, RedirectView, TemplateView
 
 from config import settings
-from core.login.forms import ResetPasswordForm, ChangePasswordForm
+from core.login.forms import CaseInsensitiveAuthenticationForm, ResetPasswordForm, ChangePasswordForm
 from core.security.models import AccessUsers
 from core.user.models import User
 
 
 class LoginAuthView(LoginView):
-    form_class = AuthenticationForm
+    form_class = CaseInsensitiveAuthenticationForm
     template_name = 'login/login_golden.html'
 
     def get_context_data(self, **kwargs):

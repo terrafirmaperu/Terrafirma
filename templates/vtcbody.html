@@ -25,8 +25,8 @@
                                                 class="fas fa-home"></i> Panel</a></li>
                                         {% block breadcrumb_li %}
                                             <li class="breadcrumb-item active" aria-current="page"><a
-                                                    href="{{ request.session.module.url }}"><i
-                                                    class="{{ request.session.module.get_icon }}"></i> {{ request.session.module.name }}
+                                                    href="{{ session_module.url }}"><i
+                                                    class="{{ session_module.get_icon }}"></i> {{ session_module.name }}
                                             </a></li>
                                         {% endblock %}
                                     </ol>
