@@ -1,0 +1,12 @@
+.git
+.idea
+__pycache__
+*.pyc
+.env
+.env.deploy
+db/*.sqlite3
+staticfiles
+media
+logs/*.log
+*.md
+deploy/json/backup.json
