@@ -76,6 +76,9 @@ if not DNI_API_TOKEN:
     import warnings
     warnings.warn('DNI_API_TOKEN no definido: consulta RENIEC deshabilitada.', stacklevel=1)
 
+_log_dir = os.path.join(BASE_DIR, 'logs')  # noqa: F405
+os.makedirs(_log_dir, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -86,24 +89,18 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),  # noqa: F405
-            'formatter': 'verbose',
-        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
     },
     'root': {
-        'handlers': ['console', 'file'],
+        'handlers': ['console'],
         'level': 'INFO',
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'WARNING',
             'propagate': False,
         },
