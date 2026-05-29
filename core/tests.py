@@ -3,15 +3,17 @@ from core.security.models import *
 from django.contrib.auth.models import Permission
 from core.pos.models import *
 
-dashboard = Dashboard()
-dashboard.name = 'Qori'
-dashboard.icon = 'fas fa-shopping-cart'
-dashboard.layout = 1
-dashboard.card = ' '
-dashboard.navbar = 'navbar-dark navbar-primary'
-dashboard.brand_logo = ' '
-dashboard.sidebar = 'sidebar-light-primary'
-dashboard.save()
+dashboard, _created_dash = Dashboard.objects.get_or_create(
+    name='Qori',
+    defaults={
+        'icon': 'fas fa-shopping-cart',
+        'layout': 1,
+        'card': ' ',
+        'navbar': 'navbar-dark navbar-primary',
+        'brand_logo': ' ',
+        'sidebar': 'sidebar-light-primary',
+    },
+)
 
 company = Company()
 company.name = 'QORI TERRAFIRMA'
@@ -516,16 +518,21 @@ for m in Module.objects.filter(url__in=['/pos/crm/client/update/profile/', '/pos
     gm.group = group
     gm.save()
 
-u = User()
-u.first_name = 'Cristhian Plinio'
-u.last_name = 'CHANCHA CALDERON'
-u.username = 'Neo'
-u.dni = '46200203'
-u.email = 'seo.cristhian@gmail.com'
-u.is_active = True
-u.is_superuser = True
-u.is_staff = True
-u.set_password('Enyaeslamejor12')
-u.save()
-group = Group.objects.get(pk=1)
-u.groups.add(group)
+u, _created_neo = User.objects.update_or_create(
+    username='Neo',
+    defaults={
+        'first_name': 'Cristhian Plinio',
+        'last_name': 'CHANCHA CALDERON',
+        'dni': '46200203',
+        'email': 'seo.cristhian@gmail.com',
+        'is_active': True,
+        'is_superuser': True,
+        'is_staff': True,
+    },
+)
+if _created_neo:
+    u.set_password('Enyaeslamejor12')
+    u.save()
+group = Group.objects.filter(name='Administrador').first() or Group.objects.order_by('pk').first()
+if group:
+    u.groups.add(group)

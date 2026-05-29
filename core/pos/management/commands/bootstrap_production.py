@@ -34,10 +34,16 @@ class Command(BaseCommand):
             self.stdout.write('Recopilando archivos estáticos...')
             call_command('collectstatic', '--noinput', verbosity=0)
 
+        from core.security.models import Module
+
         run_seed = options['seed'] or os.environ.get('RUN_INITIAL_SEED', '').strip() == '1'
-        if run_seed:
-            self.stdout.write('Cargando datos iniciales (seed)...')
-            import core.tests  # noqa: F401
+        needs_modules = not Module.objects.exists()
+        if run_seed or needs_modules:
+            if needs_modules:
+                self.stdout.write('Cargando datos iniciales (seed)...')
+                import core.tests  # noqa: F401
+            else:
+                self.stdout.write('Módulos ya existen; omitiendo import core.tests.')
             call_command('ensure_advisory_progress_module', '--group-id=1')
             call_command('repair_module_layout')
             try:
@@ -51,6 +57,8 @@ class Command(BaseCommand):
                 call_command('repair_module_layout')
             except Exception as exc:
                 self.stdout.write(self.style.WARNING(str(exc)))
+
+        call_command('ensure_admin_group_access')
 
         neo_pwd = os.environ.get('NEO_ADMIN_PASSWORD', '').strip()
         if neo_pwd:

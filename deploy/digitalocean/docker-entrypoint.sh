@@ -11,4 +11,9 @@ if [ "${RUN_MIGRATE:-0}" = "1" ]; then
   python manage.py migrate --noinput
 fi
 
+if [ "${RUN_BOOTSTRAP:-0}" = "1" ]; then
+  echo "==> bootstrap_production"
+  python manage.py bootstrap_production --seed --skip-static
+fi
+
 exec "$@"
