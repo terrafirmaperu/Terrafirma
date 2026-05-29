@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Jobs de App Platform (python manage.py …) deben ejecutarse sin paso extra.
-if [ "${1:-}" = "python" ]; then
+
+# Job PRE_DEPLOY: sh -c "python manage.py migrate --noinput"
+if [ "${1:-}" = "sh" ] && [ "${2:-}" = "-c" ] && [[ "${3:-}" == *manage.py* ]]; then
   exec "$@"
 fi
+
 if [ "${RUN_MIGRATE:-0}" = "1" ]; then
+  echo "==> migrate"
   python manage.py migrate --noinput
 fi
+
 exec "$@"
