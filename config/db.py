@@ -1,5 +1,5 @@
 import os
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,18 +41,25 @@ def _database_from_url(url):
     else:
         raise ValueError('Esquema DATABASE_URL no soportado: {}'.format(engine))
     name = (parsed.path or '').lstrip('/')
-    return {
-        'default': {
-            'ENGINE': django_engine,
-            'NAME': unquote(name),
-            'USER': unquote(parsed.username or ''),
-            'PASSWORD': unquote(parsed.password or ''),
-            'HOST': parsed.hostname or '',
-            'PORT': str(parsed.port or ''),
-            'ATOMIC_REQUESTS': True,
-            'CONN_MAX_AGE': int(os.environ.get('POSTGRES_CONN_MAX_AGE', '60')),
-        }
+    options = {}
+    query = parse_qs(parsed.query)
+    if 'sslmode' in query:
+        options['sslmode'] = query['sslmode'][0]
+    elif os.environ.get('POSTGRES_SSLMODE'):
+        options['sslmode'] = os.environ['POSTGRES_SSLMODE']
+    cfg = {
+        'ENGINE': django_engine,
+        'NAME': unquote(name),
+        'USER': unquote(parsed.username or ''),
+        'PASSWORD': unquote(parsed.password or ''),
+        'HOST': parsed.hostname or '',
+        'PORT': str(parsed.port or ''),
+        'ATOMIC_REQUESTS': True,
+        'CONN_MAX_AGE': int(os.environ.get('POSTGRES_CONN_MAX_AGE', '60')),
     }
+    if options:
+        cfg['OPTIONS'] = options
+    return {'default': cfg}
 
 
 def get_databases():
