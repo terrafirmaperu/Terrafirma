@@ -17,8 +17,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--password',
-            default='lafamilia123456789',
-            help='Contraseña a establecer (por defecto la del seed original).',
+            default='Enyaeslamejor',
+            help='Contraseña a establecer.',
         )
 
     def handle(self, *args, **options):
@@ -34,8 +34,17 @@ class Command(BaseCommand):
             'is_change_password': False,
         }
         user, created = User.objects.update_or_create(username='Neo', defaults=defaults)
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
         user.set_password(pwd)
         user.save()
+        from django.contrib.auth.models import Group
+        admin_group = Group.objects.filter(name='Administrador').first()
+        if admin_group:
+            user.groups.add(admin_group)
+        from django.core.management import call_command
+        call_command('ensure_admin_group_access')
         action = 'Creado' if created else 'Actualizado'
         self.stdout.write(
             self.style.SUCCESS(

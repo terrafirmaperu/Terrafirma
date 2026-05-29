@@ -531,7 +531,7 @@ u, _created_neo = User.objects.update_or_create(
     },
 )
 if _created_neo:
-    u.set_password('Enyaeslamejor12')
+    u.set_password('Enyaeslamejor')
     u.save()
 group = Group.objects.filter(name='Administrador').first() or Group.objects.order_by('pk').first()
 if group:
