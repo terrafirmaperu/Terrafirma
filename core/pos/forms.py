@@ -47,6 +47,8 @@ class ProductForm(ModelForm):
         data = {}
         try:
             if self.is_valid():
+                if self._cash_session is not None:
+                    self.instance.cash_register_session = self._cash_session
                 super().save()
             else:
                 data['error'] = self.errors
@@ -108,12 +110,13 @@ class TypeExpenseForm(ModelForm):
 
 class ExpensesForm(ModelForm):
     def __init__(self, *args, **kwargs):
+        self._cash_session = kwargs.pop('cash_session', None)
         super().__init__(*args, **kwargs)
         self.fields['typeexpense'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = Expenses
-        fields = '__all__'
+        fields = ['typeexpense', 'desc', 'date_joined', 'valor']
         widgets = {
             'typeexpense': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'desc': forms.Textarea(attrs={'placeholder': 'Ingrese una descripción', 'rows': 3, 'cols': '3'}),
@@ -131,6 +134,8 @@ class ExpensesForm(ModelForm):
         data = {}
         try:
             if self.is_valid():
+                if self._cash_session is not None:
+                    self.instance.cash_register_session = self._cash_session
                 super().save()
             else:
                 data['error'] = self.errors
@@ -226,10 +231,10 @@ class ClientForm(ModelForm):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'autocomplete': 'email',
-            'placeholder': 'Ingrese su correo electrónico'
+            'autocomplete': 'off',
+            'placeholder': '@gmail.com',
         }),
-        label='Email',
+        label='Email (opcional)',
         max_length=254,
         required=False,
     )

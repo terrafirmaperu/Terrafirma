@@ -16,6 +16,17 @@ from core.pos.client_properties import (
 from core.security.mixins import ModuleMixin, PermissionMixin, SupervisorDeleteApprovalMixin
 
 
+def _dni_lookup_json(dni):
+    payload = lookup_dni_data(dni)
+    if payload.get('error'):
+        return JsonResponse({
+            'success': False,
+            'error': payload['error'],
+            'skipped': bool(payload.get('skipped')),
+        })
+    return JsonResponse({'success': True, 'data': payload})
+
+
 class ClientListView(PermissionMixin, TemplateView):
     template_name = 'crm/client/list.html'
     permission_required = 'view_client'
@@ -55,9 +66,6 @@ class ClientCreateView(PermissionMixin, CreateView):
             obj = self.request.POST['obj'].strip()
             if type == 'dni':
                 if User.objects.filter(dni=obj):
-                    data['valid'] = False
-            elif type == 'mobile':
-                if Client.objects.filter(mobile=obj):
                     data['valid'] = False
             elif type == 'email':
                 if obj and User.objects.filter(email__iexact=obj).exists():
@@ -106,10 +114,7 @@ class ClientCreateView(PermissionMixin, CreateView):
             elif action == 'validate_data':
                 return self.validate_data()
             elif action == 'lookup_dni':
-                payload = lookup_dni_data(request.POST.get('dni', ''))
-                if payload.get('error'):
-                    return JsonResponse({'success': False, 'error': payload['error']})
-                return JsonResponse({'success': True, 'data': payload})
+                return _dni_lookup_json(request.POST.get('dni', ''))
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
@@ -156,9 +161,6 @@ class ClientUpdateView(PermissionMixin, UpdateView):
             if type == 'dni':
                 if User.objects.filter(dni=obj).exclude(id=instance.user.id):
                     data['valid'] = False
-            elif type == 'mobile':
-                if Client.objects.filter(mobile=obj).exclude(id=instance.id):
-                    data['valid'] = False
             elif type == 'email':
                 if obj and User.objects.filter(email__iexact=obj).exclude(id=instance.user.id).exists():
                     data['valid'] = False
@@ -201,10 +203,7 @@ class ClientUpdateView(PermissionMixin, UpdateView):
             elif action == 'validate_data':
                 return self.validate_data()
             elif action == 'lookup_dni':
-                payload = lookup_dni_data(request.POST.get('dni', ''))
-                if payload.get('error'):
-                    return JsonResponse({'success': False, 'error': payload['error']})
-                return JsonResponse({'success': True, 'data': payload})
+                return _dni_lookup_json(request.POST.get('dni', ''))
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
@@ -278,9 +277,6 @@ class ClientUpdateProfileView(ModuleMixin, UpdateView):
             if type == 'dni':
                 if User.objects.filter(dni=obj).exclude(id=instance.user.id):
                     data['valid'] = False
-            elif type == 'mobile':
-                if Client.objects.filter(mobile=obj).exclude(id=instance.id):
-                    data['valid'] = False
             elif type == 'email':
                 if obj and User.objects.filter(email__iexact=obj).exclude(id=instance.user.id).exists():
                     data['valid'] = False
@@ -323,10 +319,7 @@ class ClientUpdateProfileView(ModuleMixin, UpdateView):
             elif action == 'validate_data':
                 return self.validate_data()
             elif action == 'lookup_dni':
-                payload = lookup_dni_data(request.POST.get('dni', ''))
-                if payload.get('error'):
-                    return JsonResponse({'success': False, 'error': payload['error']})
-                return JsonResponse({'success': True, 'data': payload})
+                return _dni_lookup_json(request.POST.get('dni', ''))
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:

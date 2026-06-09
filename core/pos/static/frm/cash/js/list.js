@@ -114,8 +114,21 @@ function setCashResume(data) {
     $('#salesTarjeta').text('S/ ' + (data.sales.tarjeta || data.sales.card || '0.00'));
     $('#salesMixtoTarjeta').text('S/ ' + (data.sales.mixto_tarjeta || '0.00'));
 
-    $('#paysCount').text(data.payments.count || 0);
-    $('#paysTotal').text('S/ ' + (data.payments.total || '0.00'));
+    var expenses = data.expenses || {};
+    $('#expensesCount').text(expenses.count || 0);
+    $('#expensesTotal').text('S/ ' + (expenses.total || '0.00'));
+    $('#cashDrawerExpected').text('S/ ' + ((data.cash_drawer && data.cash_drawer.expected) || '0.00'));
+
+    if (typeof renderCashSessionExpenses === 'function') {
+        renderCashSessionExpenses({
+            session: data.session,
+            rows: expenses.rows || [],
+            count: expenses.count || 0,
+            total: expenses.total || '0.00',
+            expenses_url: window.cashExpensesUrl,
+            cash_drawer: data.cash_drawer
+        });
+    }
 }
 
 function getCashResume() {
@@ -147,7 +160,8 @@ function getCashResume() {
                     mixto_tarjeta: '0.00',
                     card: '0.00'
                 },
-                payments: {count: 0, total: '0.00'}
+                expenses: {count: 0, total: '0.00', rows: []},
+                cash_drawer: {expected: '0.00'}
             });
         }
     });
@@ -182,5 +196,11 @@ $(function () {
     $('.btnSearchAll').on('click', function () {
         getData(true);
         getCashResume();
+    });
+
+    $('#cashResumeTab a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr('href') === '#tab-expenses' && typeof loadCashSessionExpenses === 'function') {
+            loadCashSessionExpenses();
+        }
     });
 });

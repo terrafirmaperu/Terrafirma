@@ -18,19 +18,19 @@ function getData() {
             dataSrc: ""
         },
         columns: [
-            {data: "id"},
-            {data: "name"},
-            {data: "category.name"},
-            {data: "pvp"},
-            {data: "id"},
+            {data: "id", defaultContent: ''},
+            {data: "name", defaultContent: ''},
+            {data: "category.name", defaultContent: ''},
+            {data: "price", defaultContent: '0.00'},
+            {data: "id", defaultContent: ''},
         ],
         columnDefs: [
-        
             {
-                targets: [-2],
+                targets: [3],
                 class: 'text-center',
                 render: function (data, type, row) {
-                    return 'S/ ' + parseFloat(data).toFixed(2);
+                    var val = data || row.price || row.pvp || '0.00';
+                    return 'S/ ' + parseFloat(val).toFixed(2);
                 }
             },
             

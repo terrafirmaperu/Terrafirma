@@ -6,6 +6,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 
 from core.pos.forms import ExpensesForm, Expenses
 from core.pos.mixins import CashRegisterRequiredMixin
+from core.pos.models import CashRegisterSession
 from core.reports.forms import ReportForm
 from core.security.mixins import PermissionMixin, SupervisorDeleteApprovalMixin
 
@@ -48,12 +49,29 @@ class ExpensesCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView)
     success_url = reverse_lazy('expenses_list')
     permission_required = 'add_expenses'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['cash_session'] = CashRegisterSession.objects.filter(
+            user_opened=self.request.user,
+            status=CashRegisterSession.OPEN,
+        ).order_by('-opened_at').first()
+        return kwargs
+
     def post(self, request, *args, **kwargs):
         data = {}
         action = request.POST['action']
         try:
             if action == 'add':
-                data = self.get_form().save()
+                session = CashRegisterSession.objects.filter(
+                    user_opened=request.user,
+                    status=CashRegisterSession.OPEN,
+                ).order_by('-opened_at').first()
+                form = self.get_form()
+                data = form.save()
+                if not data.get('error') and session and form.instance.pk:
+                    if not form.instance.cash_register_session_id:
+                        form.instance.cash_register_session = session
+                        form.instance.save(update_fields=['cash_register_session'])
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:

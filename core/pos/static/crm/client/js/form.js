@@ -65,21 +65,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                             min: 7
                         },
                         digits: {},
-                        remote: {
-                            url: pathname,
-                            data: function () {
-                                return {
-                                    obj: form.querySelector('[name="mobile"]').value,
-                                    type: 'mobile',
-                                    action: 'validate_data'
-                                };
-                            },
-                            message: 'El número de teléfono ya se encuentra registrado',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            },
-                        }
                     }
                 },
                 email: {
@@ -88,21 +73,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                             regexp: /^$|^([a-z0-9_+&*-]+(?:\.[a-z0-9_+&*-]+)*)@([a-z0-9-]+\.)+[a-z]{2,}$/i,
                             message: 'El formato email no es correcto'
                         },
-                        remote: {
-                            url: pathname,
-                            data: function () {
-                                return {
-                                    obj: form.querySelector('[name="email"]').value,
-                                    type: 'email',
-                                    action: 'validate_data'
-                                };
-                            },
-                            message: 'El email ya se encuentra registrado',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            },
-                        }
                     }
                 },
                 address: {
@@ -238,7 +208,12 @@ $(function () {
             },
             success: function (resp) {
                 if (!resp.success) {
-                    message_error(resp.error || 'No se pudieron obtener los datos del DNI');
+                    var msg = resp.error || 'No se pudieron obtener los datos del DNI';
+                    if (resp.skipped) {
+                        alert(msg);
+                    } else {
+                        message_error(msg);
+                    }
                     return;
                 }
                 var data = resp.data || {};

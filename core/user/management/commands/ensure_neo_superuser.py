@@ -5,8 +5,10 @@ Crea o restablece el usuario supervisor Neo (desarrollo / recuperación de acces
   python manage.py ensure_neo_superuser --password MiClaveSegura
 """
 
+import os
+
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 User = get_user_model()
 
@@ -17,12 +19,14 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--password',
-            default='Enyaeslamejor',
-            help='Contraseña a establecer.',
+            default=None,
+            help='Contraseña a establecer. Si se omite, usa NEO_ADMIN_PASSWORD.',
         )
 
     def handle(self, *args, **options):
-        pwd = options['password']
+        pwd = options['password'] or os.environ.get('NEO_ADMIN_PASSWORD', '').strip()
+        if not pwd:
+            raise CommandError('Defina --password o la variable NEO_ADMIN_PASSWORD.')
         defaults = {
             'dni': '0000000000001',
             'email': 'neo@factora.local',

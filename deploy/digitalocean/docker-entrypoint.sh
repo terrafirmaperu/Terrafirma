@@ -13,7 +13,10 @@ fi
 
 if [ "${RUN_BOOTSTRAP:-0}" = "1" ]; then
   echo "==> bootstrap_production"
-  python manage.py bootstrap_production --seed --skip-static
+  python manage.py bootstrap_production --skip-static
+else
+  echo "==> ensure_dni_api_module"
+  python manage.py ensure_dni_api_module
 fi
 
 if [ -n "${NEO_ADMIN_PASSWORD:-}" ]; then

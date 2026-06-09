@@ -286,3 +286,74 @@ class AccessUsers(models.Model):
             ('delete_accessusers', 'Can delete Acceso del usuario'),
         )
         ordering = ['-id']
+
+
+class DniApiConfiguration(models.Model):
+    """Configuración singleton del proveedor de consulta DNI (RENIEC)."""
+
+    DEFAULT_API_URL = 'https://api.decolecta.com/v1/reniec/dni?numero={dni}'
+
+    provider_name = models.CharField(
+        max_length=80,
+        default='Decolecta',
+        verbose_name='Proveedor',
+    )
+    api_url = models.CharField(
+        max_length=500,
+        default=DEFAULT_API_URL,
+        verbose_name='URL de consulta',
+        help_text='Use {dni} donde va el número de documento.',
+    )
+    api_token = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+        verbose_name='API Key / Token',
+    )
+    api_timeout = models.PositiveSmallIntegerField(
+        default=12,
+        verbose_name='Tiempo de espera (segundos)',
+    )
+    is_enabled = models.BooleanField(
+        default=True,
+        verbose_name='Consulta DNI habilitada',
+    )
+    notes = models.CharField(
+        max_length=500,
+        blank=True,
+        default='',
+        verbose_name='Notas',
+    )
+
+    def __str__(self):
+        return self.provider_name or 'Configuración API DNI'
+
+    def token_configured(self):
+        return bool((self.api_token or '').strip())
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['token_configured'] = self.token_configured()
+        item['api_token'] = '********' if self.token_configured() else ''
+        return item
+
+    @classmethod
+    def get_solo(cls):
+        row = cls.objects.order_by('id').first()
+        if row:
+            return row
+        return cls(
+            provider_name='Decolecta',
+            api_url=cls.DEFAULT_API_URL,
+            api_timeout=12,
+            is_enabled=True,
+        )
+
+    class Meta:
+        verbose_name = 'Configuración API DNI'
+        verbose_name_plural = 'Configuración API DNI'
+        default_permissions = ()
+        permissions = (
+            ('view_dniapiconfiguration', 'Can view Configuración API DNI'),
+            ('change_dniapiconfiguration', 'Can change Configuración API DNI'),
+        )

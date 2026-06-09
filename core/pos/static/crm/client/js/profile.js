@@ -64,21 +64,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                             min: 7
                         },
                         digits: {},
-                        remote: {
-                            url: pathname,
-                            data: function () {
-                                return {
-                                    obj: form.querySelector('[name="mobile"]').value,
-                                    type: 'mobile',
-                                    action: 'validate_data'
-                                };
-                            },
-                            message: 'El número de teléfono ya se encuentra registrado',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            },
-                        }
                     }
                 },
                 /*email: {

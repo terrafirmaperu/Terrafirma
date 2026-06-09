@@ -33,9 +33,11 @@ services:
         value: terrafirmaperu.com,www.terrafirmaperu.com,.ondigitalocean.app
       - key: DJANGO_PUBLIC_HOST
         value: terrafirmaperu.com
+      # En producción use Managed PostgreSQL (ver deploy/digitalocean/DEPLOY.md).
+      # La URL completa va como SECRET en App Platform, no en git.
       - key: DATABASE_URL
         scope: RUN_TIME
-        value: ${db.DATABASE_URL}
+        type: SECRET
       - key: POSTGRES_SSLMODE
         value: require
       - key: EMAIL_HOST_PASSWORD
@@ -47,15 +49,17 @@ services:
       - key: NEO_ADMIN_PASSWORD
         scope: RUN_TIME
         type: SECRET
+      # Al arrancar el contenedor: migrate + módulos (incl. Config. API DNI en Seguridad).
+      - key: RUN_MIGRATE
+        value: "1"
+      - key: RUN_BOOTSTRAP
+        value: "1"
+      # Solo primera vez con base vacía (opcional; bootstrap también detecta módulos faltantes):
+      # - key: RUN_INITIAL_SEED
+      #   value: "1"
     routes:
       - path: /
 
-databases:
-  - name: db
-    engine: PG
-    version: "15"
-    production: false
-
-# Tras el primer deploy, en la consola de la app:
-#   python manage.py migrate --noinput
-#   python manage.py bootstrap_production
+# Base dev embebida en App Platform puede fallar migrate (PG15 schema public).
+# Preferir Managed Database + DATABASE_URL como SECRET (ver DEPLOY.md).
+# SECRET obligatorios en el panel: DJANGO_SECRET_KEY, DATABASE_URL, DNI_API_TOKEN, NEO_ADMIN_PASSWORD.

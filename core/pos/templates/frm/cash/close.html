@@ -1,11 +1,29 @@
 {% extends 'form.html' %}
 {% load static %}
 {% block head_form %}
+    <script type="application/javascript">
+        window.cashExpensesUrl = "{% url 'expenses_list' %}";
+        window.cashSessionExpensesUrl = "{{ cash_session_expenses_url }}";
+        window.cashSessionId = {{ cash_session_id }};
+        window.cashSessionExpensesAutoLoad = true;
+        window.cashDrawerExpectedValue = "{{ cash_drawer_expected }}";
+    </script>
     <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin-4.2.5/css/jquery.bootstrap-touchspin.css' %}"/>
     <script src="{% static 'lib/bootstrap-touchspin-4.2.5/js/jquery.bootstrap-touchspin.js' %}"></script>
     <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
+    <script src="{% static 'frm/cash/js/session_expenses.js' %}"></script>
     <script src="{% static 'frm/cash/js/form_close.js' %}"></script>
+{% endblock %}
+
+{% block box_footer %}
+    <div class="alert alert-info py-2 px-3 mb-2">
+        <i class="fas fa-cash-register"></i>
+        Efectivo estimado en caja (apertura + ingresos en efectivo − gastos):
+        <strong>S/ {{ cash_drawer_expected }}</strong>
+    </div>
+    {% include 'frm/cash/_session_expenses_panel.html' %}
+    {{ block.super }}
 {% endblock %}
 
 {% block buttons %}

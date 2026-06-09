@@ -14,22 +14,24 @@ Guía para **App Platform** (recomendado, con PostgreSQL gestionado) o **Droplet
 2. Si el repo incluye la carpeta padre, indique **Source Directory**: `app` (o la ruta donde está `manage.py`).
 3. Edite `.do/app.yaml`: `github.repo`, `DJANGO_ALLOWED_HOSTS`, dominio.
 4. Cree la base **PostgreSQL** en el mismo app (el spec ya define `databases`).
-5. En **Environment Variables**, marque como **SECRET**: `DJANGO_SECRET_KEY`, `EMAIL_HOST_PASSWORD`, `DNI_API_TOKEN`, `NEO_ADMIN_PASSWORD`.
+5. En **Environment Variables**, marque como **SECRET**: `DJANGO_SECRET_KEY`, `DATABASE_URL`, `EMAIL_HOST_PASSWORD`, `DNI_API_TOKEN`, `NEO_ADMIN_PASSWORD`.
 6. **Build command** (ya en el yaml o en la UI):
 
    ```bash
    pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
    ```
 
-7. Tras el primer deploy, abra la **Console** de la app y ejecute:
+7. El contenedor ejecuta automáticamente `migrate` y `bootstrap_production` al arrancar (`RUN_MIGRATE` / `RUN_BOOTSTRAP` en `.do/app.yaml`). Eso crea el submódulo **Seguridad → Config. API DNI** y copia `DNI_API_TOKEN` del entorno a la base de datos.
+
+   Si la base está vacía y faltan módulos, puede forzar el seed una vez:
 
    ```bash
-   python manage.py bootstrap_production --seed
+   RUN_INITIAL_SEED=1 python manage.py bootstrap_production --seed --skip-static
    ```
 
-   (Solo `--seed` la primera vez, con base vacía.)
+8. Verifique en **Seguridad → Config. API DNI** que el API Key esté guardado y use **Probar API**.
 
-8. En **Settings → Domains**, añada `terrafirmaperu.com` y active HTTPS.
+9. En **Settings → Domains**, añada `terrafirmaperu.com` y active HTTPS.
 
 **Nota:** Suba `media/` con contratos/plantillas vía volumen persistente o almacenamiento externo si la app es stateless; en App Platform el disco es efímero salvo que use un volume.
 
@@ -78,8 +80,9 @@ bash deploy/digitalocean/scripts/deploy.sh
 
 | Comando | Uso |
 |---------|-----|
-| `python manage.py bootstrap_production` | Migrar + estáticos + módulos |
+| `python manage.py bootstrap_production` | Migrar + estáticos + módulos + Config. API DNI |
 | `python manage.py bootstrap_production --seed` | Incluir datos iniciales |
+| `python manage.py ensure_dni_api_module` | Solo menú Seguridad y fila de configuración DNI |
 | `python manage.py ensure_neo_superuser --password '...'` | Restablecer admin Neo |
 | `python manage.py clear_operational_data --no-input` | Vaciar ventas/clientes de prueba |
 
@@ -89,6 +92,7 @@ bash deploy/digitalocean/scripts/deploy.sh
 - [ ] `DJANGO_ALLOWED_HOSTS` con dominio real
 - [ ] PostgreSQL configurado (`DATABASE_URL`)
 - [ ] Email (`EMAIL_HOST_PASSWORD`) probado
+- [ ] `DNI_API_TOKEN` (Decolecta) o token guardado en **Seguridad → Config. API DNI**
 - [ ] `NEO_ADMIN_PASSWORD` segura (usuario **Neo**)
 - [ ] Certificado SSL activo
 - [ ] Carpeta `media/` con plantillas de contrato/constancia

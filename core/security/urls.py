@@ -1,5 +1,6 @@
 from django.urls import path
 from .views.dashboard.views import *
+from .views.dniapi.views import *
 from .views.moduletype.views import *
 from .views.module.views import *
 from .views.group.views import *
@@ -41,4 +42,6 @@ urlpatterns = [
     path('database/backups/delete/<int:pk>/', DatabaseBackupsDeleteView.as_view(), name='databasebackups_delete'),
     # dashboard
     path('dashboard/update/', DashboardUpdateView.as_view(), name='dashboard_update'),
+    # api dni
+    path('api/dni/update/', DniApiConfigurationUpdateView.as_view(), name='dniapi_update'),
 ]

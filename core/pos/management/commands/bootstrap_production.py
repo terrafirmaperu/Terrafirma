@@ -58,6 +58,12 @@ class Command(BaseCommand):
             except Exception as exc:
                 self.stdout.write(self.style.WARNING(str(exc)))
 
+        self.stdout.write('Config. API DNI (Seguridad)...')
+        try:
+            call_command('ensure_dni_api_module')
+        except Exception as exc:
+            self.stdout.write(self.style.WARNING('Config API DNI: {}'.format(exc)))
+
         call_command('ensure_admin_group_access')
 
         neo_pwd = os.environ.get('NEO_ADMIN_PASSWORD', '').strip()

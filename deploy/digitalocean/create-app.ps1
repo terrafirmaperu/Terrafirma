@@ -35,5 +35,6 @@ if (-not $doctl) {
 & doctl auth init --access-token $token
 Write-Host 'Creando app desde .do/app.yaml...'
 & doctl apps create --spec (Join-Path $root '.do\app.yaml')
-Write-Host 'Listo. En el panel DO complete los SECRET: DJANGO_SECRET_KEY, EMAIL_HOST_PASSWORD, NEO_ADMIN_PASSWORD, DNI_API_TOKEN'
-Write-Host 'Luego en Console de la app: python manage.py bootstrap_production --seed'
+Write-Host 'Listo. En el panel DO complete los SECRET: DJANGO_SECRET_KEY, DATABASE_URL, EMAIL_HOST_PASSWORD, NEO_ADMIN_PASSWORD, DNI_API_TOKEN'
+Write-Host 'Al arrancar, migrate + bootstrap crean Seguridad -> Config. API DNI automaticamente.'
+Write-Host 'Si la base esta vacia: RUN_INITIAL_SEED=1 python manage.py bootstrap_production --seed --skip-static'

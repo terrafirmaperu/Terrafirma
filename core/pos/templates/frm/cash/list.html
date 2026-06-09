@@ -1,9 +1,14 @@
 {% extends 'list.html' %}
 {% load static %}
 {% block head_list %}
+    <script type="application/javascript">
+        window.cashExpensesUrl = "{% url 'expenses_list' %}";
+        window.cashSessionExpensesAutoLoad = false;
+    </script>
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
+    <script src="{% static 'frm/cash/js/session_expenses.js' %}"></script>
     <script src="{% static 'frm/cash/js/list.js' %}"></script>
 {% endblock %}
 
@@ -51,8 +56,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="tab-pays-link" data-toggle="pill" href="#tab-pays" role="tab">
-                                Pagos
+                            <a class="nav-link" id="tab-expenses-link" data-toggle="pill" href="#tab-expenses" role="tab">
+                                Gastos
                             </a>
                         </li>
                     </ul>
@@ -131,25 +136,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="tab-pays" role="tabpanel">
+                        <div class="tab-pane fade" id="tab-expenses" role="tabpanel">
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-2">
-                                    <div class="small-box bg-warning">
+                                <div class="col-lg-4 col-md-4 col-12 mb-2">
+                                    <div class="small-box bg-danger">
                                         <div class="inner">
-                                            <h4 id="paysCount">0</h4>
-                                            <p>Pagos a cuentas por cobrar (esta sesión)</p>
+                                            <h4 id="expensesCount">0</h4>
+                                            <p>Gastos registrados (esta sesión)</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-2">
+                                <div class="col-lg-4 col-md-4 col-12 mb-2">
+                                    <div class="small-box bg-warning">
+                                        <div class="inner">
+                                            <h4 id="expensesTotal">S/ 0.00</h4>
+                                            <p>Total gastado (descuenta efectivo en caja)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-12 mb-2">
                                     <div class="small-box bg-teal">
                                         <div class="inner">
-                                            <h4 id="paysTotal">S/ 0.00</h4>
-                                            <p>Cobros de deuda en esta sesión (no duplica la inicial de ventas al crédito)</p>
+                                            <h4 id="cashDrawerExpected">S/ 0.00</h4>
+                                            <p>Efectivo estimado en caja</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            {% include 'frm/cash/_session_expenses_panel.html' %}
                         </div>
                     </div>
                 </div>

@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 $(function () {
+    var $expected = $('input[name="closing_amount_expected"]');
+    if ($expected.length && window.cashDrawerExpectedValue && !$expected.val()) {
+        $expected.val(window.cashDrawerExpectedValue);
+    }
+
     var $closeAt = $('input[name="close_at"]');
     $closeAt.datetimepicker({
         useCurrent: false,

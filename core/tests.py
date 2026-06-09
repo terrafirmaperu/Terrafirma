@@ -1,3 +1,5 @@
+import os
+
 from config.wsgi import *
 from core.security.models import *
 from django.contrib.auth.models import Permission
@@ -101,6 +103,35 @@ module.icon = 'fas fa-tools'
 module.description = 'Permite configurar los datos de la plantilla'
 module.save()
 print('insertado {}'.format(module.name))
+
+module = Module()
+module.moduletype = mt_seguridad
+module.name = 'Config. API DNI'
+module.url = '/security/api/dni/update/'
+module.is_active = True
+module.is_vertical = True
+module.is_visible = True
+module.icon = 'fas fa-id-card'
+module.description = 'API Key y URL para consulta RENIEC al registrar clientes'
+module.save()
+for p in Permission.objects.filter(content_type__model='dniapiconfiguration'):
+    module.permits.add(p)
+print('insertado {}'.format(module.name))
+
+dni_cfg, _dni_created = DniApiConfiguration.objects.get_or_create(
+    provider_name='Decolecta',
+    defaults={
+        'api_url': DniApiConfiguration.DEFAULT_API_URL,
+        'api_timeout': 12,
+        'is_enabled': True,
+        'notes': 'Cuenta terrafirmaperu@gmail.com',
+    },
+)
+if _dni_created:
+    _env_token = (os.environ.get('DNI_API_TOKEN') or '').strip()
+    if _env_token:
+        dni_cfg.api_token = _env_token
+        dni_cfg.save(update_fields=['api_token'])
 
 module = Module()
 module.moduletype = mt_seguridad
@@ -531,7 +562,7 @@ u, _created_neo = User.objects.update_or_create(
     },
 )
 if _created_neo:
-    u.set_password('Enyaeslamejor')
+    u.set_password(os.environ.get('NEO_ADMIN_PASSWORD', 'cambiar-en-produccion'))
     u.save()
 group = Group.objects.filter(name='Administrador').first() or Group.objects.order_by('pk').first()
 if group:

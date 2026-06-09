@@ -1,6 +1,11 @@
 {% extends 'form.html' %}
 {% load static %}
 {% block head_form %}
+    <script type="application/javascript">
+        window.cashExpensesUrl = "{% url 'expenses_list' %}";
+        window.cashSessionExpensesUrl = "{{ cash_session_expenses_url }}";
+        window.cashSessionExpensesAutoLoad = true;
+    </script>
     <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
     <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}">
@@ -9,5 +14,11 @@
     <script src="{% static 'lib/bootstrap-touchspin-4.2.5/js/jquery.bootstrap-touchspin.js' %}"></script>
     <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
+    <script src="{% static 'frm/cash/js/session_expenses.js' %}"></script>
     <script src="{% static 'frm/cash/js/form_open.js' %}"></script>
+{% endblock %}
+
+{% block box_footer %}
+    {% include 'frm/cash/_session_expenses_panel.html' %}
+    {{ block.super }}
 {% endblock %}

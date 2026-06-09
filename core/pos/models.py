@@ -958,6 +958,14 @@ class Expenses(models.Model):
     desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
     date_joined = models.DateField(default=datetime.now, verbose_name='Fecha de Registro')
     valor = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name='Valor')
+    cash_register_session = models.ForeignKey(
+        'CashRegisterSession',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='expenses',
+        verbose_name='Sesión de caja',
+    )
 
     def __str__(self):
         return self.desc
