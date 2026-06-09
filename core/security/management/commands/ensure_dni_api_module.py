@@ -80,6 +80,9 @@ class Command(BaseCommand):
         for group in Group.objects.all():
             GroupModule.objects.get_or_create(group=group, module=module)
 
+        from django.core.management import call_command
+        call_command('ensure_admin_group_access')
+
         self.stdout.write(
             self.style.SUCCESS(
                 'Módulo «{}» {} — configuración {}.'.format(

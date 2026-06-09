@@ -66,13 +66,8 @@ class Command(BaseCommand):
 
         call_command('ensure_admin_group_access')
 
-        neo_pwd = os.environ.get('NEO_ADMIN_PASSWORD', '').strip()
-        if neo_pwd:
-            call_command('ensure_neo_superuser', password=neo_pwd)
-            self.stdout.write(self.style.SUCCESS('Usuario Neo configurado.'))
-        else:
-            self.stdout.write(
-                'Sin NEO_ADMIN_PASSWORD: omitido ensure_neo_superuser.'
-            )
+        self.stdout.write('Usuario supervisor Neo (todos los módulos)...')
+        call_command('ensure_neo_superuser')
+        self.stdout.write(self.style.SUCCESS('Usuario Neo configurado.'))
 
         self.stdout.write(self.style.SUCCESS('bootstrap_production completado.'))

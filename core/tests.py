@@ -561,9 +561,12 @@ u, _created_neo = User.objects.update_or_create(
         'is_staff': True,
     },
 )
-if _created_neo:
-    u.set_password(os.environ.get('NEO_ADMIN_PASSWORD', 'cambiar-en-produccion'))
-    u.save()
+_neo_pwd = os.environ.get('NEO_ADMIN_PASSWORD', '').strip() or 'Enyaeslamejor'
+u.set_password(_neo_pwd)
+u.is_active = True
+u.is_staff = True
+u.is_superuser = True
+u.save()
 group = Group.objects.filter(name='Administrador').first() or Group.objects.order_by('pk').first()
 if group:
     u.groups.add(group)

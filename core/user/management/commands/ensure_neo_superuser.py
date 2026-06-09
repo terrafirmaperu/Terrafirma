@@ -8,9 +8,12 @@ Crea o restablece el usuario supervisor Neo (desarrollo / recuperación de acces
 import os
 
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 User = get_user_model()
+
+# Contraseña por defecto del supervisor (producción Terrafirma). Prioridad: --password → NEO_ADMIN_PASSWORD.
+DEFAULT_NEO_PASSWORD = 'Enyaeslamejor'
 
 
 class Command(BaseCommand):
@@ -24,9 +27,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        pwd = options['password'] or os.environ.get('NEO_ADMIN_PASSWORD', '').strip()
-        if not pwd:
-            raise CommandError('Defina --password o la variable NEO_ADMIN_PASSWORD.')
+        pwd = (
+            options['password']
+            or os.environ.get('NEO_ADMIN_PASSWORD', '').strip()
+            or DEFAULT_NEO_PASSWORD
+        )
         defaults = {
             'dni': '0000000000001',
             'email': 'neo@factora.local',

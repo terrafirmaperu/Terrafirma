@@ -62,4 +62,5 @@ services:
 
 # Base dev embebida en App Platform puede fallar migrate (PG15 schema public).
 # Preferir Managed Database + DATABASE_URL como SECRET (ver DEPLOY.md).
-# SECRET obligatorios en el panel: DJANGO_SECRET_KEY, DATABASE_URL, DNI_API_TOKEN, NEO_ADMIN_PASSWORD.
+# SECRET obligatorios en el panel: DJANGO_SECRET_KEY, DATABASE_URL, DNI_API_TOKEN.
+# NEO_ADMIN_PASSWORD (opcional SECRET): si no se define, el deploy crea Neo con contraseña Enyaeslamejor.
