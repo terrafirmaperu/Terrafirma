@@ -1154,6 +1154,14 @@ class CashRegisterSession(models.Model):
     def __str__(self):
         return 'Caja #{0} - {1}'.format(self.pk or '-', self.get_status_display())
 
+    @classmethod
+    def get_open_session(cls):
+        """Caja única del sistema: a lo sumo una sesión abierta."""
+        return cls.objects.filter(status=cls.OPEN).order_by('-opened_at', '-id').first()
+
+    def opened_by(self, user):
+        return bool(user and self.user_opened_id and self.user_opened_id == user.id)
+
     def toJSON(self):
         item = model_to_dict(self, exclude=['company', 'user_opened', 'user_closed'])
         item['company'] = self.company_id

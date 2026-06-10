@@ -234,18 +234,11 @@ def _sale_payment_method_for_report(sale):
 
 def paid_today_report(user):
     today = timezone.localdate()
-    session = (
-        CashRegisterSession.objects.filter(
-            user_opened=user,
-            status=CashRegisterSession.OPEN,
-        )
-        .order_by('-opened_at')
-        .first()
-    )
+    session = CashRegisterSession.get_open_session()
     if not session:
         return {
             'session': None,
-            'message': 'No tiene caja abierta. Abra caja para ver pagos del turno actual.',
+            'message': 'No hay caja abierta en el sistema. El responsable debe aperturar caja.',
             'rows': [],
             'total': '0.00',
         }

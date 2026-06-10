@@ -145,10 +145,7 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                     data.append(row.toJSON())
             elif action == 'cash_resume':
                 today = timezone.localdate()
-                session = CashRegisterSession.objects.filter(
-                    user_opened=request.user,
-                    status=CashRegisterSession.OPEN,
-                ).order_by('-opened_at').first()
+                session = CashRegisterSession.get_open_session()
 
                 empty_sales = {
                     'count': 0,
@@ -167,8 +164,8 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                         'session': None,
                         'scope': 'sesion',
                         'scope_message': (
-                            'Sin caja abierta para su usuario. Abra caja para iniciar un turno; '
-                            'los totales quedarán en cero hasta entonces.'
+                            'No hay caja abierta en el sistema. El responsable del turno debe '
+                            'realizar la apertura; los totales quedarán en cero hasta entonces.'
                         ),
                         'sales': empty_sales,
                         'expenses': {
@@ -257,7 +254,8 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                         'session': session_payload,
                         'scope': 'sesion',
                         'scope_message': (
-                            'Totales del turno actual — sesión de caja n.º {} ({}). '
+                            'Caja única del día — sesión n.º {} aperturada por {}. '
+                            'Todos los usuarios operan sobre este turno. '
                             'Los gastos se descuentan del efectivo en caja.'
                         ).format(session.id, opener or 'cajero'),
                         'sales': {
@@ -285,10 +283,7 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                 if session_id:
                     session = CashRegisterSession.objects.filter(pk=session_id).first()
                 else:
-                    session = CashRegisterSession.objects.filter(
-                        user_opened=request.user,
-                        status=CashRegisterSession.OPEN,
-                    ).order_by('-opened_at').first()
+                    session = CashRegisterSession.get_open_session()
                 data = _cash_session_expenses_payload(session)
             else:
                 data['error'] = 'No ha ingresado una opción'
@@ -298,9 +293,15 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['create_url'] = reverse_lazy('cashsession_create')
+        open_session = CashRegisterSession.get_open_session()
+        context['create_url'] = (
+            reverse_lazy('cashsession_create') if open_session is None else None
+        )
         context['title'] = 'Listado de sesiones de caja'
         context['expenses_list_url'] = reverse_lazy('expenses_list')
+        context['cash_current_user_id'] = self.request.user.id
+        context['cash_open_session'] = open_session
+        context['cash_can_open'] = open_session is None
         return context
 
 
@@ -310,6 +311,25 @@ class CashRegisterSessionOpenView(PermissionMixin, CreateView):
     form_class = CashRegisterSessionOpenForm
     success_url = reverse_lazy('cashsession_list')
     permission_required = 'add_cashregistersession'
+
+    def dispatch(self, request, *args, **kwargs):
+        existing = CashRegisterSession.get_open_session()
+        if existing:
+            opener = (
+                existing.user_opened.get_full_name()
+                if existing.user_opened_id
+                else 'otro usuario'
+            )
+            messages.warning(
+                request,
+                'Ya existe una caja abierta por {0} (sesión n.º {1}). '
+                'Solo puede haber una caja abierta en el sistema.'.format(
+                    opener,
+                    existing.pk,
+                ),
+            )
+            return HttpResponseRedirect(reverse_lazy('cashsession_list'))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -324,10 +344,7 @@ class CashRegisterSessionOpenView(PermissionMixin, CreateView):
                 form = self.get_form()
                 data = form.save()
             elif action in ('cash_session_expenses', 'cash_session_payments'):
-                session = CashRegisterSession.objects.filter(
-                    user_opened=request.user,
-                    status=CashRegisterSession.OPEN,
-                ).order_by('-opened_at').first()
+                session = CashRegisterSession.get_open_session()
                 data = _cash_session_expenses_payload(session)
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -356,6 +373,19 @@ class CashRegisterSessionCloseView(PermissionMixin, UpdateView):
         self.object = self.get_object()
         if self.object.status != CashRegisterSession.OPEN:
             messages.error(request, 'Esta sesión de caja ya está cerrada.')
+            return HttpResponseRedirect(reverse_lazy('cashsession_list'))
+        if not self.object.opened_by(request.user):
+            opener = (
+                self.object.user_opened.get_full_name()
+                if self.object.user_opened_id
+                else 'quien aperturó'
+            )
+            messages.error(
+                request,
+                'Solo {0} puede cerrar esta caja (aperturó el turno actual).'.format(
+                    opener
+                ),
+            )
             return HttpResponseRedirect(reverse_lazy('cashsession_list'))
         return super().dispatch(request, *args, **kwargs)
 

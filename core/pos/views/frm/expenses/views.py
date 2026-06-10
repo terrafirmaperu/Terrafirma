@@ -51,10 +51,7 @@ class ExpensesCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['cash_session'] = CashRegisterSession.objects.filter(
-            user_opened=self.request.user,
-            status=CashRegisterSession.OPEN,
-        ).order_by('-opened_at').first()
+        kwargs['cash_session'] = CashRegisterSession.get_open_session()
         return kwargs
 
     def post(self, request, *args, **kwargs):
@@ -62,10 +59,7 @@ class ExpensesCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView)
         action = request.POST['action']
         try:
             if action == 'add':
-                session = CashRegisterSession.objects.filter(
-                    user_opened=request.user,
-                    status=CashRegisterSession.OPEN,
-                ).order_by('-opened_at').first()
+                session = CashRegisterSession.get_open_session()
                 form = self.get_form()
                 data = form.save()
                 if not data.get('error') and session and form.instance.pk:

@@ -149,11 +149,7 @@ class CtasCollectCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateVi
                         return HttpResponse(json.dumps(data), content_type='application/json')
                     payment.payment_method = method
                     payment.desc = _payment_desc_with_method(request.POST.get('desc'), method)
-                    session_open = CashRegisterSession.objects.filter(
-                        user_opened=request.user,
-                        status=CashRegisterSession.OPEN,
-                    ).order_by('-opened_at').first()
-                    payment.cash_register_session = session_open
+                    payment.cash_register_session = CashRegisterSession.get_open_session()
                     payment.save()
                     payment.ctascollect.validate_debt()
                     data = {

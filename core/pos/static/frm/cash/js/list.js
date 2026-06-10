@@ -74,7 +74,8 @@ function getData(all) {
                 orderable: false,
                 render: function (data, type, row) {
                     var btns = '';
-                    if (row.status === 'abierta') {
+                    var currentUserId = window.cashCurrentUserId || null;
+                    if (row.status === 'abierta' && currentUserId && row.user_opened === currentUserId) {
                         btns += '<a href="/pos/frm/cash/close/' + row.id + '/" class="btn btn-primary btn-xs btn-flat" title="Cierre"><i class="fas fa-cash-register"></i></a> ';
                     }
                     btns += '<a href="/pos/frm/cash/delete/' + row.id + '/" class="btn btn-danger btn-xs btn-flat" title="Eliminar"><i class="fas fa-trash"></i></a>';
@@ -95,7 +96,7 @@ function setCashResume(data) {
         $('#cashScopeMessage').text(data.scope_message);
     }
 
-    var sessionText = 'Sin caja abierta para su usuario — totales en cero';
+    var sessionText = 'Sin caja abierta en el sistema — totales en cero';
     if (data.session) {
         var nm = data.session.user_opened_name || '';
         sessionText = 'Sesión de caja n.º ' + data.session.id;

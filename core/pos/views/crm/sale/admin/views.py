@@ -149,11 +149,7 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                     sale.payment_method = request.POST['payment_method']
                     sale.payment_condition = request.POST['payment_condition']
                     sale.type_voucher = request.POST['type_voucher']
-                    session_open = CashRegisterSession.objects.filter(
-                        user_opened=request.user,
-                        status=CashRegisterSession.OPEN,
-                    ).order_by('-opened_at').first()
-                    sale.cash_register_session = session_open
+                    sale.cash_register_session = CashRegisterSession.get_open_session()
                     company = Company.objects.first()
                     sale.igv = float(company.igv) / 100 if company else 0.0
                     sale.dscto = float(request.POST['dscto']) / 100

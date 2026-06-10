@@ -549,6 +549,25 @@ class CashRegisterSessionOpenForm(ModelForm):
             ),
         }
 
+    def clean(self):
+        cleaned = super().clean()
+        existing = CashRegisterSession.get_open_session()
+        if existing:
+            opener = (
+                existing.user_opened.get_full_name()
+                if existing.user_opened_id
+                else 'otro usuario'
+            )
+            raise forms.ValidationError(
+                'Ya hay una caja abierta por {0} (sesión n.º {1}). '
+                'Solo puede existir una caja abierta en el sistema; '
+                'cierre ese turno antes de abrir otro.'.format(
+                    opener,
+                    existing.pk,
+                )
+            )
+        return cleaned
+
     def save(self, commit=True):
         data = {}
         try:
@@ -625,6 +644,18 @@ class CashRegisterSessionCloseForm(ModelForm):
             if self.is_valid():
                 if self._user_close is None:
                     data['error'] = 'No se indicó el usuario de cierre.'
+                    return data
+                if not self.instance.opened_by(self._user_close):
+                    opener = (
+                        self.instance.user_opened.get_full_name()
+                        if self.instance.user_opened_id
+                        else 'quien aperturó'
+                    )
+                    data['error'] = (
+                        'Solo puede cerrar la caja {0}, quien realizó la apertura.'.format(
+                            opener
+                        )
+                    )
                     return data
                 self.instance.user_closed = self._user_close
                 self.instance.status = CashRegisterSession.CLOSED
