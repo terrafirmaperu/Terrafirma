@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% block head_form %}
-    <script src="{% static 'whatsapp/messages/js/form.js' %}?v=20260610b"></script>
+    <script src="{% static 'whatsapp/messages/js/form.js' %}?v=20260610d"></script>
 {% endblock %}
 
 {% block content %}
@@ -70,56 +70,133 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="filter_community">Comunidad</label>
-                                    <select class="form-control" id="filter_community" name="filter_community">
-                                        <option value="">— Todas —</option>
-                                        {% for item in filter_options.communities %}
-                                            <option value="{{ item }}">{{ item }}</option>
-                                        {% endfor %}
-                                    </select>
+                        <div class="form-group">
+                            <label for="filter_location_base">Base de ubicación</label>
+                            <select class="form-control" id="filter_location_base" name="filter_location_base">
+                                {% for value, label in location_base_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div id="predioLocationFields">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="filter_predio_department">Departamento (predio)</label>
+                                        <select class="form-control filter-predio-field" id="filter_predio_department" name="filter_predio_department">
+                                            <option value="">— Todos —</option>
+                                            {% for item in filter_options.predio_departments %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="filter_predio_address">Dirección del predio (contiene)</label>
+                                        <input type="text" class="form-control filter-predio-field" id="filter_predio_address"
+                                               name="filter_predio_address" placeholder="Ej. Av. Los Incas 120, Vista Alegre">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="filter_population_center">Centro poblado</label>
-                                    <select class="form-control" id="filter_population_center" name="filter_population_center">
-                                        <option value="">— Todos —</option>
-                                        {% for item in filter_options.population_centers %}
-                                            <option value="{{ item }}">{{ item }}</option>
-                                        {% endfor %}
-                                    </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="filter_community">Comunidad (predio)</label>
+                                        <select class="form-control filter-predio-field" id="filter_community" name="filter_community">
+                                            <option value="">— Todas —</option>
+                                            {% for item in filter_options.communities %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="filter_population_center">Centro poblado (predio)</label>
+                                        <select class="form-control filter-predio-field" id="filter_population_center" name="filter_population_center">
+                                            <option value="">— Todos —</option>
+                                            {% for item in filter_options.population_centers %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="filter_province">Provincia (predio)</label>
+                                        <select class="form-control filter-predio-field" id="filter_province" name="filter_province">
+                                            <option value="">— Todas —</option>
+                                            {% for item in filter_options.predio_provinces %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="filter_district">Distrito (predio)</label>
+                                        <select class="form-control filter-predio-field" id="filter_district" name="filter_district">
+                                            <option value="">— Todos —</option>
+                                            {% for item in filter_options.predio_districts %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div id="clientLocationFields" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="filter_department">Departamento (cliente)</label>
+                                        <select class="form-control filter-client-field" id="filter_department" name="filter_department">
+                                            <option value="">— Todos —</option>
+                                            {% for item in filter_options.client_departments %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="filter_client_province">Provincia (cliente)</label>
+                                        <select class="form-control filter-client-field" id="filter_client_province" name="filter_client_province">
+                                            <option value="">— Todas —</option>
+                                            {% for item in filter_options.client_provinces %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="filter_client_district">Distrito (cliente)</label>
+                                        <select class="form-control filter-client-field" id="filter_client_district" name="filter_client_district">
+                                            <option value="">— Todos —</option>
+                                            {% for item in filter_options.client_districts %}
+                                                <option value="{{ item }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter_client_address">Dirección del cliente (contiene)</label>
+                                <input type="text" class="form-control filter-client-field" id="filter_client_address"
+                                       name="filter_client_address" placeholder="Ej. Jr. Lima 456, Huancavelica">
+                            </div>
+                        </div>
+
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="filter_province">Provincia</label>
-                                    <select class="form-control" id="filter_province" name="filter_province">
-                                        <option value="">— Todas —</option>
-                                        {% for item in filter_options.provinces %}
-                                            <option value="{{ item }}">{{ item }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="filter_district">Distrito</label>
-                                    <select class="form-control" id="filter_district" name="filter_district">
-                                        <option value="">— Todos —</option>
-                                        {% for item in filter_options.districts %}
-                                            <option value="{{ item }}">{{ item }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="filter_product">Producto / servicio</label>
+                            <div class="col-md-12">
+                                <div class="form-group mb-0">
+                                    <label for="filter_product">Producto / servicio (predio vinculado)</label>
                                     <select class="form-control" id="filter_product" name="filter_product">
                                         <option value="">— Todos —</option>
                                         {% for item in filter_options.products %}
@@ -129,11 +206,11 @@
                                 </div>
                             </div>
                         </div>
-                        <small class="text-muted">
-                            Los filtros de ubicación usan los predios registrados en clientes (comunidad, provincia, distrito).
-                            «Con deuda» incluye cuentas por cobrar con saldo pendiente.
-                            «Pagadores» incluye clientes con pagos de cuotas, inicial o ventas al contado.
-                            «Proceso completado» son casos de asesoría en la última etapa.
+                        <small class="text-muted d-block mt-2">
+                            <strong>Predio vinculado:</strong> filtra por predios registrados al cliente (o predio legacy):
+                            departamento, comunidad, centro poblado, provincia, distrito y texto de dirección del predio.
+                            <strong>Domicilio del cliente:</strong> departamento, provincia, distrito y dirección del perfil del cliente.
+                            «Con deuda», «Pagadores» y «Proceso completado» se aplican sobre el conjunto filtrado.
                         </small>
                     </div>
                 </div>

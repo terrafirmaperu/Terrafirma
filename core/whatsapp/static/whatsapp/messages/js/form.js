@@ -4,24 +4,55 @@ function recipientSourceValue() {
     return $('#id_recipient_source').val();
 }
 
+function locationBaseValue() {
+    return $('#filter_location_base').val() || 'predio';
+}
+
 function toggleRecipientBlocks() {
     var source = recipientSourceValue();
     $('#manualRecipientsBlock').toggle(source === 'manual');
     $('#filterRecipientsBlock').toggle(source === 'filter');
 }
 
+function toggleLocationBaseFields() {
+    var isClient = locationBaseValue() === 'client';
+    $('#predioLocationFields').toggle(!isClient);
+    $('#clientLocationFields').toggle(isClient);
+}
+
 function previewPayload() {
+    var base = locationBaseValue();
     var data = {
         action: 'preview_count',
         recipient_source: recipientSourceValue(),
         recipients_text: $('#id_recipients_text').val(),
         filter_audience: $('#filter_audience').val(),
-        filter_community: $('#filter_community').val(),
-        filter_population_center: $('#filter_population_center').val(),
-        filter_province: $('#filter_province').val(),
-        filter_district: $('#filter_district').val(),
+        filter_location_base: base,
         filter_product: $('#filter_product').val(),
+        filter_department: '',
+        filter_community: '',
+        filter_population_center: '',
+        filter_province: '',
+        filter_district: '',
+        filter_predio_department: '',
+        filter_predio_address: '',
+        filter_client_province: '',
+        filter_client_district: '',
+        filter_client_address: '',
     };
+    if (base === 'client') {
+        data.filter_department = $('#filter_department').val();
+        data.filter_client_province = $('#filter_client_province').val();
+        data.filter_client_district = $('#filter_client_district').val();
+        data.filter_client_address = $('#filter_client_address').val();
+    } else {
+        data.filter_predio_department = $('#filter_predio_department').val();
+        data.filter_predio_address = $('#filter_predio_address').val();
+        data.filter_community = $('#filter_community').val();
+        data.filter_population_center = $('#filter_population_center').val();
+        data.filter_province = $('#filter_province').val();
+        data.filter_district = $('#filter_district').val();
+    }
     return data;
 }
 
@@ -56,8 +87,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $(function () {
     toggleRecipientBlocks();
+    toggleLocationBaseFields();
+
     $('#id_recipient_source').on('change', function () {
         toggleRecipientBlocks();
+        $('#recipientCount').val('—');
+    });
+
+    $('#filter_location_base').on('change', function () {
+        toggleLocationBaseFields();
         $('#recipientCount').val('—');
     });
 
@@ -74,7 +112,7 @@ $(function () {
         });
     });
 
-    $('#filterRecipientsBlock select').on('change', function () {
+    $('#filterRecipientsBlock select, #filterRecipientsBlock input[type="text"]').on('change input', function () {
         $('#recipientCount').val('—');
     });
 

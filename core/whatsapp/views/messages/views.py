@@ -4,12 +4,16 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, TemplateView
 
-from core.reports.client_report import get_client_report_filter_options
+from core.whatsapp.whatsapp_recipients import get_whatsapp_filter_options
 from core.security.mixins import ModuleMixin, PermissionMixin, SupervisorDeleteApprovalMixin
 from core.whatsapp.forms import WhatsAppBulkMessageForm
 from core.whatsapp.models import WhatsAppBulkMessage
 from core.whatsapp.whatsapp_api import send_bulk_message
-from core.whatsapp.whatsapp_recipients import AUDIENCE_CHOICES, count_phones_for_post
+from core.whatsapp.whatsapp_recipients import (
+    AUDIENCE_CHOICES,
+    LOCATION_BASE_CHOICES,
+    count_phones_for_post,
+)
 
 
 class WhatsAppMessageListView(ModuleMixin, TemplateView):
@@ -50,7 +54,7 @@ class WhatsAppMessageCreateView(PermissionMixin, CreateView):
             if action == 'preview_count':
                 return JsonResponse({'count': count_phones_for_post(request.POST)})
             if action == 'filter_options':
-                return JsonResponse(get_client_report_filter_options())
+                return JsonResponse(get_whatsapp_filter_options())
             if action == 'add':
                 form = WhatsAppBulkMessageForm(request.POST, filter_post=request.POST)
                 data = form.save(user=request.user)
@@ -75,8 +79,9 @@ class WhatsAppMessageCreateView(PermissionMixin, CreateView):
         context['list_url'] = self.success_url
         context['title'] = 'Nuevo mensaje masivo'
         context['action'] = 'add'
-        context['filter_options'] = get_client_report_filter_options()
+        context['filter_options'] = get_whatsapp_filter_options()
         context['audience_choices'] = AUDIENCE_CHOICES
+        context['location_base_choices'] = LOCATION_BASE_CHOICES
         return context
 
 

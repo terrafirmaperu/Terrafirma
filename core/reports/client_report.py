@@ -79,6 +79,10 @@ def filter_clients_report(
     province='',
     district='',
     location_type='',
+    location_base='',
+    department='',
+    predio_address='',
+    client_address='',
 ):
     qs = Client.objects.select_related('user').order_by(
         'user__last_name', 'user__first_name', 'id',
@@ -89,6 +93,62 @@ def filter_clients_report(
             queryset=AdvisoryProgressCase.objects.select_related('sale').order_by('-id'),
         ),
     )
+
+    base = (location_base or '').strip()
+    dept = (department or '').strip()
+
+    if base == 'client':
+        if dept:
+            qs = qs.filter(department__iexact=dept)
+        if province:
+            qs = qs.filter(province__iexact=province.strip())
+        if district:
+            qs = qs.filter(district__iexact=district.strip())
+        addr = (client_address or '').strip()
+        if addr:
+            qs = qs.filter(address__icontains=addr)
+        return qs.distinct()
+
+    if base == 'predio':
+        qs = qs.filter(Q(properties__isnull=False) | Q(has_predio=True)).distinct()
+        if dept:
+            qs = qs.filter(
+                Q(properties__department__iexact=dept)
+                | Q(has_predio=True, predio_department__iexact=dept)
+            ).distinct()
+        if location_type == 'community':
+            qs = qs.filter(
+                properties__community_location_enabled=True,
+            ).exclude(properties__community='').distinct()
+        elif location_type == 'population_center':
+            qs = qs.filter(
+                properties__community_location_enabled=True,
+            ).exclude(properties__population_center='').distinct()
+        if community:
+            qs = qs.filter(properties__community__iexact=community.strip()).distinct()
+        if population_center:
+            qs = qs.filter(
+                properties__population_center__iexact=population_center.strip(),
+            ).distinct()
+        if province:
+            p = province.strip()
+            qs = qs.filter(
+                Q(properties__province__iexact=p)
+                | Q(has_predio=True, predio_province__iexact=p)
+            ).distinct()
+        if district:
+            d = district.strip()
+            qs = qs.filter(
+                Q(properties__district__iexact=d)
+                | Q(has_predio=True, predio_district__iexact=d)
+            ).distinct()
+        addr = (predio_address or '').strip()
+        if addr:
+            qs = qs.filter(
+                Q(properties__address__icontains=addr)
+                | Q(has_predio=True, predio_address__icontains=addr)
+            ).distinct()
+        return qs.distinct()
 
     if not any([community, population_center, province, district, location_type]):
         return qs
