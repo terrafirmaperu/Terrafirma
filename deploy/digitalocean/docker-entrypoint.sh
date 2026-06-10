@@ -17,6 +17,8 @@ if [ "${RUN_BOOTSTRAP:-0}" = "1" ]; then
 else
   echo "==> ensure_dni_api_module"
   python manage.py ensure_dni_api_module
+  echo "==> ensure_whatsapp_module"
+  python manage.py ensure_whatsapp_module
   echo "==> ensure_neo_superuser"
   python manage.py ensure_neo_superuser
 fi

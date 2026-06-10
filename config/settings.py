@@ -73,6 +73,7 @@ LOCAL_APPS = [
     'core.dashboard',
     'core.pos',
     'core.reports',
+    'core.whatsapp',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS

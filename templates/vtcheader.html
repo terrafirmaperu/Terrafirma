@@ -1,4 +1,5 @@
 {% load static %}
+{% load security_extras %}
 <nav class="main-header navbar navbar-expand {{ dshboard.navbar }} factora-header-bar">
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -10,9 +11,22 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{% url 'home' %}" class="nav-link"><i class="fas fa-globe"></i> Ir a web</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'whatsapp' %}" class="nav-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Ir a WhatsApp</a>
+        {% if session_group %}
+        {% with mensajeria=session_group.id|getmensajeriamodules %}
+        {% if mensajeria %}
+        <li class="nav-item dropdown d-none d-sm-inline-block">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <i class="fab fa-whatsapp"></i> Mensajería
+            </a>
+            <div class="dropdown-menu">
+                {% for m in mensajeria %}
+                    <a href="{{ m.url }}" class="dropdown-item"><i class="{{ m.icon }}"></i> {{ m.name }}</a>
+                {% endfor %}
+            </div>
         </li>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
         <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link"><i class="fas fa-user-shield"></i> Bienvenido {{ request.user.username }}</a>
         </li>

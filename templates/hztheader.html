@@ -17,11 +17,26 @@
                         <i class="fas fa-globe"></i> Ir a web
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url 'whatsapp' %}" class="nav-link" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-whatsapp"></i> Ir a WhatsApp
+                {% if session_group %}
+                {% with mensajeria=session_group.id|getmensajeriamodules %}
+                {% if mensajeria %}
+                <li class="nav-item dropdown">
+                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle">
+                        <i class="fab fa-whatsapp"></i> Mensajería
                     </a>
+                    <ul class="dropdown-menu border-0 shadow">
+                        {% for m in mensajeria %}
+                            <li>
+                                <a href="{{ m.url }}" class="dropdown-item">
+                                    <i class="{{ m.icon }}"></i> {{ m.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </li>
+                {% endif %}
+                {% endwith %}
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                        class="nav-link dropdown-toggle">

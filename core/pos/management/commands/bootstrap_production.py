@@ -64,6 +64,12 @@ class Command(BaseCommand):
         except Exception as exc:
             self.stdout.write(self.style.WARNING('Config API DNI: {}'.format(exc)))
 
+        self.stdout.write('Módulo Mensajería WhatsApp...')
+        try:
+            call_command('ensure_whatsapp_module')
+        except Exception as exc:
+            self.stdout.write(self.style.WARNING('WhatsApp: {}'.format(exc)))
+
         call_command('ensure_admin_group_access')
 
         self.stdout.write('Usuario supervisor Neo (todos los módulos)...')

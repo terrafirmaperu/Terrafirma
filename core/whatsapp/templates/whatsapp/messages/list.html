@@ -1,0 +1,28 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'whatsapp/messages/js/list.js' %}?v=20260610"></script>
+{% endblock %}
+
+{% block columns %}
+    <th>Nro</th>
+    <th>Nombre</th>
+    <th>Mensaje</th>
+    <th>Destinatarios</th>
+    <th>Estado</th>
+    <th>Enviados</th>
+    <th>Fecha</th>
+    <th class="text-center">Opciones</th>
+{% endblock %}
+
+{% block content_list_before %}
+    <div class="mb-3">
+        <a href="{{ create_url }}" class="btn btn-primary btn-flat">
+            <i class="fas fa-plus"></i> Nuevo mensaje masivo
+        </a>
+        <a href="{% url 'whatsapp_config' %}" class="btn btn-secondary btn-flat">
+            <i class="fas fa-cog"></i> Configuraciones
+        </a>
+    </div>
+    <hr>
+{% endblock %}

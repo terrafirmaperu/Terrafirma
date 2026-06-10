@@ -30,9 +30,9 @@
 {% block content_list_before %}
     {% if cash_open_session %}
     <div class="alert alert-info py-2">
-        Caja abierta ? sesi?n n.? {{ cash_open_session.id }}
+        Caja abierta - sesion n. {{ cash_open_session.id }}
         ({{ cash_open_session.user_opened.get_full_name }}).
-        Solo quien apertur? puede cerrar; el resto del equipo opera sobre este turno.
+        Solo quien aperturo puede cerrar; el resto del equipo opera sobre este turno.
     </div>
     {% endif %}
     <div class="row">
@@ -60,7 +60,7 @@
                     <ul class="nav nav-pills" id="cashResumeTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="tab-sales-link" data-toggle="pill" href="#tab-sales" role="tab">
-                                Facturaci?n y Ventas
+                                Facturacion y Ventas
                             </a>
                         </li>
                         <li class="nav-item">
@@ -72,14 +72,14 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-2">
-                        <strong>Resumen del turno (sesi?n de caja)</strong>
+                        <strong>Resumen del turno (sesion de caja)</strong>
                         <span class="text-muted" id="cashReportDate"></span>
                         <div class="small text-muted" id="cashScopeMessage">
-                            Hay una sola caja para todo el sistema. Los importes corresponden al turno abierto; todos los usuarios operan sobre la misma sesi?n hasta el cierre.
+                            Hay una sola caja para todo el sistema. Los importes corresponden al turno abierto; todos los usuarios operan sobre la misma sesion hasta el cierre.
                         </div>
                     </div>
                     <div class="mb-2 text-muted small">
-                        <span id="cashSessionStatus">Sin sesi?n abierta</span>
+                        <span id="cashSessionStatus">Sin sesion abierta</span>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-sales" role="tabpanel">
@@ -88,7 +88,7 @@
                                     <div class="small-box bg-info">
                                         <div class="inner">
                                             <h4 id="salesCount">0</h4>
-                                            <p>Ventas (esta sesi?n)</p>
+                                            <p>Ventas (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                     <div class="small-box bg-success">
                                         <div class="inner">
                                             <h4 id="salesTotal">S/ 0.00</h4>
-                                            <p>Total facturado (esta sesi?n)</p>
+                                            <p>Total facturado (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
                                     <div class="small-box bg-primary">
                                         <div class="inner">
                                             <h4 id="salesCash">S/ 0.00</h4>
-                                            <p>Efectivo (esta sesi?n)</p>
+                                            <p>Efectivo (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                     <div class="small-box bg-purple">
                                         <div class="inner">
                                             <h4 id="salesYape">S/ 0.00</h4>
-                                            <p>Yape (esta sesi?n)</p>
+                                            <p>Yape (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                                     <div class="small-box bg-orange">
                                         <div class="inner">
                                             <h4 id="salesPlin">S/ 0.00</h4>
-                                            <p>Plin (esta sesi?n)</p>
+                                            <p>Plin (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                     <div class="small-box bg-navy">
                                         <div class="inner">
                                             <h4 id="salesTarjeta">S/ 0.00</h4>
-                                            <p>Tarjeta (esta sesi?n)</p>
+                                            <p>Tarjeta (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                     <div class="small-box bg-secondary">
                                         <div class="inner">
                                             <h4 id="salesMixtoTarjeta">S/ 0.00</h4>
-                                            <p>Mixto ÿÿÿ parte tarjeta (esta sesi?n)</p>
+                                            <p>Mixto - parte tarjeta (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                     <div class="small-box bg-danger">
                                         <div class="inner">
                                             <h4 id="expensesCount">0</h4>
-                                            <p>Gastos registrados (esta sesi?n)</p>
+                                            <p>Gastos registrados (esta sesion)</p>
                                         </div>
                                     </div>
                                 </div>

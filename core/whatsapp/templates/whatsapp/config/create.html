@@ -1,0 +1,128 @@
+{% extends 'form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head_form %}
+    <script src="{% static 'whatsapp/config/js/form.js' %}?v=20260610"></script>
+{% endblock %}
+
+{% block content %}
+    <form class="form" method="post" action="." enctype="multipart/form-data" id="frmForm"
+          data-url="{{ list_url }}" autocomplete="off">
+        <div class="card {{ dshboard.card }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fab fa-whatsapp"></i>
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    <input type="hidden" name="action" id="action" value="{{ action }}">
+                    {% csrf_token %}
+                    <div class="alert alert-info py-2">
+                        Configure la API de WhatsApp Business (Meta Cloud API). Los cambios aplican de inmediato
+                        en el módulo de mensajes masivos.
+                    </div>
+                    {% if token_configured %}
+                    <div class="alert alert-success py-2">
+                        <i class="fas fa-check-circle"></i> Hay un token guardado.
+                        Deje el campo vacío si no desea cambiarlo.
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ form.provider_name.label }}:</label>
+                                {{ form.provider_name|add_class:'form-control' }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ form.is_enabled.label }}:</label><br>
+                                {{ form.is_enabled }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ form.phone_number_id.label }}:</label>
+                                {{ form.phone_number_id }}
+                                <small class="text-muted d-block">{{ form.phone_number_id.help_text }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ form.phone_number_display.label }}:</label>
+                                {{ form.phone_number_display }}
+                                <small class="text-muted d-block">{{ form.phone_number_display.help_text }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.business_account_id.label }}:</label>
+                        {{ form.business_account_id }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>{{ form.api_base_url.label }}:</label>
+                                {{ form.api_base_url }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{ form.api_version.label }}:</label>
+                                {{ form.api_version }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{ form.api_timeout.label }}:</label>
+                                {{ form.api_timeout }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.api_token_input.label }}:</label>
+                        {{ form.api_token_input }}
+                        {% if form.api_token_input.help_text %}
+                        <small class="text-muted d-block">{{ form.api_token_input.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.notes.label }}:</label>
+                        {{ form.notes }}
+                    </div>
+                    <div class="alert alert-secondary py-2 small mb-0">
+                        Endpoint de envío: <code>{{ messages_endpoint }}</code>
+                    </div>
+                    <hr>
+                    <div class="form-group mb-0">
+                        <label>Probar API</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="testPhoneInput" maxlength="15"
+                                   placeholder="Teléfono de prueba (opcional, envía mensaje)" autocomplete="off">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-primary btn-flat" id="btnTestApi">
+                                    <i class="fas fa-vial"></i> Probar conexión
+                                </button>
+                            </div>
+                        </div>
+                        <small class="text-muted">Sin teléfono: solo verifica credenciales en Meta. Con teléfono: envía mensaje de prueba.</small>
+                        <pre class="bg-light border rounded p-2 mt-2 mb-0 small" id="testApiResult"
+                             style="min-height:2.5rem;">Sin pruebas aún.</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-flat">
+                    <i class="fas fa-save"></i> Guardar configuración
+                </button>
+                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

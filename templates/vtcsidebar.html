@@ -23,13 +23,21 @@
                         <p>Ir a web</p>
                     </a>
                 </li>
+                {% if session_group %}
+                {% with mensajeria=session_group.id|getmensajeriamodules %}
+                {% if mensajeria %}
                 <li class="nav-header">Mensajería</li>
-                <li class="nav-item">
-                    <a href="{% url 'whatsapp' %}" class="nav-link" target="_blank" rel="noopener noreferrer">
-                        <i class="nav-icon fab fa-whatsapp"></i>
-                        <p>Ir a WhatsApp</p>
-                    </a>
-                </li>
+                {% for m in mensajeria %}
+                    <li class="nav-item">
+                        <a href="{{ m.url }}" class="nav-link">
+                            <i class="nav-icon {{ m.icon }}"></i>
+                            <p>{{ m.name }}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% endif %}
                 <li class="nav-header">Módulos</li>
                 {% if session_group %}
                 {% for mt in session_group.id|getmoduletype %}

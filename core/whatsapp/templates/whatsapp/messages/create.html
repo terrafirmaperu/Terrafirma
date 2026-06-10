@@ -1,0 +1,154 @@
+{% extends 'form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head_form %}
+    <script src="{% static 'whatsapp/messages/js/form.js' %}?v=20260610b"></script>
+{% endblock %}
+
+{% block content %}
+    <form class="form" method="post" action="." id="frmForm" data-url="{{ list_url }}" autocomplete="off">
+        <div class="card {{ dshboard.card }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fab fa-whatsapp"></i>
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    <input type="hidden" name="action" id="action" value="{{ action }}">
+                    <input type="hidden" name="send_now" id="send_now" value="0">
+                    {% csrf_token %}
+                    <div class="alert alert-info py-2">
+                        Redacte el mensaje y elija destinatarios. Puede filtrar por comunidad, deudas, pagadores,
+                        procesos completados, ubicación o producto/servicio.
+                        Revise la API en <a href="{% url 'whatsapp_config' %}">Configuraciones</a>.
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.name.label }}:</label>
+                        {{ form.name|add_class:'form-control' }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.message_body.label }}:</label>
+                        {{ form.message_body }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ form.recipient_source.label }}:</label>
+                                {{ form.recipient_source }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Destinatarios estimados</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="recipientCount" readonly value="—">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary btn-flat" id="btnPreviewCount">
+                                            <i class="fas fa-calculator"></i> Calcular
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="manualRecipientsBlock" class="form-group">
+                        <label>{{ form.recipients_text.label }}:</label>
+                        {{ form.recipients_text }}
+                        <small class="text-muted d-block">{{ form.recipients_text.help_text }}</small>
+                    </div>
+
+                    <div id="filterRecipientsBlock" class="border rounded p-3 bg-light mb-3" style="display:none;">
+                        <h5 class="mb-3"><i class="fas fa-filter"></i> Filtros de clientes</h5>
+                        <div class="form-group">
+                            <label for="filter_audience">Tipo de audiencia</label>
+                            <select class="form-control" id="filter_audience" name="filter_audience">
+                                {% for value, label in audience_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="filter_community">Comunidad</label>
+                                    <select class="form-control" id="filter_community" name="filter_community">
+                                        <option value="">— Todas —</option>
+                                        {% for item in filter_options.communities %}
+                                            <option value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="filter_population_center">Centro poblado</label>
+                                    <select class="form-control" id="filter_population_center" name="filter_population_center">
+                                        <option value="">— Todos —</option>
+                                        {% for item in filter_options.population_centers %}
+                                            <option value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="filter_province">Provincia</label>
+                                    <select class="form-control" id="filter_province" name="filter_province">
+                                        <option value="">— Todas —</option>
+                                        {% for item in filter_options.provinces %}
+                                            <option value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="filter_district">Distrito</label>
+                                    <select class="form-control" id="filter_district" name="filter_district">
+                                        <option value="">— Todos —</option>
+                                        {% for item in filter_options.districts %}
+                                            <option value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="filter_product">Producto / servicio</label>
+                                    <select class="form-control" id="filter_product" name="filter_product">
+                                        <option value="">— Todos —</option>
+                                        {% for item in filter_options.products %}
+                                            <option value="{{ item.id }}">{{ item.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            Los filtros de ubicación usan los predios registrados en clientes (comunidad, provincia, distrito).
+                            «Con deuda» incluye cuentas por cobrar con saldo pendiente.
+                            «Pagadores» incluye clientes con pagos de cuotas, inicial o ventas al contado.
+                            «Proceso completado» son casos de asesoría en la última etapa.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-flat" id="btnSaveDraft">
+                    <i class="fas fa-save"></i> Guardar borrador
+                </button>
+                <button type="button" class="btn btn-success btn-flat" id="btnSendNow">
+                    <i class="fas fa-paper-plane"></i> Guardar y enviar ahora
+                </button>
+                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

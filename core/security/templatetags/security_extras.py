@@ -6,10 +6,29 @@ from core.security.models import ModuleType
 
 register = template.Library()
 
+MENSAJERIA_MODULE_TYPE = 'Mensajería'
+
 
 @register.filter
 def getmoduletype(group_id):
-    return ModuleType.objects.filter(module__groupmodule__group_id=group_id, is_active=True).distinct().order_by('id')
+    return (
+        ModuleType.objects.filter(module__groupmodule__group_id=group_id, is_active=True)
+        .exclude(name=MENSAJERIA_MODULE_TYPE)
+        .distinct()
+        .order_by('id')
+    )
+
+
+@register.filter
+def getmensajeriamodules(group_id):
+    return Module.objects.filter(
+        groupmodule__group_id=group_id,
+        moduletype__name=MENSAJERIA_MODULE_TYPE,
+        moduletype__is_active=True,
+        is_active=True,
+        is_vertical=True,
+        is_visible=True,
+    ).order_by('name')
 
 
 @register.filter()
