@@ -1,0 +1,17 @@
+---
+description: Operaciones Terrafirma — deploy, DigitalOcean, GitHub, permisos y producción
+alwaysApply: true
+---
+
+# Terrafirma — contexto operativo
+
+Antes de tareas de **deploy**, **DigitalOcean**, **GitHub**, **permisos del ERP**, **dominios**, **Neo/superusuario** o **cambios en producción**:
+
+1. Leer `permisos.txt` en la raíz del proyecto (si existe).
+2. Para comandos `doctl`, usar el token en `.env.deploy` (`DIGITALOCEAN_ACCESS_TOKEN`).
+3. Para actualizar la app en DO, usar `.do/app-spec.local.yaml` (secretos; no está en Git).
+4. **Nunca** commitear: `permisos.txt`, `.env.deploy`, `.do/app-spec.local.yaml`, `db/*.sqlite3`.
+
+Si `permisos.txt` no existe en esta máquina, indicar al usuario que lo copie desde su PC principal o desde `permisos.example.txt` (plantilla en Git).
+
+Repositorio: `terrafirmaperu/Terrafirma`, rama `main` → deploy automático en App Platform `terrafirma`.

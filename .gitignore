@@ -204,6 +204,7 @@ celerybeat-schedule.*
 # Environments
 .env
 .env.deploy
+permisos.txt
 .do/app-spec.local.yaml
 .venv
 env/

@@ -21,6 +21,7 @@ urlpatterns = [
     path('user/', include('core.user.urls')),
     path('pos/', include('core.pos.urls')),
     path('reports/', include('core.reports.urls')),
+    path('whatsapp/', include('core.whatsapp.urls')),
 ]
 
 if settings.DEBUG:

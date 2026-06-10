@@ -11,6 +11,9 @@
             <a href="{% url 'home' %}" class="nav-link"><i class="fas fa-globe"></i> Ir a web</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
+            <a href="{% url 'whatsapp' %}" class="nav-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Ir a WhatsApp</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link"><i class="fas fa-user-shield"></i> Bienvenido {{ request.user.username }}</a>
         </li>
     </ul>

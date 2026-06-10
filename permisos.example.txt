@@ -1,0 +1,42 @@
+================================================================================
+TERRAFIRMA — permisos.example.txt (PLANTILLA — SÍ va en Git)
+================================================================================
+Copie este archivo como permisos.txt en cada PC y complete los valores [RELLENAR].
+permisos.txt está en .gitignore y NO se sube a GitHub.
+
+Para usar Cursor en otra PC con el mismo comportamiento:
+  1) git clone https://github.com/terrafirmaperu/Terrafirma.git
+  2) Iniciar sesión en Cursor con la misma cuenta
+  3) Abrir la carpeta del repo en Cursor
+  4) Copiar permisos.txt (completo) desde la PC principal — USB, nube privada, etc.
+  5) Copiar también .env.deploy y .do/app-spec.local.yaml
+  6) La regla .cursor/rules/terrafirma-operaciones.mdc ya viene del repo y guía al agente
+
+================================================================================
+ARCHIVOS A COPIAR ENTRE PCs (no están en GitHub)
+================================================================================
+
+  permisos.txt              ← copiar desde PC principal (o completar esta plantilla)
+  .env.deploy               ← token DigitalOcean
+  .do/app-spec.local.yaml   ← spec con SECRETs de producción
+
+Opcional local dev:
+  .env                      ← variables desarrollo local
+
+================================================================================
+VALORES A RELLENAR EN permisos.txt
+================================================================================
+
+Neo contraseña producción:     [RELLENAR o ver panel DO → NEO_ADMIN_PASSWORD]
+DigitalOcean token:            [RELLENAR en .env.deploy]
+DATABASE_URL:                  [RELLENAR en app-spec.local.yaml / panel DO]
+
+URLs fijas (no cambian):
+  Producción:  https://www.terrafirmaperu.com/login/
+  GitHub:      https://github.com/terrafirmaperu/Terrafirma
+  App DO ID:   3107e7d7-80d9-4e46-a715-2485afc2d592
+
+Ver permisos.txt completo en la PC principal para el resto de secciones
+(módulos, comandos, DNS, permisos Django, etc.).
+
+================================================================================
