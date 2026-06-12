@@ -36,18 +36,9 @@
             margin-bottom: 5px;
         }
 
-        .name-company {
-            margin-top: 10px;
-            font-size: 9px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 0;
-            text-align: center;
-        }
-
         .desc-company {
             font-size: 5px;
-            margin-top: 0;
+            margin-top: 4px;
             margin-bottom: 5px;
         }
 
@@ -74,19 +65,26 @@
             color: black;
         }
 
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
         .img-logo {
-            margin-top: 5px;
-            width: 20px;
-            height: 20px;
-            margin-bottom: 5px;
+            display: block;
+            width: 48mm;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
         }
 
     </style>
 </head>
 <body>
 <div class="content">
-    <img src="{{ company.get_image }}" class="img-fluid d-block mx-auto img-logo">
-    <h1 class="name-company">{{ company.name }}</h1>
+    <div class="logo-wrap">
+        <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+    </div>
     <p class="text-center desc-company">
         {{ company.address }}<br>
         Celular: {{ company.mobile }}<br>

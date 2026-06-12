@@ -84,6 +84,11 @@ class Company(models.Model):
             return '{}{}'.format(settings.MEDIA_URL, self.image)
         return '{}{}'.format(settings.STATIC_URL, 'img/terrafirma_logo.svg')
 
+    def get_comprobante_logo(self):
+        """Logo institucional fijo para comprobantes PDF (no contratos Word)."""
+        from core.pos.brand_assets import comprobante_logo_file_uri
+        return comprobante_logo_file_uri()
+
     def get_igv(self):
         return format(self.igv, '.2f')
 

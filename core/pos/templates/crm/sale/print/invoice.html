@@ -12,15 +12,6 @@
             color: black;
         }
 
-        .name-company {
-            font-size: 30px;
-            padding: 0;
-            margin: 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
         table thead tr th {
             border: 1px solid black !important;
             padding: 3px;
@@ -31,19 +22,26 @@
             padding: 3px;
         }
 
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
         .img-logo {
-            margin-top: 10px;
-            width: 75px;
-            height: 75px;
-            margin-bottom: 10px;
+            display: block;
+            width: 55mm;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
         }
 
     </style>
 </head>
 <body>
 <div class="container-fluid">
-    <img src="{{ company.get_image }}" class="img-fluid d-block mx-auto img-logo">
-    <h1 class="name-company">{{ company.name }}</h1>
+    <div class="logo-wrap">
+        <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+    </div>
     <p class="text-center">
         {{ company.address }}<br>
         Ruc: {{ company.ruc }}

@@ -13,6 +13,7 @@ from django.views.generic.base import View
 from weasyprint import HTML, CSS
 
 from config import settings
+from core.pos.brand_assets import comprobante_print_context
 from core.pos.forms import PaymentsCtaCollectForm
 from core.pos.mixins import CashRegisterRequiredMixin
 from core.pos.models import CashRegisterSession, CtasCollect, PaymentsCtaCollect, Company
@@ -243,6 +244,7 @@ class CtasCollectPaymentPrintView(PermissionMixin, View):
                 'payment': payment,
                 'ctas': payment.ctascollect,
                 'sale': payment.ctascollect.sale,
+                **comprobante_print_context(),
             }
             html_template = template.render(context).encode(encoding='UTF-8')
             url_css = os.path.join(

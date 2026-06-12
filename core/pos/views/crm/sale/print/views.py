@@ -17,6 +17,7 @@ from django.views.generic.base import View
 from weasyprint import HTML, CSS
 
 from config import settings
+from core.pos.brand_assets import comprobante_print_context
 from core.pos.client_properties import lock_client_properties_for_sale_contract
 from core.pos.models import Sale, Company, CtasCollect
 from core.pos.views.crm.sale.print.contract_docx_decorate import decorate_contract_celia_docx
@@ -1131,7 +1132,7 @@ class SalePrintVoucherView(LoginRequiredMixin, View):
 
     def get_height_ticket(self):
         sale = Sale.objects.get(pk=self.kwargs['pk'])
-        height = 120
+        height = 138
         increment = sale.saledetail_set.all().count() * 5.45
         height += increment
         return round(height)
@@ -1139,7 +1140,11 @@ class SalePrintVoucherView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         try:
             sale = Sale.objects.get(pk=self.kwargs['pk'])
-            context = {'sale': sale, 'company': Company.objects.first()}
+            context = {
+                'sale': sale,
+                'company': Company.objects.first(),
+                **comprobante_print_context(),
+            }
             if sale.type_voucher == 'ticket':
                 template = get_template('crm/sale/print/ticket.html')
                 context['height'] = self.get_height_ticket()

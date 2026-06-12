@@ -26,14 +26,16 @@
         .line { border-top: 1px dotted #000; margin: 6px 0; }
         .label { font-weight: bold; }
         .small { font-size: 7px; }
-        .img-logo { width: 20px; height: 20px; margin: 0 auto 4px auto; display: block; }
+        .logo-wrap { text-align: center; margin-bottom: 4px; }
+        .img-logo { display: block; width: 48mm; max-width: 100%; height: auto; margin: 0 auto; }
     </style>
 </head>
 <body>
 <div class="content">
     <div class="center">
-        <img src="{{ company.get_image }}" class="img-logo" alt="logo">
-        <div class="label">{{ company.name }}</div>
+        <div class="logo-wrap">
+            <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+        </div>
         <div class="small">{{ company.address }}</div>
         <div class="small">RUC: {{ company.ruc }}</div>
     </div>
