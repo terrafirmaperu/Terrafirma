@@ -1132,7 +1132,7 @@ class SalePrintVoucherView(LoginRequiredMixin, View):
 
     def get_height_ticket(self):
         sale = Sale.objects.get(pk=self.kwargs['pk'])
-        height = 132
+        height = 120
         increment = sale.saledetail_set.all().count() * 5.45
         height += increment
         return round(height)
