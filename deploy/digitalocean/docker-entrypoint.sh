@@ -23,4 +23,7 @@ else
   python manage.py ensure_neo_superuser
 fi
 
+echo "==> sync_company_constancia"
+python manage.py sync_company_constancia || true
+
 exec "$@"

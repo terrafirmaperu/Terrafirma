@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     parameters,
                     function (request) {
                         dialog_action('Notificación', '¿Desea Imprimir el Comprobante?', function () {
-                            window.open('/pos/crm/sale/print/voucher/' + request.id + '/', '_blank');
+                            window.open('/pos/crm/sale/print/voucher/' + request.id + '/?t=' + Date.now(), '_blank');
                             openContrataModal(request, urlrefresh);
                         }, function () {
                             openContrataModal(request, urlrefresh);
@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 });
 
 function printInvoice(id) {
-    var printWindow = window.open("/pos/crm/sale/print/voucher/" + id + "/", 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+    var printWindow = window.open("/pos/crm/sale/print/voucher/" + id + "/?t=" + Date.now(), 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
     printWindow.addEventListener('load', function () {
         printWindow.print();
     }, true);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static comprobante_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -83,7 +83,7 @@
 <body>
 <div class="content">
     <div class="logo-wrap">
-        <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+        <img src="{% comprobante_logo %}" class="img-logo" alt="Terrafirma">
     </div>
     <p class="text-center desc-company">
         {{ company.address }}<br>
@@ -92,7 +92,7 @@
         Web: {{ company.website }}<br>
     </p>
     <p class="ruc border-dotted">
-        RUC N°: {{ comprobante_ruc }}
+        RUC N°: {% comprobante_ruc %}
     </p>
     <p class="client">
         <b>Cajero:</b> {{ sale.employee.get_full_name }}<br>

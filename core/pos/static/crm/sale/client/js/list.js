@@ -169,7 +169,7 @@ function getData(all) {
                 render: function (data, type, row) {
                     var buttons = '';
                     buttons += '<a class="btn btn-info btn-xs btn-flat" rel="detail"><i class="fas fa-folder-open"></i></a> ';
-                    buttons += '<a href="/pos/crm/sale/print/voucher/' + row.id + '/" target="_blank" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-file-pdf"></i></a> ';
+                    buttons += '<a href="/pos/crm/sale/print/voucher/' + row.id + '/?t=' + Date.now() + '" target="_blank" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-file-pdf"></i></a> ';
                     var cbn = String(row.contract_docx_basename || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
                     buttons += '<a href="#" class="btn btn-success btn-xs btn-flat" rel="contract" data-sale-id="' + row.id + '" data-contract-basename="' + cbn + '" title="Ver contrato en ventana"><i class="fas fa-file-signature"></i> Ver contrato</a> ';
                     return buttons;

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load comprobante_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -40,11 +41,11 @@
 <body>
 <div class="container-fluid">
     <div class="logo-wrap">
-        <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+        <img src="{% comprobante_logo %}" class="img-logo" alt="Terrafirma">
     </div>
     <p class="text-center">
         {{ company.address }}<br>
-        Ruc: {{ comprobante_ruc }}
+        Ruc: {% comprobante_ruc %}
         Celular: {{ company.mobile }}<br>
         Teléfono: {{ company.phone }}<br>
         Web: {{ company.website }}<br>
