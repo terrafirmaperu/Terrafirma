@@ -9,6 +9,7 @@ from django.conf import settings
 
 # Ruta relativa dentro de static/ — versionada en Git y servida con collectstatic en deploy.
 COMPROBANTE_LOGO_STATIC = 'img/terrafirma_comprobante_logo.png'
+COMPROBANTE_RUC = '20612888141'
 
 
 def _resolve_comprobante_logo_path():
@@ -34,5 +35,8 @@ def comprobante_logo_file_uri():
 
 
 def comprobante_print_context():
-    """Contexto mínimo del logo para plantillas PDF de comprobantes."""
-    return {'comprobante_logo': comprobante_logo_file_uri()}
+    """Datos fijos de marca para plantillas PDF de comprobantes."""
+    return {
+        'comprobante_logo': comprobante_logo_file_uri(),
+        'comprobante_ruc': COMPROBANTE_RUC,
+    }

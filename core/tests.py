@@ -19,7 +19,7 @@ dashboard, _created_dash = Dashboard.objects.get_or_create(
 
 company = Company()
 company.name = 'QORI TERRAFIRMA'
-company.ruc = '921047681'
+company.ruc = '20612888141'
 company.email = 'naihtsircristhian@gmail.com'
 company.phone = '921047681'
 company.mobile = '921047681'
