@@ -8,6 +8,11 @@ import re
 from core.pos.views.crm.sale.print.docx_codes import iter_body_paragraphs
 from core.pos.views.crm.sale.print.views import W_NS, W_P, _paragraph_join_text
 
+try:
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+except ImportError:
+    WD_ALIGN_PARAGRAPH = None
+
 _ELLIPSIS_RE = re.compile(r'^[\s\u2026.]+$')
 # Bloques de puntos suspensivos del Word (……) dentro del mismo run
 _INLINE_PLACEHOLDER_RE = re.compile(r'(?:[\u2026.]){2,}')
@@ -54,6 +59,69 @@ def _replace_ellipsis_runs_in_order(p_elem, values):
             text = text[: m.start()] + values[idx] + text[m.end() :]
             idx += 1
         t_elem.text = text
+
+
+def _is_company_signature_paragraph(text):
+    t = (text or '').strip().upper()
+    if not t:
+        return False
+    return (
+        'TERRAFIRMA' in t
+        or t.startswith('G.G.')
+        or 'ASESOR' in t
+        or 'CONSULTOR' in t
+    )
+
+
+def _set_cell_centered_lines(cell, lines):
+    cell.text = ''
+    for idx, line in enumerate(lines):
+        paragraph = cell.paragraphs[0] if idx == 0 else cell.add_paragraph()
+        if WD_ALIGN_PARAGRAPH is not None:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        paragraph.add_run(line)
+
+
+def ensure_constancia_signature_block(doc, ctx):
+    """Reemplaza la firma única de la plantilla por cliente (izq.) y empresa (der.)."""
+    anchor = None
+    to_remove = []
+    for paragraph in doc.paragraphs:
+        text = paragraph.text.strip()
+        if text.startswith('________________'):
+            if anchor is None:
+                anchor = paragraph
+            to_remove.append(paragraph)
+            continue
+        if anchor is not None and _is_company_signature_paragraph(text):
+            to_remove.append(paragraph)
+            break
+
+    if anchor is None:
+        return
+
+    table = doc.add_table(rows=1, cols=2)
+    try:
+        table.style = 'Table Grid'
+    except Exception:
+        pass
+
+    client_name = (ctx.get('name') or 'CLIENTE').strip()
+    rep_name = (ctx.get('rep_name') or '').strip()
+    company_name = (ctx.get('company_name') or 'TERRAFIRMA ASESORÍA Y CONSULTORÍA').strip()
+
+    _set_cell_centered_lines(
+        table.rows[0].cells[0],
+        ['_' * 28, 'Firma del cliente', client_name],
+    )
+    _set_cell_centered_lines(
+        table.rows[0].cells[1],
+        ['_' * 28, rep_name, company_name],
+    )
+
+    anchor._element.addprevious(table._tbl)
+    for paragraph in to_remove:
+        paragraph._element.getparent().remove(paragraph._element)
 
 
 def _replace_signature_date_runs(p_elem, ctx):
@@ -198,19 +266,4 @@ def fill_constancia_doc_paragraphs(doc, ctx):
         elif 'conformidad' in full and 'HUANCAVELICA' in full.upper():
             _replace_signature_date_runs(p_elem, ctx)
 
-    signature_targets = []
-    for paragraph in iter_body_paragraphs(doc):
-        p_elem = _paragraph_xml(paragraph)
-        full = _paragraph_join_text(p_elem)
-        t = full.strip()
-        if not t:
-            continue
-        if t.startswith('________________'):
-            signature_targets.append(p_elem)
-        elif t and _is_ellipsis_text(t) and len(t) > 5:
-            signature_targets.append(p_elem)
-    if len(signature_targets) >= 2:
-        _replace_ellipsis_runs_in_order(signature_targets[-2], [ctx['rep_name']])
-        _replace_ellipsis_runs_in_order(signature_targets[-1], [ctx['rep_title']])
-    elif len(signature_targets) == 1:
-        _replace_ellipsis_runs_in_order(signature_targets[0], [ctx['rep_name']])
+    ensure_constancia_signature_block(doc, ctx)

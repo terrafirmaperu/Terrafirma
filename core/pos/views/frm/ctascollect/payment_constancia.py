@@ -219,7 +219,7 @@ def _constancia_context(payment):
         'quota_words': _soles_en_letras(quota_amount),
         'payment_method': _payment_method_text(payment),
         'beneficiary': full_name,
-        'company_name': company_name,
+        'company_name': company_profile['legal_name'],
         'rep_name': rep_name,
         'rep_title': 'REPRESENTANTE',
         'signature_date': _signature_date_plain(payment),
