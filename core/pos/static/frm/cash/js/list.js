@@ -113,7 +113,7 @@ function setCashResume(data) {
     $('#salesYape').text('S/ ' + (data.sales.yape || '0.00'));
     $('#salesPlin').text('S/ ' + (data.sales.plin || '0.00'));
     $('#salesTarjeta').text('S/ ' + (data.sales.tarjeta || data.sales.card || '0.00'));
-    $('#salesMixtoTarjeta').text('S/ ' + (data.sales.mixto_tarjeta || '0.00'));
+    $('#salesMixtoYape').text('S/ ' + (data.sales.mixto_yape || '0.00'));
 
     var expenses = data.expenses || {};
     $('#expensesCount').text(expenses.count || 0);
@@ -158,6 +158,7 @@ function getCashResume() {
                     yape: '0.00',
                     plin: '0.00',
                     tarjeta: '0.00',
+                    mixto_yape: '0.00',
                     mixto_tarjeta: '0.00',
                     card: '0.00'
                 },

@@ -12,8 +12,43 @@
     <script src="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/js/tempusdominus-bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/tempusdominus-bootstrap-4.5.37.0/css/tempusdominus-bootstrap.css' %}"/>
     <link rel="stylesheet" href="{% static 'crm/client/css/predios.css' %}?v=20260518-sale-process"/>
-    <script src="{% static 'crm/client/js/predios.js' %}?v=20260518-community"></script>
-    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260518-dup-guard"></script>
+    <style>
+        .sale-footer-collector .sale-collector-combo {
+            min-width: 280px;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background: #fff;
+            padding: 0.2rem 0.35rem 0.2rem 0.5rem;
+        }
+        .sale-footer-collector .sale-collector-icon {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.65rem 0 0.35rem;
+            color: #28a745;
+            font-size: 1.45rem;
+            line-height: 1;
+        }
+        .sale-footer-collector .sale-collector-select-wrap {
+            flex: 1 1 auto;
+            min-width: 200px;
+        }
+        .sale-footer-collector .sale-collector-select-wrap .select2-container {
+            width: 100% !important;
+        }
+        .sale-footer-collector .sale-collector-select-wrap .select2-selection--single {
+            border: 0;
+            min-height: 31px;
+            height: 31px;
+        }
+        .sale-footer-collector .sale-collector-select-wrap .select2-selection__rendered {
+            line-height: 29px;
+            padding-left: 0;
+        }
+    </style>
+    <script src="{% static 'crm/client/js/predios.js' %}?v=20260615-sale-predio-link"></script>
+    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260615-sin-ref-ventas"></script>
 {% endblock %}
 
 {% block content %}
@@ -124,6 +159,8 @@
                                         {{ form.payment_condition }}
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="control-label">Método de pago:</label>
@@ -146,20 +183,28 @@
                                                     <span class="factora-pay-text">Plin</span>
                                                 </span>
                                             </button>
-                                            <button type="button" class="factora-pay-card factora-pay-tarjeta" data-value="tarjeta_debito_credito" title="Tarjeta">
+                                            <button type="button" class="factora-pay-card factora-pay-efectivo-yape" data-value="efectivo_yape" title="Efectivo / Yape">
                                                 <span class="factora-pay-card-inner">
-                                                    <span class="factora-pay-icon"><i class="fas fa-credit-card"></i></span>
-                                                    <span class="factora-pay-text">Tarjeta</span>
-                                                </span>
-                                            </button>
-                                            <button type="button" class="factora-pay-card factora-pay-mixto" data-value="efectivo_tarjeta" title="Efectivo y Tarjeta">
-                                                <span class="factora-pay-card-inner">
-                                                    <span class="factora-pay-icon"><i class="fas fa-hand-holding-usd"></i></span>
-                                                    <span class="factora-pay-text">Efectivo y Tarjeta</span>
+                                                    <span class="factora-pay-icon factora-pay-badge-ey">E/Y</span>
+                                                    <span class="factora-pay-text">Efectivo / Yape</span>
                                                 </span>
                                             </button>
                                         </div>
                                         {{ form.payment_method }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="saleRowCash">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Efectivo recibido:</label>
+                                        {{ form.cash }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Cambio:</label>
+                                        {{ form.change }}
                                     </div>
                                 </div>
                             </div>
@@ -177,41 +222,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row rowVents">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Efectivo recibido:</label>
-                                        {{ form.cash }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Cambio:</label>
-                                        {{ form.change }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row rowVents">
-                                <div class="col-lg-4">
+                            <div class="row rowVents" id="saleRowCard" style="display: none;">
+                                <div class="col-lg-4 sale-pay-card-only">
                                     <div class="form-group">
                                         <label>Número de tarjeta:</label>
                                         {{ form.card_number }}
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-4 sale-pay-card-only">
                                     <div class="form-group">
                                         <label>Titular:</label>
                                         {{ form.titular }}
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-4 sale-pay-second-amount-col">
                                     <div class="form-group">
-                                        <label>Monto a debitar:</label>
+                                        <label id="saleSecondPayAmountLabel">Monto a debitar:</label>
                                         {{ form.amount_debited }}
+                                        <small id="saleYapeSplitHelp" class="form-text text-muted" style="display: none;">
+                                            Resto del total pagado por Yape (automático).
+                                        </small>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row rowVents">
+                            <div class="row rowVents" id="saleRowCreditEnd" style="display: none;">
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Fecha limite de credito:</label>
@@ -245,10 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row rowVents">
-                                <div class="col-lg-12 mb-1">
-                                    <small class="text-muted"><i class="fas fa-info-circle"></i> Pago en cuotas (solo crédito)</small>
-                                </div>
+                            <div class="row rowVents" id="saleRowCreditCuotas" style="display: none;">
                                 <div class="col-lg-5">
                                     <div class="form-group">
                                         <label class="control-label">Número de cuotas:</label>
@@ -297,13 +328,6 @@
                                                     <span class="factora-pay-text">Plin</span>
                                                 </span>
                                         </button>
-                                        <button type="button" class="factora-pay-card factora-pay-tarjeta credit-inicial-pay"
-                                                data-value="tarjeta_debito_credito" title="Tarjeta">
-                                                <span class="factora-pay-card-inner">
-                                                    <span class="factora-pay-icon"><i class="fas fa-credit-card"></i></span>
-                                                    <span class="factora-pay-text">Tarjeta</span>
-                                                </span>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -344,16 +368,29 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-flat btnCollect">
-                    <i class="fas fa-file-invoice-dollar"></i> Facturar e imprimir
-                </button>
-                <button type="button" class="btn btn-warning btn-flat btnProforma">
-                    <i class="fas fa-file-alt"></i> Crear Proforma
-                </button>
-                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
-                    <i class="fas fa-times"></i> Cancelar
-                </a>
+            <div class="card-footer d-flex flex-wrap align-items-center justify-content-between">
+                <div class="sale-footer-actions mb-2 mb-md-0">
+                    <button type="submit" class="btn btn-primary btn-flat btnCollect">
+                        <i class="fas fa-file-invoice-dollar"></i> Facturar e imprimir
+                    </button>
+                    <button type="button" class="btn btn-warning btn-flat btnProforma">
+                        <i class="fas fa-file-alt"></i> Crear Proforma
+                    </button>
+                    <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+                <div id="rowCollector" class="sale-footer-collector">
+                    <label class="sr-only" for="id_collector">Lugar de cobro</label>
+                    <div class="sale-collector-combo d-flex align-items-center">
+                        <span class="sale-collector-icon" title="Admin Cobranzas — lugar de cobro">
+                            <i class="fas fa-coins"></i>
+                        </span>
+                        <div class="sale-collector-select-wrap">
+                            {{ form.collector|add_class:"form-control select2"|attr:"style:width:100%;" }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

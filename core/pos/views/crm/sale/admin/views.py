@@ -29,6 +29,7 @@ from core.pos.models import (
     ClientProperty,
     Sale,
     SaleDetail,
+    Collector,
 )
 from core.user.models import User
 from core.reports.forms import ReportForm
@@ -54,7 +55,7 @@ class SaleAdminListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
                 start_date = (request.POST.get('start_date') or '').strip()
                 end_date = (request.POST.get('end_date') or '').strip()
                 search = Sale.objects.select_related(
-                    'client__user', 'employee', 'cash_register_session'
+                    'client__user', 'employee', 'collector', 'cash_register_session'
                 ).order_by('-id')
                 if start_date and end_date:
                     search = search.filter(date_joined__range=[start_date, end_date])
@@ -123,9 +124,12 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
 
     def get_form(self, form_class=None):
         form = SaleForm()
+        initial = {}
         client = Client.objects.filter(user__dni='9999999999')
         if client.exists():
-            form.initial = {'client': client[0]}
+            initial['client'] = client[0]
+        initial['collector'] = Collector.get_or_create_default().pk
+        form.initial = initial
         return form
 
     def post(self, request, *args, **kwargs):
@@ -148,6 +152,11 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                     sale.client_id = client_id
                     sale.payment_method = request.POST['payment_method']
                     sale.payment_condition = request.POST['payment_condition']
+                    collector_raw = (request.POST.get('collector') or '').strip()
+                    if collector_raw:
+                        sale.collector_id = int(collector_raw)
+                    else:
+                        sale.collector = Collector.get_or_create_default()
                     sale.type_voucher = request.POST['type_voucher']
                     sale.cash_register_session = CashRegisterSession.get_open_session()
                     company = Company.objects.first()
@@ -219,7 +228,7 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                         if inicial >= total_amt:
                             raise ValueError('La inicial debe ser menor que el total a pagar.')
                         method_ini = (request.POST.get('credit_down_payment_method') or 'efectivo').strip()
-                        if method_ini not in ('efectivo', 'yape', 'plin', 'tarjeta_debito_credito'):
+                        if method_ini not in ('efectivo', 'yape', 'plin'):
                             method_ini = 'efectivo'
                         sale.credit_quota_count = quota_count
                         sale.credit_down_payment = inicial
@@ -292,11 +301,11 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                             sale.titular = request.POST['titular']
                             sale.amount_debited = float(request.POST['amount_debited'])
                             sale.save()
-                        elif sale.payment_method == 'efectivo_tarjeta':
+                        elif sale.payment_method == 'efectivo_yape':
                             sale.cash = float(request.POST['cash'])
-                            sale.change = float(request.POST.get('change', 0) or 0)
-                            sale.card_number = request.POST['card_number']
-                            sale.titular = request.POST['titular']
+                            sale.change = 0.00
+                            sale.card_number = ''
+                            sale.titular = ''
                             sale.amount_debited = float(request.POST['amount_debited'])
                             sale.save()
 
@@ -331,6 +340,13 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                     data['duplicates'] = duplicates
                 else:
                     data['ok'] = True
+            elif action == 'worker_credit_reference':
+                try:
+                    product_ids = json.loads(request.POST.get('product_ids') or '[]')
+                except json.JSONDecodeError:
+                    product_ids = []
+                from core.pos.product_worker import worker_credit_reference_for_products
+                data = worker_credit_reference_for_products(product_ids)
             elif action == 'search_products':
                 ids = json.loads(request.POST.get('ids') or '[]')
                 term = (request.POST.get('term') or '').strip()
@@ -382,6 +398,29 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
                     item = p.toJSON()
                     item['text'] = '{} / {}'.format(p.user.get_full_name(), p.user.dni)
                     data.append(item)
+            elif action == 'get_client':
+                try:
+                    client_id = int(request.POST.get('client_id', 0))
+                except (TypeError, ValueError):
+                    return JsonResponse({'error': 'Cliente no válido.'})
+                client = (
+                    Client.objects.filter(pk=client_id)
+                    .select_related('user')
+                    .prefetch_related(
+                        Prefetch(
+                            'properties',
+                            queryset=ClientProperty.objects.select_related(
+                                'product', 'product__category',
+                            ).order_by('order', 'id'),
+                        ),
+                    )
+                    .first()
+                )
+                if not client:
+                    return JsonResponse({'error': 'Cliente no encontrado.'})
+                item = client.toJSON()
+                item['text'] = '{} / {}'.format(client.user.get_full_name(), client.user.dni)
+                return JsonResponse(item)
             elif action == 'validate_client':
                 return self.validate_client()
             elif action == 'lookup_dni':

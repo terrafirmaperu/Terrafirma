@@ -12,8 +12,12 @@ from core.security.models import Module
 
 SUPERVISOR_DELETE_SESSION_KEY = 'supervisor_delete_approved_at'
 SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY = 'supervisor_predio_unlock_approved_at'
+SUPERVISOR_COLLECTOR_SESSION_KEY = 'supervisor_collector_approved_at'
+SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY = 'supervisor_collector_save_approved_at'
 SUPERVISOR_DELETE_WINDOW_SEC = 180
 SUPERVISOR_PREDIO_UNLOCK_WINDOW_SEC = 180
+SUPERVISOR_COLLECTOR_WINDOW_SEC = 1800
+SUPERVISOR_COLLECTOR_SAVE_WINDOW_SEC = 180
 
 
 def _consume_supervisor_approval(request, session_key, window_sec):
@@ -37,6 +41,72 @@ def consume_supervisor_predio_unlock(request):
         request,
         SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY,
         SUPERVISOR_PREDIO_UNLOCK_WINDOW_SEC,
+    )
+
+
+def _supervisor_session_valid(request, session_key, window_sec):
+    if getattr(request.user, 'is_superuser', False):
+        return True
+    ts = request.session.get(session_key)
+    if ts is None:
+        return False
+    try:
+        ts = float(ts)
+    except (TypeError, ValueError):
+        return False
+    return time.time() - ts <= window_sec
+
+
+class SupervisorCollectorMixin(object):
+    """Admin Cobranzas: solo superusuario (Neo) o quien autorice con su contraseña."""
+
+    supervisor_collector_gate_template = 'frm/collector/supervisor_gate.html'
+
+    def _collector_supervisor_ok(self, request):
+        return _supervisor_session_valid(
+            request,
+            SUPERVISOR_COLLECTOR_SESSION_KEY,
+            SUPERVISOR_COLLECTOR_WINDOW_SEC,
+        )
+
+    def render_supervisor_gate(self, request):
+        from django.shortcuts import render
+        return render(
+            request,
+            self.supervisor_collector_gate_template,
+            {
+                'title': 'Admin Cobranzas',
+                'next_url': request.get_full_path(),
+            },
+        )
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if not self._collector_supervisor_ok(request):
+            if request.method == 'POST':
+                return JsonResponse(
+                    {'error': 'Autorización del supervisor requerida (usuario Neo o contraseña de superusuario).'},
+                    status=403,
+                )
+            return self.render_supervisor_gate(request)
+        return super().dispatch(request, *args, **kwargs)
+
+
+def require_supervisor_collector_save(request):
+    if getattr(request.user, 'is_superuser', False):
+        return None
+    ok, err = _consume_supervisor_approval(
+        request,
+        SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY,
+        SUPERVISOR_COLLECTOR_SAVE_WINDOW_SEC,
+    )
+    if ok:
+        return None
+    return JsonResponse(
+        {
+            'error': err or 'Autorización del supervisor requerida para registrar cobradores.',
+        },
+        status=403,
     )
 
 

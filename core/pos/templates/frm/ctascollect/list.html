@@ -4,11 +4,48 @@
     <script type="application/javascript">
         window.ctasCollectPayUrl = "{% url 'ctascollect_create' %}";
         window.ctasCollectPrintBaseUrl = "/pos/frm/ctas/collect/print/voucher/";
+        window.ctasCollectCollectors = {{ collectors_json|safe }};
+        window.ctasCollectDefaultCollectorId = {{ default_collector_id }};
     </script>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}">
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
-    <script src="{% static 'frm/ctascollect/js/list.js' %}?v=20260519-constancia-docx"></script>
+    <style>
+        #payQuotaCollectorWrap .pay-quota-collector-combo {
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background: #fff;
+            padding: 0.15rem 0.35rem 0.15rem 0.5rem;
+        }
+        #payQuotaCollectorWrap .pay-quota-collector-icon,
+        #payQuotaEntregableWrap .pay-quota-entregable-icon {
+            color: #28a745;
+            font-size: 1.35rem;
+            line-height: 1;
+            padding-right: 0.5rem;
+        }
+        #payQuotaEntregableWrap .pay-quota-entregable-combo {
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background: #fff;
+            padding: 0.15rem 0.35rem 0.15rem 0.5rem;
+        }
+        #payQuotaCollectorWrap .select2-container,
+        #payQuotaEntregableWrap .select2-container { width: 100% !important; }
+        #payQuotaCollectorWrap,
+        #payQuotaEntregableWrap {
+            position: relative;
+            overflow: visible;
+        }
+        #myModalPayQuota .modal-body { overflow: visible; }
+        #myModalPayQuota .select2-container--open { z-index: 1061; }
+        #myModalPayQuota .select2-dropdown { z-index: 1062; }
+    </style>
+    <script src="{% static 'frm/ctascollect/js/list.js' %}?v=20260615-select2-fix"></script>
 {% endblock %}
 
 {% block columns %}
@@ -104,6 +141,31 @@
                             Seleccione Efectivo, Yape o Plin.
                         </small>
                     </div>
+                    <div class="form-group" id="payQuotaEntregableWrap">
+                        <label>Entregable / proceso</label>
+                        <div class="d-flex align-items-center pay-quota-entregable-combo">
+                            <span class="pay-quota-entregable-icon" title="Obrero — producto">
+                                <i class="fas fa-hard-hat"></i>
+                            </span>
+                            <select class="form-control form-control-sm" id="payQuotaEntregable" style="width: 100%;">
+                                <option value="">Sin entregable vinculado</option>
+                            </select>
+                        </div>
+                        <small class="form-text text-muted" id="payQuotaEntregableHint">
+                            Opciones desde la configuración Obrero del producto de la venta.
+                        </small>
+                    </div>
+                    <div class="form-group" id="payQuotaCollectorWrap">
+                        <label>Lugar de cobro</label>
+                        <div class="d-flex align-items-center pay-quota-collector-combo">
+                            <span class="pay-quota-collector-icon" title="Admin Cobranzas">
+                                <i class="fas fa-coins"></i>
+                            </span>
+                            <select class="form-control form-control-sm" id="payQuotaCollector" style="width: 100%;">
+                                <option value="">Lugar de cobro</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group mb-0">
                         <label>Detalle</label>
                         <input type="text" class="form-control" id="payQuotaDesc" maxlength="500">
@@ -130,12 +192,41 @@
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <p class="mb-3">Pago registrado. Elija formato:</p>
-                    <button type="button" class="btn btn-primary btn-block" id="btnPrintQuotaTicket">
-                        <i class="fas fa-receipt"></i> Ticket
+                    <p class="mb-2">Pago registrado. Elija formato de ticket:</p>
+                    <button type="button" class="btn btn-primary btn-block" id="btnPrintQuotaTicketTermica">
+                        <i class="fas fa-receipt"></i> Térmica <small>(80 mm)</small>
                     </button>
+                    <button type="button" class="btn btn-secondary btn-block" id="btnPrintQuotaTicketRppos">
+                        <i class="fas fa-receipt"></i> RP Pos <small>(58 mm)</small>
+                    </button>
+                    <hr class="my-2">
                     <button type="button" class="btn btn-info btn-block" id="btnPrintQuotaInvoice">
                         <i class="fas fa-file-signature"></i> Constancia de pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalTicketFormat" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true" style="z-index: 1065;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title">
+                        <b><i class="fas fa-receipt"></i> Imprimir voucher</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3 small text-muted">Seleccione el tipo de impresora</p>
+                    <p class="mb-2 small text-danger"><strong>Impresión directa:</strong> cierre Chrome normal y abra Terrafirma con el icono <strong>Terrafirma - Impresion directa</strong> del escritorio.</p>
+                    <input type="hidden" id="ticketFormatPaymentId" value="">
+                    <button type="button" class="btn btn-primary btn-block" id="btnTicketFormatTermica">
+                        <i class="fas fa-print"></i> Térmica <small>(80 mm)</small>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-block" id="btnTicketFormatRppos">
+                        <i class="fas fa-print"></i> RP Pos <small>(58 mm)</small>
                     </button>
                 </div>
             </div>

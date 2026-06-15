@@ -55,7 +55,11 @@ class AdvisoryProgressControlView(PermissionMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         """PermissionMixin.get puede devolver None si falta grupo en sesión."""
-        if 'group' not in request.session:
+        from core.security.session_group import get_group_from_session
+
+        if get_group_from_session(request) is None:
+            request.user.set_group_session()
+        if get_group_from_session(request) is None:
             messages.error(
                 request,
                 'Debe elegir su grupo de trabajo en el panel antes de usar este módulo.',

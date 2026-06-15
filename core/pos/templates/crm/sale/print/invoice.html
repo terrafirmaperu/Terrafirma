@@ -120,9 +120,9 @@
                             Usted va a pagar por Plin un total de {{ sale.total }}<br>
                         {% elif sale.payment_method == 'tarjeta_debito_credito' %}
                             Se le va a descontar de su tarjeta un monto de {{ sale.amount_debited }}<br>
-                        {% elif sale.payment_method == 'efectivo_tarjeta' %}
+                        {% elif sale.payment_method == 'efectivo_yape' %}
                             Usted va a pagar en efectivo un total de {{ sale.cash }}<br>
-                            Y se le va a descontar de su tarjeta un monto de {{ sale.amount_debited }}<br>
+                            Y por Yape un monto de {{ sale.amount_debited }}<br>
                         {% endif %}
                         Total de productos {{ sale.saledetail_set.all.count }}
                     </p>

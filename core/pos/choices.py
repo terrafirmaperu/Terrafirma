@@ -7,15 +7,13 @@ payment_method = (
     ('efectivo', 'Efectivo'),
     ('yape', 'Yape'),
     ('plin', 'Plin'),
-    ('tarjeta_debito_credito', 'Tarjeta'),
-    ('efectivo_tarjeta', 'Efectivo y Tarjeta'),
+    ('efectivo_yape', 'Efectivo / Yape'),
 )
 
 credit_down_payment_method = (
     ('efectivo', 'Efectivo'),
     ('yape', 'Yape'),
     ('plin', 'Plin'),
-    ('tarjeta_debito_credito', 'Tarjeta'),
 )
 
 voucher = (

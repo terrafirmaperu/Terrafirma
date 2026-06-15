@@ -7,9 +7,11 @@ from core.pos.views.crm.sale.client.views import SaleClientListView
 from core.pos.views.frm.ctascollect.views import *
 from core.pos.views.frm.debtspay.views import *
 from core.pos.views.scm.product.views import *
+from core.pos.views.scm.product.worker_views import ProductWorkerConfigView
 from core.pos.views.scm.category.views import *
 from core.pos.views.scm.purchase.views import *
 from core.pos.views.frm.typeexpense.views import *
+from core.pos.views.frm.collector.views import *
 from core.pos.views.frm.expenses.views import *
 from core.pos.views.frm.cash.views import (
     CashRegisterSessionCloseView,
@@ -35,6 +37,7 @@ urlpatterns = [
     path('scm/product/add/', ProductCreateView.as_view(), name='product_create'),
     path('scm/product/update/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
     path('scm/product/delete/<int:pk>/', ProductDeleteView.as_view(), name='product_delete'),
+    path('scm/product/<int:pk>/obrero/', ProductWorkerConfigView.as_view(), name='product_worker'),
     # purchase
     path('scm/purchase/', PurchaseListView.as_view(), name='purchase_list'),
     path('scm/purchase/add/', PurchaseCreateView.as_view(), name='purchase_create'),
@@ -44,6 +47,11 @@ urlpatterns = [
     path('frm/type/expense/add/', TypeExpenseCreateView.as_view(), name='typeexpense_create'),
     path('frm/type/expense/update/<int:pk>/', TypeExpenseUpdateView.as_view(), name='typeexpense_update'),
     path('frm/type/expense/delete/<int:pk>/', TypeExpenseDeleteView.as_view(), name='typeexpense_delete'),
+    # collector
+    path('frm/collector/', CollectorListView.as_view(), name='collector_list'),
+    path('frm/collector/add/', CollectorCreateView.as_view(), name='collector_create'),
+    path('frm/collector/update/<int:pk>/', CollectorUpdateView.as_view(), name='collector_update'),
+    path('frm/collector/delete/<int:pk>/', CollectorDeleteView.as_view(), name='collector_delete'),
     # expenses
     path('frm/expenses/', ExpensesListView.as_view(), name='expenses_list'),
     path('frm/expenses/add/', ExpensesCreateView.as_view(), name='expenses_create'),
@@ -84,6 +92,7 @@ urlpatterns = [
     path('crm/sale/admin/', SaleAdminListView.as_view(), name='sale_admin_list'),
     path('crm/sale/admin/add/', SaleAdminCreateView.as_view(), name='sale_admin_create'),
     path('crm/sale/admin/delete/<int:pk>/', SaleAdminDeleteView.as_view(), name='sale_admin_delete'),
+    path('crm/sale/print/voucher/<int:pk>/<str:voucher>/', SalePrintVoucherView.as_view(), name='sale_print_ticket_format'),
     path('crm/sale/print/voucher/<int:pk>/', SalePrintVoucherView.as_view(), name='sale_print_ticket'),
     path('crm/sale/print/contract/<int:pk>/', SalePrintContractView.as_view(), name='sale_print_contract'),
     path('crm/sale/print/payment-schedule/<int:pk>/', SalePrintPaymentScheduleView.as_view(), name='sale_print_payment_schedule'),

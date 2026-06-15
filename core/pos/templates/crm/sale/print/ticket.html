@@ -173,9 +173,9 @@
                 Usted va a pagar por Plin un total de {{ sale.total }}<br>
             {% elif sale.payment_method == 'tarjeta_debito_credito' %}
                 Se le va a descontar de su tarjeta un monto de {{ sale.amount_debited }}<br>
-            {% elif sale.payment_method == 'efectivo_tarjeta' %}
+            {% elif sale.payment_method == 'efectivo_yape' %}
                 Usted va a pagar en efectivo un total de {{ sale.cash }}<br>
-                Y se le va a descontar de su tarjeta un monto de {{ sale.amount_debited }}<br>
+                Y por Yape un monto de {{ sale.amount_debited }}<br>
             {% endif %}
             Total de productos {{ sale.saledetail_set.all.count }}
         </p>
@@ -197,5 +197,32 @@
         Que tenga un excelente día
     </p>
 </div>
+<script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var mode = params.get('auto');
+        function runPrint(afterPrint) {
+            window.focus();
+            window.print();
+            if (typeof afterPrint === 'function') {
+                setTimeout(afterPrint, 150);
+            }
+        }
+        function whenReady(fn) {
+            if (document.readyState === 'complete') {
+                fn();
+            } else {
+                window.addEventListener('load', fn, { once: true });
+            }
+        }
+        if (mode === 'popup') {
+            whenReady(function () {
+                setTimeout(function () {
+                    runPrint(function () { window.close(); });
+                }, 80);
+            });
+        }
+    })();
+</script>
 </body>
 </html>

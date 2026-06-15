@@ -76,10 +76,8 @@ def _sale_net_cash_in_drawer(sale):
         c = Decimal(str(sale.cash or 0))
         ch = Decimal(str(sale.change or 0))
         return c - ch
-    if sale.payment_method == 'efectivo_tarjeta':
-        c = Decimal(str(sale.cash or 0))
-        ch = Decimal(str(sale.change or 0))
-        return c - ch
+    if sale.payment_method == 'efectivo_yape':
+        return Decimal(str(sale.cash or 0))
     return Decimal('0.00')
 
 
@@ -154,6 +152,7 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                     'yape': '0.00',
                     'plin': '0.00',
                     'tarjeta': '0.00',
+                    'mixto_yape': '0.00',
                     'mixto_tarjeta': '0.00',
                     'card': '0.00',
                 }
@@ -208,6 +207,15 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                         ),
                         Decimal('0.00'),
                     )
+                    sales_mixto_yape = sum(
+                        (
+                            Decimal(str(i.amount_debited or 0))
+                            for i in sales
+                            if i.payment_condition == 'contado' and i.payment_method == 'efectivo_yape'
+                        ),
+                        Decimal('0.00'),
+                    )
+                    sales_yape += sales_mixto_yape
                     sales_plin = sum(
                         (
                             Decimal(str(i.total or 0))
@@ -227,12 +235,9 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                         Decimal('0.00'),
                     )
                     sales_tarjeta_pure = Decimal('0.00')
-                    sales_mixto_tarjeta = Decimal('0.00')
                     for i in sales:
                         if i.payment_condition == 'contado' and i.payment_method == 'tarjeta_debito_credito':
                             sales_tarjeta_pure += Decimal(str(i.total or 0))
-                        elif i.payment_condition == 'contado' and i.payment_method == 'efectivo_tarjeta':
-                            sales_mixto_tarjeta += Decimal(str(i.amount_debited or 0))
                         elif (
                             i.payment_condition == 'credito'
                             and Decimal(str(i.credit_down_payment or 0)) > 0
@@ -242,7 +247,7 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                                 str(i.amount_debited or i.credit_down_payment or 0)
                             )
 
-                    sales_card = sales_tarjeta_pure + sales_mixto_tarjeta
+                    sales_card = sales_tarjeta_pure
                     expenses_qs = _session_expenses_queryset(session)
                     expenses_total = sum(
                         (Decimal(str(i.valor or 0)) for i in expenses_qs),
@@ -265,7 +270,8 @@ class CashRegisterSessionListView(PermissionMixin, FormView):
                             'yape': format(sales_yape, '.2f'),
                             'plin': format(sales_plin, '.2f'),
                             'tarjeta': format(sales_tarjeta_pure, '.2f'),
-                            'mixto_tarjeta': format(sales_mixto_tarjeta, '.2f'),
+                            'mixto_yape': format(sales_mixto_yape, '.2f'),
+                            'mixto_tarjeta': '0.00',
                             'card': format(sales_card, '.2f'),
                         },
                         'expenses': {

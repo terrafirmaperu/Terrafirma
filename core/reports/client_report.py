@@ -437,7 +437,10 @@ def payments_by_day_report(start_date='', end_date=''):
             row['yape'] += amount
         elif method == 'plin':
             row['plin'] += amount
-        elif method in ('tarjeta_debito_credito', 'efectivo_tarjeta'):
+        elif method == 'efectivo_yape':
+            row['cash'] += Decimal(str(sale.cash or 0))
+            row['yape'] += Decimal(str(sale.amount_debited or 0))
+        elif method in ('tarjeta_debito_credito',):
             row['tarjeta'] += amount
         row['total'] += amount
 

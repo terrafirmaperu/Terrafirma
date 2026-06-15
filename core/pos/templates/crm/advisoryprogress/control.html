@@ -42,8 +42,53 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         .advisory-case-type { font-size: 0.7rem; margin-right: 0.25rem; }
-        .advisory-case-contract code { color: #0056b3; }
-        #cases_list .case-item.active { border-left: 4px solid #17a2b8; }
+        .advisory-case-contract code {
+            color: #004085;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 0.1rem 0.35rem;
+            border-radius: 0.2rem;
+        }
+        #cases_list .case-item {
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+        #cases_list .case-item:hover {
+            background-color: #f0f8ff;
+        }
+        #cases_list .case-item.active {
+            border-left: 4px solid #17a2b8 !important;
+            background-color: #e8f4fc !important;
+            color: #212529 !important;
+            border-color: #bee5eb !important;
+        }
+        #cases_list .case-item.active .text-muted {
+            color: #495057 !important;
+        }
+        #cases_list .case-item.active .text-info {
+            color: #0c5460 !important;
+        }
+        #cases_list .case-item.active .advisory-case-contract code {
+            color: #004085 !important;
+            background: #fff;
+        }
+        #cases_list .case-item.active .badge-info {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+        #case_sale_panel {
+            background-color: #e8f4fc !important;
+            border-color: #bee5eb !important;
+            color: #212529 !important;
+        }
+        #case_sale_panel code {
+            color: #004085 !important;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.1rem 0.35rem;
+            border-radius: 0.2rem;
+        }
+        #case_sale_panel .small,
+        #case_sale_panel li {
+            color: #343a40 !important;
+        }
     </style>
 {% endblock %}
 

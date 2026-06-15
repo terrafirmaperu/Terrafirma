@@ -7,6 +7,7 @@ var QUOTA_PAY_METHOD_LABELS = {
 var date_current;
 var input_daterange;
 var lastQuotaPaymentId = null;
+var payQuotaEntregables = [];
 
 function computeQuotaProgress(row) {
     var paymentConditionId = row && row.sale && row.sale.payment_condition
@@ -92,12 +93,83 @@ function refreshPayQuotaDesc() {
     if (!quotaLabel) {
         return;
     }
-    var method = getPayQuotaPaymentMethod();
-    if (!method) {
-        $('#payQuotaDesc').val('Pago de ' + quotaLabel);
+    var entregableLabel = getPayQuotaEntregableLabel();
+    var parts = ['Pago de ' + quotaLabel];
+    if (entregableLabel) {
+        parts.push(entregableLabel);
+    }
+    $('#payQuotaDesc').val(parts.join(' — '));
+}
+
+function getPayQuotaEntregableLabel() {
+    var $sel = $('#payQuotaEntregable');
+    if (!$sel.length || !$sel.val()) {
+        return '';
+    }
+    var text = $sel.find('option:selected').text();
+    return text && text.indexOf('Sin entregable') === -1 ? text : '';
+}
+
+function getPayQuotaEntregableOption(val) {
+    if (!val) {
+        return null;
+    }
+    for (var i = 0; i < payQuotaEntregables.length; i++) {
+        if (payQuotaEntregables[i].id === val) {
+            return payQuotaEntregables[i];
+        }
+    }
+    return null;
+}
+
+function initPayQuotaEntregableSelect(row) {
+    var $wrap = $('#payQuotaEntregableWrap');
+    var $sel = $('#payQuotaEntregable');
+    if (!$sel.length) {
         return;
     }
-    $('#payQuotaDesc').val('Pago de ' + quotaLabel + ' (' + QUOTA_PAY_METHOD_LABELS[method] + ')');
+    payQuotaEntregables = (row && row.worker_entregables) ? row.worker_entregables.slice() : [];
+    if ($sel.hasClass('select2-hidden-accessible')) {
+        $sel.select2('destroy');
+    }
+    $sel.find('option:not(:first)').remove();
+    payQuotaEntregables.forEach(function (opt) {
+        $sel.append($('<option>', { value: opt.id, text: opt.label }));
+    });
+    if (!payQuotaEntregables.length) {
+        $wrap.hide();
+        $sel.val('').trigger('change');
+        return;
+    }
+    $wrap.show();
+    $sel.select2({
+        width: '100%',
+        dropdownParent: $('#payQuotaEntregableWrap'),
+        placeholder: 'Entregable / proceso',
+        allowClear: true,
+        dropdownAutoWidth: false
+    });
+    $sel.val(null).trigger('change.select2');
+    $('#payQuotaEntregableHint').text(
+        payQuotaEntregables.length === 1
+            ? '1 opción desde configuración Obrero del producto.'
+            : payQuotaEntregables.length + ' opciones desde configuración Obrero del producto.'
+    );
+}
+
+function onPayQuotaEntregableChange() {
+    var opt = getPayQuotaEntregableOption($('#payQuotaEntregable').val());
+    if (opt && opt.charge_amount) {
+        var charge = parseFloat(String(opt.charge_amount).replace(',', '.'));
+        var maxAmount = parseFloat(String($('#payQuotaAmount').attr('max') || '0').replace(',', '.'));
+        if (!isNaN(charge) && charge > 0) {
+            if (!isNaN(maxAmount) && maxAmount > 0) {
+                charge = Math.min(charge, maxAmount);
+            }
+            $('#payQuotaAmount').val(charge.toFixed(2));
+        }
+    }
+    refreshPayQuotaDesc();
 }
 
 function extractQuotaLabelFromDesc(desc) {
@@ -124,6 +196,38 @@ function getTodayYmd() {
     var m = String(dt.getMonth() + 1).padStart(2, '0');
     var d = String(dt.getDate()).padStart(2, '0');
     return dt.getFullYear() + '-' + m + '-' + d;
+}
+
+function initPayQuotaCollectorSelect() {
+    var $sel = $('#payQuotaCollector');
+    if (!$sel.length) {
+        return;
+    }
+    if (!$sel.data('options-loaded')) {
+        $sel.find('option:not(:first)').remove();
+        (window.ctasCollectCollectors || []).forEach(function (c) {
+            $sel.append($('<option>', { value: String(c.id), text: c.name }));
+        });
+        $sel.data('options-loaded', true);
+    }
+    if ($sel.hasClass('select2-hidden-accessible')) {
+        $sel.select2('destroy');
+    }
+    $sel.select2({
+        width: '100%',
+        dropdownParent: $('#payQuotaCollectorWrap'),
+        placeholder: 'Lugar de cobro',
+        allowClear: false,
+        dropdownAutoWidth: false
+    });
+}
+
+function setPayQuotaCollectorDefault(row) {
+    var id = String(window.ctasCollectDefaultCollectorId || '');
+    if (row && row.sale && row.sale.collector && row.sale.collector.id) {
+        id = String(row.sale.collector.id);
+    }
+    $('#payQuotaCollector').val(id).trigger('change');
 }
 
 function openPayQuotaModal(row) {
@@ -160,6 +264,9 @@ function openPayQuotaModal(row) {
     $('#payQuotaRemainingLabel').text('Saldo pendiente: S/ ' + saldo.toFixed(2));
     clearPayQuotaPaymentMethod();
     $('#payQuotaDesc').val('Pago de ' + quotaLabel);
+    initPayQuotaEntregableSelect(row);
+    initPayQuotaCollectorSelect();
+    setPayQuotaCollectorDefault(row);
     $('#myModalPayQuota').modal('show');
 }
 
@@ -209,7 +316,9 @@ function submitPayQuota() {
             date_joined: dateJoined,
             valor: n.toFixed(2),
             desc: desc || '',
-            payment_method: payMethod
+            payment_method: payMethod,
+            collector: $('#payQuotaCollector').val() || window.ctasCollectDefaultCollectorId || '',
+            worker_entregable: $('#payQuotaEntregable').val() || ''
         },
         success: function (resp) {
             if (resp && resp.error) {
@@ -254,8 +363,52 @@ function openQuotaPaymentPrintForPayment(paymentId, voucher) {
         return;
     }
     var base = window.ctasCollectPrintBaseUrl || '/pos/frm/ctas/collect/print/voucher/';
-    var url = base + String(paymentId) + '/' + String(voucher) + '/';
-    window.open(url, '_blank');
+    var path = base + String(paymentId) + '/' + String(voucher) + '/';
+    var url = path + '?format=html&auto=popup&t=' + Date.now();
+    var features = 'width=1,height=1,left=0,top=0,toolbar=0,menubar=0,location=0,status=0';
+    var printWin = window.open(url, 'terrafirma_print_' + paymentId, features);
+    if (!printWin) {
+        try {
+            sessionStorage.setItem('terrafirma_print_return', window.location.pathname + window.location.search);
+        } catch (e) {
+            /* ignore */
+        }
+        window.location.href = path + '?format=html&auto=1&t=' + Date.now();
+    }
+}
+
+function openTicketFormatModal(paymentId) {
+    if (!paymentId) {
+        return;
+    }
+    $('#ticketFormatPaymentId').val(paymentId);
+    var $ticketModal = $('#myModalTicketFormat');
+    if (!$ticketModal.parent().is('body')) {
+        $ticketModal.appendTo('body');
+    }
+    if ($('#myModalPayments').hasClass('show')) {
+        $('#myModalPayments').one('hidden.bs.modal.ticketFormat', function () {
+            $ticketModal.modal('show');
+        });
+        $('#myModalPayments').modal('hide');
+        return;
+    }
+    $ticketModal.modal('show');
+}
+
+function printTicketFormat(voucherType) {
+    var paymentId = $('#ticketFormatPaymentId').val();
+    if (!paymentId) {
+        paymentId = lastQuotaPaymentId;
+    }
+    if (!paymentId) {
+        return;
+    }
+    $('#myModalTicketFormat').modal('hide');
+    $('#myModalPrintQuota').modal('hide');
+    setTimeout(function () {
+        openQuotaPaymentPrintForPayment(paymentId, voucherType);
+    }, 300);
 }
 
 function escapeHtmlText(text) {
@@ -344,7 +497,29 @@ function getData(all) {
         },
         columns: [
             {data: "sale.nro"},
-            {data: "sale.client"},
+            {
+                data: function (row, type) {
+                    var u = row.sale && row.sale.client && row.sale.client.user;
+                    var plain = u
+                        ? ((u.full_name || '') + ' ' + (u.dni || '') + ' ' + (row.predio_reference || '')).trim()
+                        : 'Consumidor final';
+                    return plain;
+                },
+                render: function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+                    if (!$.isEmptyObject(row.sale.client) && row.sale.client.user) {
+                        var u = row.sale.client.user;
+                        var name = escapeHtmlText(u.full_name || '');
+                        var dni = u.dni
+                            ? '<br><small class="text-muted">DNI ' + escapeHtmlText(u.dni) + '</small>'
+                            : '';
+                        return name + dni + predioReferenceLine(row);
+                    }
+                    return 'Consumidor final';
+                },
+            },
             {data: "quota_plan"},
             {data: "date_joined"},
             {data: "end_date"},
@@ -376,17 +551,6 @@ function getData(all) {
             {
                 targets: [1],
                 class: 'text-center',
-                render: function (data, type, row) {
-                    if (!$.isEmptyObject(row.sale.client) && row.sale.client.user) {
-                        var u = row.sale.client.user;
-                        var name = escapeHtmlText(u.full_name || '');
-                        var dni = u.dni
-                            ? '<br><small class="text-muted">DNI ' + escapeHtmlText(u.dni) + '</small>'
-                            : '';
-                        return name + dni + predioReferenceLine(row);
-                    }
-                    return 'Consumidor final';
-                }
             },
             {
                 targets: [2],
@@ -459,6 +623,17 @@ function getData(all) {
 }
 
 $(function () {
+
+    $('#myModalPayQuota').appendTo('body');
+    $('#myModalTicketFormat').appendTo('body');
+    $('#myModalTicketFormat').on('hidden.bs.modal', function () {
+        if ($('#myModalPayments').data('reopen-after-ticket')) {
+            $('#myModalPayments').removeData('reopen-after-ticket');
+            window.setTimeout(function () {
+                $('#myModalPayments').modal('show');
+            }, 150);
+        }
+    });
 
     input_daterange = $('input[name="date_range"]');
 
@@ -588,12 +763,31 @@ $(function () {
 
                 }
             });
+            $('#myModalPayments').data('reopen-after-ticket', false);
             $('#myModalPayments').modal('show');
         });
 
-    $('#tblPayments tbody')
-        .off()
-        .on('click', 'a[rel="delete"]', function () {
+    $(document)
+        .off('click.ctasPrintPay', '#tblPayments a[rel="print_pay_ticket"]')
+        .on('click.ctasPrintPay', '#tblPayments a[rel="print_pay_ticket"]', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('#myModalPayments').data('reopen-after-ticket', true);
+            openTicketFormatModal($(this).attr('data-id') || $(this).data('id'));
+        })
+        .off('click.ctasPrintConstancia', '#tblPayments a[rel="print_pay_constancia"]')
+        .on('click.ctasPrintConstancia', '#tblPayments a[rel="print_pay_constancia"]', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openQuotaPaymentPrintForPayment($(this).attr('data-id') || $(this).data('id'), 'constancia');
+        });
+
+    $(document)
+        .off('click.ctasDeletePay', '#tblPayments a[rel="delete"]')
+        .on('click.ctasDeletePay', '#tblPayments a[rel="delete"]', function () {
+            if (!tblPaymentsCtasCollect) {
+                return;
+            }
             $('.tooltip').remove();
             var tr = tblPaymentsCtasCollect.cell($(this).closest('td, li')).index(),
                 row = tblPaymentsCtasCollect.row(tr.row).data();
@@ -609,14 +803,6 @@ $(function () {
                     tblPaymentsCtasCollect.ajax.reload();
                 }
             );
-        })
-        .on('click', 'a[rel="print_pay_ticket"]', function (e) {
-            e.preventDefault();
-            openQuotaPaymentPrintForPayment($(this).data('id'), 'ticket');
-        })
-        .on('click', 'a[rel="print_pay_constancia"]', function (e) {
-            e.preventDefault();
-            openQuotaPaymentPrintForPayment($(this).data('id'), 'constancia');
         });
 
     $('#btnSubmitPayQuota').on('click', function () {
@@ -627,8 +813,19 @@ $(function () {
         setPayQuotaPaymentMethod($(this).data('value'));
     });
 
-    $('#btnPrintQuotaTicket').on('click', function () {
-        openQuotaPaymentPrint('ticket');
+    $('#payQuotaEntregable').on('change', onPayQuotaEntregableChange);
+
+    $('#btnPrintQuotaTicketTermica').on('click', function () {
+        printTicketFormat('ticket-termica');
+    });
+    $('#btnPrintQuotaTicketRppos').on('click', function () {
+        printTicketFormat('ticket-rppos');
+    });
+    $('#btnTicketFormatTermica').on('click', function () {
+        printTicketFormat('ticket-termica');
+    });
+    $('#btnTicketFormatRppos').on('click', function () {
+        printTicketFormat('ticket-rppos');
     });
     $('#btnPrintQuotaInvoice').on('click', function () {
         openQuotaPaymentPrint('constancia');

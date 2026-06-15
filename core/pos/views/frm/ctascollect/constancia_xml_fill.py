@@ -184,7 +184,7 @@ def fill_constancia_document_xml(xml_str, ctx):
         elif 'El presente pago se realiz' in full:
             _replace_ellipsis_runs_in_order(
                 p_elem,
-                [ctx['payment_method'], ctx['beneficiary']],
+                [ctx['payment_method'], ctx.get('collector_name') or ctx.get('beneficiary', '')],
             )
         elif 'conformidad' in full and 'HUANCAVELICA' in full.upper():
             _replace_signature_date_runs(p_elem, ctx)
@@ -261,7 +261,7 @@ def fill_constancia_doc_paragraphs(doc, ctx):
         elif 'El presente pago se realiz' in full:
             _replace_ellipsis_runs_in_order(
                 p_elem,
-                [ctx['payment_method'], ctx['beneficiary']],
+                [ctx['payment_method'], ctx.get('collector_name') or ctx.get('beneficiary', '')],
             )
         elif 'conformidad' in full and 'HUANCAVELICA' in full.upper():
             _replace_signature_date_runs(p_elem, ctx)

@@ -10,13 +10,17 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, CreateView, FormView
 from django.views.generic.base import View
-from weasyprint import HTML, CSS
+from weasyprint import HTML
 
 from config import settings
-from core.pos.brand_assets import comprobante_print_context
+from core.pos.brand_assets import comprobante_logo_url, comprobante_print_context
 from core.pos.forms import PaymentsCtaCollectForm
 from core.pos.mixins import CashRegisterRequiredMixin
-from core.pos.models import CashRegisterSession, CtasCollect, PaymentsCtaCollect, Company
+from core.pos.models import CashRegisterSession, Collector, CtasCollect, PaymentsCtaCollect, Company
+from core.pos.product_worker import (
+    parse_worker_entregable_value,
+    resolve_worker_entregable_for_sale,
+)
 from core.pos.views.frm.ctascollect.payment_constancia import (
     DOCX_CONTENT_TYPE,
     build_constancia_docx,
@@ -55,6 +59,13 @@ def _payment_desc_with_method(desc, method):
     return '{} ({})'.format(base, label)
 
 
+def _payment_collector_id(request):
+    raw = (request.POST.get('collector') or '').strip()
+    if raw:
+        return int(raw)
+    return Collector.get_or_create_default().pk
+
+
 class CtasCollectListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
     template_name = 'frm/ctascollect/list.html'
     permission_required = 'view_ctascollect'
@@ -68,8 +79,10 @@ class CtasCollectListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
                 data = []
                 search = CtasCollect.objects.select_related(
                     'sale__client__user',
+                    'sale__collector',
                 ).prefetch_related(
-                    'sale__saledetail_set__product',
+                    'sale__saledetail_set__product__worker_deliverables',
+                    'sale__saledetail_set__product__worker_config',
                     'sale__client__properties',
                 ).all()
                 start_date = request.POST.get('start_date', '')
@@ -99,9 +112,16 @@ class CtasCollectListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
         return HttpResponse(json.dumps(data), content_type='application/json')
 
     def get_context_data(self, **kwargs):
+        import json
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Cuentas por Cobrar'
         context['create_url'] = reverse_lazy('ctascollect_create')
+        default_collector = Collector.get_or_create_default()
+        collectors = list(
+            Collector.objects.filter(is_active=True).order_by('name').values('id', 'name')
+        )
+        context['collectors_json'] = json.dumps(collectors)
+        context['default_collector_id'] = default_collector.pk
         return context
 
 
@@ -150,6 +170,23 @@ class CtasCollectCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateVi
                         return HttpResponse(json.dumps(data), content_type='application/json')
                     payment.payment_method = method
                     payment.desc = _payment_desc_with_method(request.POST.get('desc'), method)
+                    payment.collector_id = _payment_collector_id(request)
+                    deliverable_id, inscription_product_id = parse_worker_entregable_value(
+                        request.POST.get('worker_entregable'),
+                    )
+                    if deliverable_id or inscription_product_id:
+                        deliverable, inscription_product, entregable_error = (
+                            resolve_worker_entregable_for_sale(
+                                ctas.sale,
+                                deliverable_id=deliverable_id,
+                                inscription_product_id=inscription_product_id,
+                            )
+                        )
+                        if entregable_error:
+                            data['error'] = entregable_error
+                            return HttpResponse(json.dumps(data), content_type='application/json')
+                        payment.worker_deliverable = deliverable
+                        payment.worker_inscription_product = inscription_product
                     payment.cash_register_session = CashRegisterSession.get_open_session()
                     payment.save()
                     payment.ctascollect.validate_debt()
@@ -192,6 +229,15 @@ class CtasCollectDeleteView(SupervisorDeleteApprovalMixin, CashRegisterRequiredM
         return context
 
 
+_CTACOLLECT_TICKET_TEMPLATES = {
+    'ticket': 'frm/ctascollect/print_ticket.html',
+    'ticket-rppos': 'frm/ctascollect/print_ticket.html',
+    'ticket-58': 'frm/ctascollect/print_ticket.html',
+    'ticket-termica': 'frm/ctascollect/print_ticket_termica.html',
+    'ticket-80': 'frm/ctascollect/print_ticket_termica.html',
+}
+
+
 class CtasCollectPaymentPrintView(PermissionMixin, View):
     permission_required = 'view_ctascollect'
 
@@ -203,6 +249,8 @@ class CtasCollectPaymentPrintView(PermissionMixin, View):
             payment = PaymentsCtaCollect.objects.select_related(
                 'ctascollect__sale__client__user',
                 'ctascollect__sale__employee',
+                'ctascollect__sale__collector',
+                'collector',
             ).get(pk=self.kwargs['pk'])
             voucher = (self.kwargs.get('voucher') or 'ticket').lower()
             if voucher in ('factura', 'constancia'):
@@ -236,26 +284,27 @@ class CtasCollectPaymentPrintView(PermissionMixin, View):
                 )
                 response['Content-Length'] = len(docx_bytes)
                 return response
-            if voucher != 'ticket':
-                voucher = 'ticket'
-            template = get_template('frm/ctascollect/print_{}.html'.format(voucher))
+            ticket_template = _CTACOLLECT_TICKET_TEMPLATES.get(voucher, _CTACOLLECT_TICKET_TEMPLATES['ticket'])
+            template = get_template(ticket_template)
+            print_ctx = comprobante_print_context()
+            if request.GET.get('format', 'html').lower() != 'pdf':
+                print_ctx = dict(print_ctx)
+                print_ctx['comprobante_logo'] = request.build_absolute_uri(comprobante_logo_url())
             context = {
                 'company': Company.objects.first(),
                 'payment': payment,
                 'ctas': payment.ctascollect,
                 'sale': payment.ctascollect.sale,
-                **comprobante_print_context(),
+                **print_ctx,
             }
-            html_template = template.render(context).encode(encoding='UTF-8')
-            url_css = os.path.join(
-                settings.BASE_DIR,
-                'static/lib/bootstrap-4.6.0/css/bootstrap.min.css',
-            )
-            pdf_file = HTML(
-                string=html_template,
-                base_url=request.build_absolute_uri(),
-            ).write_pdf(stylesheets=[CSS(url_css)], presentational_hints=True)
-            return HttpResponse(pdf_file, content_type='application/pdf')
+            html_content = template.render(context)
+            if request.GET.get('format', 'html').lower() == 'pdf':
+                pdf_file = HTML(
+                    string=html_content.encode(encoding='UTF-8'),
+                    base_url=request.build_absolute_uri(),
+                ).write_pdf(presentational_hints=True)
+                return HttpResponse(pdf_file, content_type='application/pdf')
+            return HttpResponse(html_content, content_type='text/html; charset=utf-8')
         except PaymentsCtaCollect.DoesNotExist:
             return HttpResponse(
                 'Pago no encontrado.',

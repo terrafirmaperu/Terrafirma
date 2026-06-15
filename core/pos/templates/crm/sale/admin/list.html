@@ -7,7 +7,8 @@
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/spanish.js' %}"></script>
     <script src="{% static 'lib/bootstrap-daterangepicker-3.1/js/daterangepicker.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/bootstrap-daterangepicker-3.1/css/daterangepicker.css' %}"/>
-    <script src="{% static 'crm/sale/admin/js/list.js' %}"></script>
+    <script src="{% static 'js/terrafirma_print.js' %}?v=20260613c"></script>
+    <script src="{% static 'crm/sale/admin/js/list.js' %}?v=20260614-collector"></script>
 {% endblock %}
 
 {% block columns %}
@@ -16,6 +17,7 @@
     <th>Cód. contrato</th>
     <th>Cliente</th>
     <th>Forma de Pago</th>
+    <th>Lugar de cobro</th>
     <th>Método de Pago</th>
     <th>Inicial</th>
     <th>Comprobante</th>
@@ -115,6 +117,30 @@
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
                     <button type="button" id="btnContractDownload" class="btn btn-success btn-sm">
                         <i class="fas fa-file-word"></i> Descargar Word
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalSaleTicketFormat" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title">
+                        <b><i class="fas fa-receipt"></i> Imprimir comprobante</b>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3 small text-muted">Seleccione el tipo de impresora</p>
+                    <input type="hidden" id="saleTicketFormatId" value="">
+                    <button type="button" class="btn btn-primary btn-block" id="btnSaleTicketFormatTermica">
+                        <i class="fas fa-print"></i> Térmica <small>(80 mm)</small>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-block" id="btnSaleTicketFormatRppos">
+                        <i class="fas fa-print"></i> RP Pos <small>(58 mm)</small>
                     </button>
                 </div>
             </div>

@@ -188,6 +188,98 @@ class Product(models.Model):
         ]
 
 
+class ProductWorkerConfig(models.Model):
+    """Cuotas de pago al obrero vinculadas al producto."""
+
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='worker_config',
+        verbose_name='Producto',
+    )
+    quota_count = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name='Número de cuotas',
+    )
+    quota_amount = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        default=0.00,
+        verbose_name='Monto por cuota',
+    )
+    inscription_amount = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        default=0.00,
+        verbose_name='Inscripción',
+    )
+    quotas_enabled = models.BooleanField(
+        default=False,
+        verbose_name='Cuotas habilitadas',
+    )
+
+    def deliverables_total(self):
+        total = self.product.worker_deliverables.aggregate(
+            resp=models.Sum('charge_amount'),
+        )['resp']
+        return total if total is not None else Decimal('0.00')
+
+    def worker_total(self):
+        return self.inscription_amount + self.deliverables_total()
+
+    def toJSON(self):
+        return {
+            'quota_count': self.quota_count,
+            'quota_amount': format(self.quota_amount, '.2f'),
+            'inscription_amount': format(self.inscription_amount, '.2f'),
+            'quotas_enabled': self.quotas_enabled,
+            'deliverables_total': format(self.deliverables_total(), '.2f'),
+            'worker_total': format(self.worker_total(), '.2f'),
+            'quota_total': format(self.quota_count * self.quota_amount, '.2f'),
+        }
+
+    class Meta:
+        verbose_name = 'Configuración obrero (producto)'
+        verbose_name_plural = 'Configuraciones obrero (producto)'
+
+
+class ProductWorkerDeliverable(models.Model):
+    """Entregable o proceso del obrero con monto de cobro, por producto."""
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='worker_deliverables',
+        verbose_name='Producto',
+    )
+    order = models.PositiveSmallIntegerField(default=1, verbose_name='Orden')
+    name = models.CharField(max_length=200, verbose_name='Entregable / proceso')
+    charge_amount = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        default=0.00,
+        verbose_name='Cobro',
+    )
+    notes = models.CharField(max_length=300, blank=True, default='', verbose_name='Notas')
+
+    def toJSON(self):
+        return {
+            'id': self.id,
+            'order': self.order,
+            'name': self.name,
+            'charge_amount': format(self.charge_amount, '.2f'),
+            'notes': self.notes,
+        }
+
+    class Meta:
+        verbose_name = 'Entregable obrero'
+        verbose_name_plural = 'Entregables obrero'
+        ordering = ['order', 'id']
+        indexes = [
+            models.Index(fields=['product', 'order'], name='pos_worker_deliv_prod_ord'),
+        ]
+
+
 class Purchase(models.Model):
     payment_condition = models.CharField(choices=payment_condition, max_length=50, default='contado')
     date_joined = models.DateField(default=datetime.now)
@@ -435,9 +527,54 @@ class ClientProperty(models.Model):
         )
 
 
+class Collector(models.Model):
+    DEFAULT_NAME = 'Oficina'
+
+    name = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
+    is_active = models.BooleanField(default=True, verbose_name='Activo')
+
+    def __str__(self):
+        return self.name
+
+    def get_full_name(self):
+        return self.name
+
+    @classmethod
+    def get_or_create_default(cls):
+        obj, _ = cls.objects.get_or_create(
+            name=cls.DEFAULT_NAME,
+            defaults={'is_active': True},
+        )
+        if not obj.is_active:
+            obj.is_active = True
+            obj.save(update_fields=['is_active'])
+        return obj
+
+    def toJSON(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'full_name': self.name,
+            'is_active': self.is_active,
+        }
+
+    class Meta:
+        verbose_name = 'Cobrador'
+        verbose_name_plural = 'Cobradores'
+        ordering = ['name', 'id']
+
+
 class Sale(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True)
     employee = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    collector = models.ForeignKey(
+        Collector,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='sales',
+        verbose_name='Cobrador',
+    )
     payment_condition = models.CharField(choices=payment_condition, max_length=50, default='contado')
     payment_method = models.CharField(choices=payment_method, max_length=50, default='efectivo')
     type_voucher = models.CharField(choices=voucher, max_length=50, default='ticket')
@@ -563,6 +700,7 @@ class Sale(models.Model):
             'date_joined': self.date_joined.strftime('%Y-%m-%d'),
             'end_credit': self.end_credit.strftime('%Y-%m-%d'),
             'employee': {} if self.employee is None else self.employee.toJSON(),
+            'collector': {} if self.collector is None else self.collector.toJSON(),
             'client': {} if self.client is None else self.client.toJSON(),
             'payment_condition': {
                 'id': self.payment_condition,
@@ -778,6 +916,8 @@ class CtasCollect(models.Model):
         item['financed_balance'] = format(max(Decimal('0'), total_d - inicial_d), '.2f')
         item['quota_plan'] = self.get_quota_plan()
         item['predio_reference'] = build_sale_predio_summary_from_sale(self.sale) if self.sale_id else ''
+        from core.pos.product_worker import worker_entregables_for_sale
+        item['worker_entregables'] = worker_entregables_for_sale(self.sale)
         return item
 
     class Meta:
@@ -819,6 +959,38 @@ class PaymentsCtaCollect(models.Model):
         default='efectivo',
         verbose_name='Forma de pago',
     )
+    collector = models.ForeignKey(
+        Collector,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='payments',
+        verbose_name='Lugar de cobro',
+    )
+    worker_deliverable = models.ForeignKey(
+        'ProductWorkerDeliverable',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='ctacollect_payments',
+        verbose_name='Entregable / proceso',
+    )
+    worker_inscription_product = models.ForeignKey(
+        Product,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='worker_inscription_payments',
+        verbose_name='Inscripción (producto)',
+    )
+
+    def worker_entregable_label(self):
+        if self.worker_deliverable_id:
+            d = self.worker_deliverable
+            return '{} — {}'.format(d.product.name, d.name)
+        if self.worker_inscription_product_id:
+            return '{} — Inscripción'.format(self.worker_inscription_product.name)
+        return ''
 
     def __str__(self):
         return self.ctascollect.id
@@ -851,6 +1023,14 @@ class PaymentsCtaCollect(models.Model):
         item['payment_method'] = {
             'id': self.payment_method,
             'name': self.get_payment_method_display(),
+        }
+        item['collector'] = {} if self.collector is None else self.collector.toJSON()
+        label = self.worker_entregable_label()
+        item['worker_entregable'] = {
+            'label': label,
+            'type': 'inscription' if self.worker_inscription_product_id else (
+                'deliverable' if self.worker_deliverable_id else ''
+            ),
         }
         return item
 

@@ -1,0 +1,78 @@
+{% extends 'skin.html' %}
+{% load static %}
+{% block content %}
+    <div class="card {{ dshboard.card }}">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-user-shield"></i>
+                {{ title }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid" style="max-width: 420px; margin: 0 auto;">
+                <p class="text-muted text-center mb-4">
+                    Solo el usuario <strong>Neo</strong> o quien ingrese su contraseña de superusuario
+                    puede administrar cobradores.
+                </p>
+                <div class="form-group">
+                    <label>Usuario supervisor</label>
+                    <input type="text" class="form-control" id="supervisor_username" value="Neo" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" class="form-control" id="supervisor_password" autocomplete="current-password" autofocus>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" id="btnConfirmSupervisorCollector">
+                    <i class="fas fa-unlock"></i> Autorizar acceso
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-block mt-2">
+                    <i class="fas fa-arrow-left"></i> Volver al inicio
+                </a>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript">
+        (function () {
+            var nextUrl = '{{ next_url|escapejs }}';
+            $('#btnConfirmSupervisorCollector').on('click', function () {
+                var $btn = $(this);
+                $btn.prop('disabled', true);
+                $.ajax({
+                    url: '{% url "verify_supervisor_collector" %}',
+                    method: 'POST',
+                    headers: {'X-CSRFToken': csrftoken},
+                    data: {
+                        supervisor_username: $('#supervisor_username').val(),
+                        supervisor_password: $('#supervisor_password').val()
+                    },
+                    success: function () {
+                        window.location.href = nextUrl;
+                    },
+                    error: function (xhr) {
+                        var msg = 'No se pudo autorizar.';
+                        try {
+                            var r = JSON.parse(xhr.responseText);
+                            if (r.error) {
+                                msg = r.error;
+                            }
+                        } catch (e) {}
+                        if (typeof message_error === 'function') {
+                            message_error(msg);
+                        } else {
+                            alert(msg);
+                        }
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+            $('#supervisor_password').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#btnConfirmSupervisorCollector').click();
+                }
+            });
+        })();
+    </script>
+{% endblock %}

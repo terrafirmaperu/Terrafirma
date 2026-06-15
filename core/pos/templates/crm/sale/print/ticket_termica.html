@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{% load static comprobante_tags %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Venta - Ticket térmica 80mm</title>
+    <style>
+        @page {
+            width: 80mm;
+            height: {{ height }}mm;
+            margin: 0;
+        }
+
+        html, body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            line-height: 1.25;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            width: 80mm;
+            height: {{ height }}mm;
+            overflow: hidden;
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .content {
+            width: 80mm;
+            height: {{ height }}mm;
+            padding: 2mm 3mm 2mm 3mm;
+            overflow: hidden;
+        }
+
+        .center { text-align: center; }
+        .line {
+            border-top: 1px dotted #000;
+            margin: 3px 0;
+            height: 0;
+        }
+        .label { font-weight: bold; }
+        .small { font-size: 10px; line-height: 1.2; }
+        .title {
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+        .row { margin: 0 0 2px 0; }
+        .logo-wrap { text-align: center; margin: 0 0 2px 0; }
+        .img-logo {
+            display: block;
+            width: 22mm;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+        .table {
+            width: 100%;
+            font-size: 9px;
+            border-collapse: collapse;
+            margin: 2px 0;
+        }
+        .table th, .table td {
+            padding: 1px 0;
+            vertical-align: top;
+        }
+        .table th {
+            border-bottom: 1px solid #000;
+            font-weight: bold;
+        }
+        .totals td {
+            padding: 1px 0;
+        }
+        .total-row {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .footer-note {
+            font-size: 9px;
+            line-height: 1.2;
+            margin: 4px 0 0 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="center">
+        <div class="logo-wrap">
+            <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+        </div>
+        <div class="small">{{ company.address }}</div>
+        <div class="small">RUC: {% comprobante_ruc %}</div>
+    </div>
+    <div class="line"></div>
+    <div class="center title">COMPROBANTE DE VENTA</div>
+    <div class="line"></div>
+
+    <div class="row"><span class="label">Venta:</span> {{ sale.nro }}</div>
+    <div class="row"><span class="label">Cód. venta:</span> {{ sale.sale_code|default:sale.nro }}</div>
+    <div class="row"><span class="label">Fecha:</span> {{ sale.date_joined|date:'d/m/Y' }}</div>
+    <div class="row"><span class="label">Cajero:</span> {% if sale.employee %}{{ sale.employee.get_full_name }}{% else %}—{% endif %}</div>
+    <div class="row"><span class="label">Cliente:</span> {{ sale.client.user.get_full_name }}</div>
+    <div class="row"><span class="label">DNI:</span> {{ sale.client.user.dni }}</div>
+    <div class="row"><span class="label">Forma pago:</span> {{ sale.get_payment_condition_display }}</div>
+    {% if sale.payment_condition == 'contado' %}
+    <div class="row"><span class="label">Método:</span> {{ sale.get_payment_method_display }}</div>
+    {% else %}
+        {% if sale.credit_quota_count %}
+    <div class="row"><span class="label">Cuotas:</span> {{ sale.credit_quota_count }}</div>
+        {% endif %}
+        {% if sale.credit_down_payment %}
+    <div class="row"><span class="label">Inicial:</span> S/ {{ sale.credit_down_payment|floatformat:2 }}</div>
+        {% endif %}
+    {% endif %}
+
+    <div class="line"></div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width:12%;">Cant</th>
+            <th style="width:38%;">Producto</th>
+            <th style="width:18%;">P.Unit</th>
+            <th style="width:16%;">Dscto</th>
+            <th style="width:16%; text-align:right;">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for det in sale.saledetail_set.all %}
+        <tr>
+            <td>{{ det.cant }}</td>
+            <td>{{ det.product.name }}</td>
+            <td>{{ det.price }}</td>
+            <td>{{ det.total_dscto }}</td>
+            <td style="text-align:right;">{{ det.total }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="line"></div>
+
+    <table class="table totals">
+        <tr>
+            <td>Base imponible</td>
+            <td style="text-align:right;">S/ {{ sale.subtotal|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td>IGV {% widthratio sale.igv 1 100 %}%</td>
+            <td style="text-align:right;">S/ {{ sale.total_igv|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td>Descuento {{ sale.dscto }}%</td>
+            <td style="text-align:right;">S/ {{ sale.total_dscto|floatformat:2 }}</td>
+        </tr>
+        <tr class="total-row">
+            <td>TOTAL A PAGAR</td>
+            <td style="text-align:right;">S/ {{ sale.total|floatformat:2 }}</td>
+        </tr>
+    </table>
+
+    <div class="line"></div>
+    <p class="center footer-note">Gracias por su preferencia · Conserve este comprobante</p>
+    <p class="center footer-note">
+        <strong>Seguimiento proceso</strong> www.terrafirmaperu.com —
+        Su DNI como Usuario y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
+    </p>
+</div>
+{% include 'includes/terrafirma_ticket_autoprint.html' %}
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends 'skin.html' %}
+{% load static %}
+{% block head_body %}
+    {{ block.super }}
+    <style>
+        #tblDeliverables input.form-control { min-width: 90px; }
+        #tblDeliverables .col-name input { min-width: 180px; }
+        .worker-summary-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1rem;
+        }
+        .worker-summary-box .value { font-weight: 700; font-size: 1.1rem; }
+    </style>
+    <script>
+        window.PRODUCT_WORKER_URL = "{{ worker_url|escapejs }}";
+    </script>
+    <script src="{% static 'scm/product/js/worker.js' %}?v=20260615-sin-cuotas"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="card {{ dshboard.card }}">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-hard-hat text-warning"></i> {{ title }}
+            </h3>
+            <div class="card-tools">
+                <span class="badge badge-secondary">{{ product.category.name }}</span>
+                <span class="badge badge-info">PVP S/ {{ product.pvp }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <p class="text-muted small mb-3">
+                Defina la <strong>inscripción</strong> y los <strong>entregables / procesos</strong> con su cobro.
+            </p>
+
+            <div class="card card-outline card-primary mb-0">
+                <div class="card-header py-2 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0"><i class="fas fa-tasks"></i> Entregables / procesos</h5>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn_load_suggested">
+                            <i class="fas fa-magic"></i> Cargar etapas sugeridas
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" id="btn_add_deliverable">
+                            <i class="fas fa-plus"></i> Agregar fila
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="px-3 py-3 border-bottom bg-white">
+                        <div class="form-row align-items-center">
+                            <div class="form-group col-md-4 mb-0">
+                                <span class="font-weight-bold">
+                                    <i class="fas fa-file-signature text-primary"></i> Inscripción
+                                </span>
+                            </div>
+                            <div class="form-group col-md-8 mb-0">
+                                <div class="d-flex flex-wrap align-items-center justify-content-md-end">
+                                    <span class="text-muted small mr-3 mb-2 mb-md-0">
+                                        Monto referencial a la inscripción
+                                    </span>
+                                    <div class="input-group" style="max-width: 200px;">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">S/</span>
+                                        </div>
+                                        <input type="number" class="form-control" id="inscription_amount"
+                                               min="0" step="0.01" value="0.00"
+                                               aria-label="Monto referencial a la inscripción">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0" id="tblDeliverables">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:50px;">#</th>
+                                    <th class="col-name">Entregable / proceso</th>
+                                    <th style="width:140px;">Cobro (S/)</th>
+                                    <th>Notas</th>
+                                    <th style="width:50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="deliverables_body"></tbody>
+                            <tfoot>
+                                <tr class="bg-light">
+                                    <td colspan="2" class="text-right">Inscripción:</td>
+                                    <td id="inscription_total_display">S/ 0.00</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <td colspan="2" class="text-right">Subtotal entregables:</td>
+                                    <td id="deliverables_subtotal_display">S/ 0.00</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr class="bg-light font-weight-bold">
+                                    <td colspan="2" class="text-right">Total general:</td>
+                                    <td id="deliverables_total_display">S/ 0.00</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary btn-flat" id="btn_save_worker">
+                <i class="fas fa-save"></i> Guardar configuración
+            </button>
+            <a href="{{ list_url }}" class="btn btn-secondary btn-flat">
+                <i class="fas fa-arrow-left"></i> Volver al listado
+            </a>
+        </div>
+    </div>
+{% endblock %}

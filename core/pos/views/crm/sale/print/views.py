@@ -17,7 +17,7 @@ from django.views.generic.base import View
 from weasyprint import HTML, CSS
 
 from config import settings
-from core.pos.brand_assets import comprobante_print_context
+from core.pos.brand_assets import comprobante_logo_url, comprobante_print_context
 from core.pos.client_properties import lock_client_properties_for_sale_contract
 from core.pos.models import Sale, Company, CtasCollect
 from core.pos.views.crm.sale.print.contract_docx_decorate import decorate_contract_celia_docx
@@ -1121,6 +1121,14 @@ DOCX_CONTENT_TYPE = (
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 )
 
+_SALE_TICKET_TEMPLATES = {
+    'ticket': 'crm/sale/print/ticket.html',
+    'ticket-rppos': 'crm/sale/print/ticket_rppos.html',
+    'ticket-58': 'crm/sale/print/ticket_rppos.html',
+    'ticket-termica': 'crm/sale/print/ticket_termica.html',
+    'ticket-80': 'crm/sale/print/ticket_termica.html',
+}
+
 
 class SalePrintVoucherView(LoginRequiredMixin, View):
     success_url = reverse_lazy('sale_admin_list')
@@ -1137,29 +1145,56 @@ class SalePrintVoucherView(LoginRequiredMixin, View):
         height += increment
         return round(height)
 
+    def get_height_ticket_80(self):
+        sale = Sale.objects.get(pk=self.kwargs['pk'])
+        height = 135
+        increment = sale.saledetail_set.all().count() * 4.2
+        height += increment
+        return round(height)
+
     def get(self, request, *args, **kwargs):
         try:
             sale = Sale.objects.get(pk=self.kwargs['pk'])
+            voucher = (self.kwargs.get('voucher') or 'ticket').lower()
+            print_ctx = comprobante_print_context()
+            if request.GET.get('format', 'html').lower() != 'pdf':
+                print_ctx = dict(print_ctx)
+                print_ctx['comprobante_logo'] = request.build_absolute_uri(comprobante_logo_url())
             context = {
                 'sale': sale,
                 'company': Company.objects.first(),
-                **comprobante_print_context(),
+                **print_ctx,
             }
             if sale.type_voucher == 'ticket':
-                template = get_template('crm/sale/print/ticket.html')
-                context['height'] = self.get_height_ticket()
+                ticket_template = _SALE_TICKET_TEMPLATES.get(
+                    voucher, _SALE_TICKET_TEMPLATES['ticket'],
+                )
+                template = get_template(ticket_template)
+                if voucher in ('ticket-termica', 'ticket-80'):
+                    context['height'] = self.get_height_ticket_80()
+                else:
+                    context['height'] = self.get_height_ticket()
             else:
                 template = get_template('crm/sale/print/invoice.html')
-            html_template = template.render(context).encode(encoding="UTF-8")
-            url_css = os.path.join(settings.BASE_DIR, 'static/lib/bootstrap-4.6.0/css/bootstrap.min.css')
-            pdf_file = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(
-                stylesheets=[CSS(url_css)], presentational_hints=True)
-            response = HttpResponse(pdf_file, content_type='application/pdf')
-            # response['Content-Disposition'] = 'filename="generate_html.pdf"'
-            return response
-        except:
-            pass
-        return HttpResponseRedirect(self.get_success_url())
+            html_content = template.render(context)
+            if request.GET.get('format', 'pdf').lower() == 'html':
+                return HttpResponse(html_content, content_type='text/html; charset=utf-8')
+            url_css = os.path.join(
+                settings.BASE_DIR, 'static/lib/bootstrap-4.6.0/css/bootstrap.min.css',
+            )
+            pdf_file = HTML(
+                string=html_content.encode(encoding='UTF-8'),
+                base_url=request.build_absolute_uri(),
+            ).write_pdf(
+                stylesheets=[CSS(url_css)], presentational_hints=True,
+            )
+            return HttpResponse(pdf_file, content_type='application/pdf')
+        except Exception as exc:
+            return HttpResponse(
+                'Error al generar el comprobante: {}'.format(exc),
+                status=500,
+                content_type='text/plain; charset=utf-8',
+            )
 
 
 class SalePrintContractView(LoginRequiredMixin, View):

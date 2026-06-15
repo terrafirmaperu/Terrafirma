@@ -421,6 +421,8 @@
                 addCard(rootEl, item);
             });
             setLinked(panel, true);
+        } else if (options.openForLinking) {
+            setLinked(panel, true);
         } else {
             setLinked(panel, false);
         }

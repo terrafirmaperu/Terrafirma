@@ -84,6 +84,30 @@ class PurchaseForm(ModelForm):
         }
 
 
+class CollectorForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Collector
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Ingrese el nombre del cobrador'}),
+        }
+
+    def save(self, commit=True):
+        data = {}
+        try:
+            if self.is_valid():
+                super().save()
+            else:
+                data['error'] = self.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+
 class TypeExpenseForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -302,7 +326,15 @@ class ClientForm(ModelForm):
 class SaleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['client'].queryset = Client.objects.all()
+        self.fields['client'].queryset = Client.objects.none()
+        self.fields['client'].required = False
+        self.fields['client'].empty_label = None
+        default_collector = Collector.get_or_create_default()
+        self.fields['collector'].queryset = Collector.objects.filter(is_active=True).order_by('name')
+        self.fields['collector'].required = False
+        self.fields['collector'].empty_label = 'Lugar de cobro'
+        if not self.is_bound and not self.initial.get('collector'):
+            self.initial['collector'] = default_collector.pk
 
     class Meta:
         model = Sale
@@ -314,6 +346,7 @@ class SaleForm(ModelForm):
         )
         widgets = {
             'client': forms.Select(attrs={'class': 'custom-select select2'}),
+            'collector': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'payment_condition': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'payment_method': forms.Select(
                 attrs={'class': 'form-control factora-pay-method-select d-none'}

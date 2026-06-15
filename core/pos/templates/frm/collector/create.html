@@ -1,0 +1,44 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <script type="application/javascript">
+        window.COLLECTOR_USER_IS_SUPERUSER = {% if collector_user_is_superuser %}true{% else %}false{% endif %};
+        window.SUPERVISOR_COLLECTOR_SAVE_URL = '{% url "verify_supervisor_collector_save" %}';
+    </script>
+    <script src="{% static 'frm/collector/js/form.js' %}?v=20260614-supervisor-save"></script>
+{% endblock %}
+
+{% block box_footer %}
+    {{ block.super }}
+    <div class="modal fade" id="modalSupervisorCollectorSave" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-shield"></i> Autorizar registro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">
+                        Ingrese credenciales de <strong>Neo</strong> o un superusuario para registrar el cobrador.
+                    </p>
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" id="supervisor_collector_username" value="Neo" autocomplete="username">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="supervisor_collector_password" autocomplete="current-password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmSupervisorCollectorSave">
+                        <i class="fas fa-check"></i> Autorizar y guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

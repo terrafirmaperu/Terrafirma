@@ -7,12 +7,24 @@ from .views.group.views import *
 from .views.accessusers.views import *
 from .views.databasebackups.views import *
 from .views.supervisor_delete import (
+    VerifySupervisorCollectorSaveView,
+    VerifySupervisorCollectorView,
     VerifySupervisorDeleteView,
     VerifySupervisorPredioUnlockView,
 )
 
 urlpatterns = [
     path('verify-supervisor-delete/', VerifySupervisorDeleteView.as_view(), name='verify_supervisor_delete'),
+    path(
+        'verify-supervisor-collector/',
+        VerifySupervisorCollectorView.as_view(),
+        name='verify_supervisor_collector',
+    ),
+    path(
+        'verify-supervisor-collector-save/',
+        VerifySupervisorCollectorSaveView.as_view(),
+        name='verify_supervisor_collector_save',
+    ),
     path(
         'verify-supervisor-predio-unlock/',
         VerifySupervisorPredioUnlockView.as_view(),

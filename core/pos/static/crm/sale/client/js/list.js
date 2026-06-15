@@ -272,11 +272,9 @@ $(function () {
                 invoice.push({'id': 'Número de tarjeta', 'name': row.card_number});
                 invoice.push({'id': 'Titular de tarjeta', 'name': row.titular});
                 invoice.push({'id': 'Monto a debitar', 'name': 'S/ ' + row.amount_debited});
-            } else if (row.payment_method.id === 'efectivo_tarjeta') {
+            } else if (row.payment_method.id === 'efectivo_yape') {
                 invoice.push({'id': 'Efectivo', 'name': 'S/ ' + row.cash});
-                invoice.push({'id': 'Número de tarjeta', 'name': row.card_number});
-                invoice.push({'id': 'Titular de tarjeta', 'name': row.titular});
-                invoice.push({'id': 'Monto a debitar', 'name': 'S/ ' + row.amount_debited});
+                invoice.push({'id': 'Yape', 'name': 'S/ ' + row.amount_debited});
             }
 
             $('#tblInvoice').DataTable({

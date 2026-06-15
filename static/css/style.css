@@ -495,3 +495,27 @@ table.table-bordered.dataTable tbody td {
     border-color: #fff9c4;
     box-shadow: 0 4px 18px rgba(46, 125, 50, 0.35), 0 4px 18px rgba(13, 71, 161, 0.3);
 }
+
+/* Efectivo / Yape — verde + morado */
+.factora-pay-efectivo-yape {
+    background: linear-gradient(115deg, #1b5e20 0%, #2e7d32 38%, #6a1b9a 72%, #4a148c 100%);
+    color: #fff !important;
+    border-color: rgba(106, 27, 154, 0.4);
+}
+
+.factora-pay-efectivo-yape::before {
+    background: #e1bee7;
+}
+
+.factora-pay-efectivo-yape .factora-pay-icon {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.factora-pay-efectivo-yape.active {
+    border-color: #e1bee7;
+    box-shadow: 0 4px 18px rgba(46, 125, 50, 0.35), 0 4px 18px rgba(74, 20, 140, 0.3);
+}

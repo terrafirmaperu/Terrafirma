@@ -10,6 +10,7 @@ var pendingContractPaymentCondition = null;
 var select_client;
 /*var input_birthdate;*/
 var select_paymentcondition;
+var select_collector;
 var select_paymentmethod;
 var input_cash;
 var input_cardnumber;
@@ -26,7 +27,6 @@ var input_endcredit_year;
 var input_endcredit_month;
 var input_endcredit_day;
 var input_custom_endcredit_enabled;
-var inputs_vents;
 
 var vents = {
     details: {
@@ -75,6 +75,9 @@ var vents = {
         $('input[name="amount"]').val(vents.details.total.toFixed(2));
         if (typeof window.updateCreditCuotasHelp === 'function') {
             window.updateCreditCuotasHelp();
+        }
+        if (typeof syncEfectivoYapeSplit === 'function') {
+            syncEfectivoYapeSplit();
         }
         if (typeof fvSale !== 'undefined' && $('select[name="payment_condition"]').val() === 'credito') {
             fvSale.revalidateField('credit_down_payment');
@@ -493,10 +496,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     select_client.find('option[value="' + request.id + '"]').remove();
                     var newOption = new Option(optionText, request.id, false, true);
                     select_client.append(newOption).trigger('change');
-                    var listEl = document.getElementById('saleClientPropertiesList');
-                    if (request && request.id && listEl && window.ClientPredios) {
-                        $('#saleClientPropertiesWrap').show();
-                        ClientPredios.renderSalePropertiesList(listEl, request);
+                    if (typeof window.fetchAndShowSaleClientPredios === 'function') {
+                        window.fetchAndShowSaleClientPredios(request.id, request);
                     }
                     fvSale.revalidateField('client');
                     $('#myModalClient').modal('hide');
@@ -514,9 +515,18 @@ document.addEventListener('DOMContentLoaded', function (e) {
             if (cash < total) {
                 return {valid: false, message: 'El efectivo debe ser mayor o igual al total a pagar'};
             }
-        } else if (method_payment === 'efectivo_tarjeta') {
-            var amount_debited = (total - cash);
-            input_amountdebited.val(amount_debited.toFixed(2));
+        } else if (method_payment === 'efectivo_yape') {
+            if (isNaN(cash) || cash <= 0) {
+                return {valid: false, message: 'Ingrese el monto pagado en efectivo'};
+            }
+            if (cash >= total) {
+                return {
+                    valid: false,
+                    message: 'El efectivo debe ser menor al total; el resto se paga por Yape',
+                };
+            }
+            input_amountdebited.val((total - cash).toFixed(2));
+            input_change.val('0.00');
         }
         return {valid: true};
     }
@@ -595,6 +605,25 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         notEmpty: {
                             message: 'Seleccione una forma de pago'
                         },
+                    }
+                },
+                collector: {
+                    validators: {
+                        callback: {
+                            callback: function (input) {
+                                if ($('select[name="payment_condition"]').val() !== 'credito') {
+                                    return {valid: true};
+                                }
+                                var val = (input.value || '').trim();
+                                if (!val) {
+                                    return {
+                                        valid: false,
+                                        message: 'Seleccione el lugar de cobro (Admin Cobranzas)',
+                                    };
+                                }
+                                return {valid: true};
+                            }
+                        }
                     }
                 },
                 payment_method: {
@@ -924,13 +953,60 @@ function printContrataDraft() {
 }
 
 function hideRowsVents(values) {
+    var rows = {
+        0: $('#saleRowCash'),
+        1: $('#saleRowCard'),
+        2: $('#saleRowCreditEnd'),
+        3: $('#saleRowCreditCuotas'),
+    };
     $.each(values, function (key, value) {
-        if (value.enable) {
-            $(inputs_vents[value.pos]).show();
-        } else {
-            $(inputs_vents[value.pos]).hide();
+        var $row = rows[value.pos];
+        if ($row && $row.length) {
+            if (value.enable) {
+                $row.show();
+            } else {
+                $row.hide();
+            }
         }
     });
+}
+
+function syncEfectivoYapeSplit() {
+    if (typeof select_paymentmethod === 'undefined' || !select_paymentmethod.length) {
+        return;
+    }
+    if (select_paymentmethod.val() !== 'efectivo_yape') {
+        return;
+    }
+    var total = parseFloat(vents.details.total);
+    if (isNaN(total) || total <= 0) {
+        total = parseFloat(
+            ($('input[name="total"]').val() || $('input[name="amount"]').val() || '0')
+                .toString()
+                .replace(',', '.')
+        ) || 0;
+    }
+    var cash = parseFloat((input_cash.val() || '0').toString().replace(',', '.')) || 0;
+    var yape = Math.max(0, parseFloat((total - cash).toFixed(2)));
+    input_amountdebited.val(yape.toFixed(2));
+    input_change.val('0.00');
+}
+
+function onSaleCashInputChanged() {
+    var paymentmethod = select_paymentmethod.val();
+    if (paymentmethod === 'efectivo_yape') {
+        syncEfectivoYapeSplit();
+        safeFvSaleCall(function () {
+            fvSale.revalidateField('cash');
+        });
+        return;
+    }
+    if (paymentmethod === 'efectivo') {
+        var total = parseFloat(vents.details.total) || 0;
+        var cash = parseFloat((input_cash.val() || '0').toString().replace(',', '.')) || 0;
+        input_change.val((cash - total).toFixed(2));
+        fvSale.revalidateField('change');
+    }
 }
 
 $(function () {
@@ -945,26 +1021,70 @@ $(function () {
     input_endcredit_day = $('input[name="end_credit_day"]');
     input_custom_endcredit_enabled = $('#toggleCustomEndCredit');
     select_paymentcondition = $('select[name="payment_condition"]');
+    select_collector = $('select[name="collector"]');
     select_paymentmethod = $('select[name="payment_method"]');
-    // Solo la grilla de "método de pago" de contado lleva is-disabled en crédito; no la de inicial.
     var payMethodGrid = $('.factora-pay-method-grid').not('.factora-credit-inicial-grid');
     var payMethodCards = payMethodGrid.find('.factora-pay-card');
+
+    function isSaleCreditMode() {
+        return select_paymentcondition.val() === 'credito';
+    }
+
+    function getActivePayMethodValue() {
+        if (isSaleCreditMode()) {
+            return $('#credit_down_payment_method').val() || 'efectivo';
+        }
+        return select_paymentmethod.val();
+    }
+
+    function syncPayMethodGridCreditMode(creditOn) {
+        var mixed = payMethodCards.filter('[data-value="efectivo_yape"]');
+        if (creditOn) {
+            mixed.prop('disabled', true).attr('aria-disabled', 'true');
+        } else {
+            mixed.prop('disabled', false).attr('aria-disabled', 'false');
+        }
+    }
+
+    function setCreditInicialPayMethod(val) {
+        var allowed = ['efectivo', 'yape', 'plin'];
+        if (allowed.indexOf(val) < 0) {
+            val = 'efectivo';
+        }
+        $('#credit_down_payment_method').val(val);
+        $('.credit-inicial-pay').removeClass('active').attr('aria-pressed', 'false');
+        $('.credit-inicial-pay[data-value="' + val + '"]').addClass('active').attr('aria-pressed', 'true');
+        window.syncCreditInicialMethodUi();
+    }
 
     function updatePayMethodCardsActive() {
         if (!payMethodGrid.length) {
             return;
         }
-        var v = select_paymentmethod.val();
+        var v = getActivePayMethodValue();
         payMethodCards.removeClass('active').attr('aria-pressed', 'false');
         payMethodCards.filter('[data-value="' + v + '"]').addClass('active').attr('aria-pressed', 'true');
     }
 
     payMethodCards.on('click', function () {
-        if (select_paymentmethod.prop('disabled')) {
+        if ($(this).prop('disabled')) {
             return;
         }
         var val = $(this).data('value');
-        select_paymentmethod.val(val).trigger('change');
+        if (isSaleCreditMode()) {
+            setCreditInicialPayMethod(val);
+            updatePayMethodCardsActive();
+            return;
+        }
+        if (select_paymentmethod.prop('disabled')) {
+            return;
+        }
+        select_paymentmethod.val(val);
+        if (typeof window.onPaymentMethodChanged === 'function') {
+            window.onPaymentMethodChanged();
+        } else {
+            select_paymentmethod.trigger('change.salePayMethod');
+        }
     });
 
     input_cardnumber = $('input[name="card_number"]');
@@ -972,26 +1092,46 @@ $(function () {
     input_cash = $('input[name="cash"]');
     input_change = $('input[name="change"]');
     input_titular = $('input[name="titular"]');
-    inputs_vents = $('.rowVents');
 
     window.syncCreditInicialMethodUi = function () {
         var wrap = $('.credit-inicial-metodo-wrap');
         var hidden = $('#credit_down_payment_method');
+        var $payLabel = payMethodGrid.closest('.form-group').find('> label.control-label').first();
         if (!wrap.length || !hidden.length) {
             return;
         }
         if ($('select[name="payment_condition"]').val() !== 'credito') {
             wrap.hide();
             hidden.val('efectivo');
+            syncPayMethodGridCreditMode(false);
+            if ($payLabel.length) {
+                $payLabel.text('Método de pago:');
+            }
             return;
         }
+        syncPayMethodGridCreditMode(true);
+        if ($payLabel.length) {
+            $payLabel.text('Método de pago de la inicial:');
+        }
+        wrap.show();
+
         var raw = ($('input[name="credit_down_payment"]').val() || '').trim().replace(',', '.');
         var inicial = parseFloat(raw);
-        if (isNaN(inicial) || raw === '' || inicial <= 0) {
-            wrap.hide();
-            hidden.val('efectivo');
-            $('.credit-inicial-pay').removeClass('active').attr('aria-pressed', 'false');
-            $('.credit-inicial-pay[data-value="efectivo"]').addClass('active').attr('aria-pressed', 'true');
+        if (isNaN(inicial) || raw === '') {
+            inicial = 0;
+        }
+
+        var v = hidden.val() || 'efectivo';
+        var allowed = ['efectivo', 'yape', 'plin'];
+        if (allowed.indexOf(v) < 0) {
+            v = 'efectivo';
+            hidden.val(v);
+        }
+        $('.credit-inicial-pay').removeClass('active').attr('aria-pressed', 'false');
+        $('.credit-inicial-pay[data-value="' + v + '"]').addClass('active').attr('aria-pressed', 'true');
+        updatePayMethodCardsActive();
+
+        if (inicial <= 0) {
             hideRowsVents([
                 {'pos': 0, 'enable': false},
                 {'pos': 1, 'enable': false},
@@ -1008,41 +1148,21 @@ $(function () {
             input_amountdebited.val('0.00');
             return;
         }
-        wrap.show();
-        var v = hidden.val() || 'efectivo';
-        var allowed = ['efectivo', 'yape', 'plin', 'tarjeta_debito_credito'];
-        if (allowed.indexOf(v) < 0) {
-            v = 'efectivo';
-            hidden.val(v);
-        }
-        $('.credit-inicial-pay').removeClass('active').attr('aria-pressed', 'false');
-        $('.credit-inicial-pay[data-value="' + v + '"]').addClass('active').attr('aria-pressed', 'true');
 
-        var showTarjeta = v === 'tarjeta_debito_credito';
         hideRowsVents([
             {'pos': 0, 'enable': false},
-            {'pos': 1, 'enable': showTarjeta},
+            {'pos': 1, 'enable': false},
             {'pos': 2, 'enable': true},
             {'pos': 3, 'enable': true},
         ]);
         if (typeof fvSale !== 'undefined') {
-            if (showTarjeta) {
-                fvSale.enableValidator('card_number');
-                fvSale.enableValidator('titular');
-                fvSale.enableValidator('amount_debited');
-                input_amountdebited.val(inicial.toFixed(2));
-                fvSale.revalidateField('card_number');
-                fvSale.revalidateField('titular');
-                fvSale.revalidateField('amount_debited');
-            } else {
-                fvSale.disableValidator('card_number');
-                fvSale.disableValidator('titular');
-                fvSale.disableValidator('amount_debited');
-                input_cardnumber.val('');
-                input_titular.val('');
-                input_amountdebited.val('0.00');
-            }
+            fvSale.disableValidator('card_number');
+            fvSale.disableValidator('titular');
+            fvSale.disableValidator('amount_debited');
         }
+        input_cardnumber.val('');
+        input_titular.val('');
+        input_amountdebited.val('0.00');
     };
 
     function getSaleBaseDate() {
@@ -1163,17 +1283,189 @@ $(function () {
         window.syncCreditInicialMethodUi();
     };
 
+    function safeFvSaleCall(fn) {
+        if (typeof fvSale === 'undefined') {
+            return;
+        }
+        try {
+            fn();
+        } catch (e) {
+            console.warn('fvSale:', e);
+        }
+    }
+
+    function revalidateCollectorField() {
+        safeFvSaleCall(function () {
+            fvSale.revalidateField('collector');
+        });
+    }
+
+    function setSecondPayMode(mode) {
+        var $row = $('#saleRowCard');
+        var $cardCols = $row.find('.sale-pay-card-only');
+        var $amountCol = $row.find('.sale-pay-second-amount-col');
+        var $label = $('#saleSecondPayAmountLabel');
+        var $help = $('#saleYapeSplitHelp');
+        if (mode === 'yape') {
+            $cardCols.hide();
+            $amountCol.removeClass('col-lg-4').addClass('col-lg-6');
+            $label.text('Monto Yape (S/):');
+            $help.show();
+            input_cardnumber.val('');
+            input_titular.val('');
+            input_amountdebited.prop('readonly', true);
+            syncEfectivoYapeSplit();
+        } else {
+            $cardCols.hide();
+            $help.hide();
+            input_amountdebited.prop('readonly', false);
+        }
+    }
+
+    function onPaymentMethodChanged() {
+        var id = select_paymentmethod.val();
+        hideRowsVents([
+            {'pos': 0, 'enable': false},
+            {'pos': 1, 'enable': false},
+            {'pos': 2, 'enable': false},
+            {'pos': 3, 'enable': false}
+        ]);
+        input_cash.val(input_cash.val());
+        input_amountdebited.val('0.00');
+        switch (id) {
+            case "efectivo":
+                setSecondPayMode('off');
+                safeFvSaleCall(function () {
+                    fvSale.enableValidator('cash');
+                    fvSale.enableValidator('change');
+                    fvSale.disableValidator('card_number');
+                    fvSale.disableValidator('titular');
+                    fvSale.disableValidator('amount_debited');
+                });
+                try {
+                    if (input_cash.data('TouchSpin')) {
+                        input_cash.trigger('touchspin.updatesettings', {max: 100000000});
+                    }
+                } catch (e) { /* TouchSpin aún no inicializado */ }
+                hideRowsVents([
+                    {'pos': 0, 'enable': true},
+                    {'pos': 3, 'enable': select_paymentcondition.val() === 'credito'}
+                ]);
+                break;
+            case "yape":
+            case "plin":
+                setSecondPayMode('off');
+                input_cash.val('0.00');
+                input_change.val('0.00');
+                input_cardnumber.val('');
+                input_titular.val('');
+                input_amountdebited.val('0.00');
+                safeFvSaleCall(function () {
+                    fvSale.disableValidator('change');
+                    fvSale.disableValidator('card_number');
+                    fvSale.disableValidator('titular');
+                    fvSale.disableValidator('amount_debited');
+                });
+                if (select_paymentcondition.val() === 'credito') {
+                    hideRowsVents([{'pos': 2, 'enable': true}, {'pos': 3, 'enable': true}]);
+                }
+                break;
+            case "efectivo_yape":
+                setSecondPayMode('yape');
+                input_change.val('0.00');
+                safeFvSaleCall(function () {
+                    fvSale.enableValidator('cash');
+                    fvSale.disableValidator('change');
+                    fvSale.disableValidator('card_number');
+                    fvSale.disableValidator('titular');
+                    fvSale.disableValidator('amount_debited');
+                });
+                try {
+                    if (input_cash.data('TouchSpin')) {
+                        input_cash.trigger('touchspin.updatesettings', {max: vents.details.total});
+                    }
+                } catch (e) { /* TouchSpin aún no inicializado */ }
+                syncEfectivoYapeSplit();
+                hideRowsVents([
+                    {'pos': 0, 'enable': true},
+                    {'pos': 1, 'enable': true},
+                    {'pos': 3, 'enable': select_paymentcondition.val() === 'credito'}
+                ]);
+                break;
+        }
+        updatePayMethodCardsActive();
+    }
+
+    window.onPaymentMethodChanged = onPaymentMethodChanged;
+
+    if (select_paymentmethod.length) {
+        select_paymentmethod.off('change.salePayMethod').on('change.salePayMethod', onPaymentMethodChanged);
+    }
+
+    function onPaymentConditionChanged() {
+        var id = select_paymentcondition.val();
+        hideRowsVents([
+            {'pos': 0, 'enable': false},
+            {'pos': 1, 'enable': false},
+            {'pos': 2, 'enable': false},
+            {'pos': 3, 'enable': false}
+        ]);
+        safeFvSaleCall(function () {
+            fvSale.disableValidator('card_number');
+            fvSale.disableValidator('titular');
+            fvSale.disableValidator('amount_debited');
+            fvSale.disableValidator('cash');
+            fvSale.disableValidator('change');
+        });
+        switch (id) {
+            case "contado":
+                safeFvSaleCall(function () {
+                    fvSale.disableValidator('end_credit');
+                });
+                if (input_custom_endcredit_enabled.length) {
+                    input_custom_endcredit_enabled.prop('checked', false);
+                }
+                safeFvSaleCall(function () {
+                    fvSale.enableValidator('payment_method');
+                });
+                select_paymentmethod.prop('disabled', false).val('efectivo');
+                onPaymentMethodChanged();
+                payMethodGrid.removeClass('is-disabled');
+                window.updateCreditCuotasHelp();
+                break;
+            case "credito":
+                safeFvSaleCall(function () {
+                    fvSale.enableValidator('end_credit');
+                    fvSale.disableValidator('payment_method');
+                });
+                select_paymentmethod.val('efectivo');
+                hideRowsVents([{'pos': 2, 'enable': true}, {'pos': 3, 'enable': true}]);
+                select_paymentmethod.prop('disabled', true);
+                payMethodGrid.removeClass('is-disabled');
+                $('.factora-credit-inicial-grid').removeClass('is-disabled');
+                updatePayMethodCardsActive();
+                safeFvSaleCall(function () {
+                    fvSale.revalidateField('credit_down_payment');
+                });
+                window.updateCreditCuotasHelp();
+                break;
+        }
+        syncCustomEndCreditUi();
+        revalidateCollectorField();
+    }
+
+    if (select_paymentcondition.length) {
+        select_paymentcondition.off('change.salePayment').on('change.salePayment', onPaymentConditionChanged);
+    }
+
     $('.credit-inicial-pay').on('click', function () {
-        var val = $(this).data('value');
-        $('#credit_down_payment_method').val(val);
-        $('.credit-inicial-pay').removeClass('active').attr('aria-pressed', 'false');
-        $(this).addClass('active').attr('aria-pressed', 'true');
-        window.updateCreditCuotasHelp();
+        setCreditInicialPayMethod($(this).data('value'));
+        updatePayMethodCardsActive();
     });
 
     vents.details.igv = parseFloat($('input[name="igv"]').val());
 
-    $('.select2').select2({
+    $('.select2').not('select[name="client"]').select2({
         theme: 'bootstrap4',
         language: "es",
     });
@@ -1237,6 +1529,7 @@ $(function () {
             var tr = tblProducts.cell($(this).closest('td, li')).index();
             vents.details.products.splice(tr.row, 1);
             tblProducts.row(tr.row).remove().draw();
+            vents.calculate_invoice();
         });
 
     $('.btnSearchProducts').on('click', function () {
@@ -1308,86 +1601,43 @@ $(function () {
 
     /* Client */
 
-    select_client.select2({
-        theme: "bootstrap4",
-        language: 'es',
-        allowClear: true,
-        // dropdownParent: modal_sale,
-        ajax: {
-            delay: 120,
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            url: pathname,
-            data: function (params) {
-                var queryParameters = {
-                    term: params.term,
-                    action: 'search_client'
-                }
-                return queryParameters;
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
-            },
-        },
-        placeholder: 'Ingrese una descripción',
-        minimumInputLength: 1,
-    })
-        .on('select2:select', function (e) {
-            fvSale.revalidateField('client');
-            var clientData = e.params && e.params.data ? e.params.data : null;
-            var wrap = $('#saleClientPropertiesWrap');
-            var listEl = document.getElementById('saleClientPropertiesList');
-            if (clientData && clientData.id && listEl && window.ClientPredios) {
-                wrap.show();
-                ClientPredios.renderSalePropertiesList(listEl, clientData);
-            }
-        })
-        .on('select2:clear', function (e) {
-            fvSale.revalidateField('client');
-            $('#saleClientPropertiesWrap').hide();
-            var listEl = document.getElementById('saleClientPropertiesList');
-            if (listEl) {
-                listEl.innerHTML = '';
-            }
-        });
-
-    $('.btnAddClient').on('click', function () {
-        /*input_birthdate.datetimepicker('date', new Date());*/
-        $('#myModalClient').modal('show');
-    });
-
-    var modalClientForm = $('#frmClient');
-    var modalDniInput = modalClientForm.find('input[name="dni"]');
-    var modalFirstNameInput = modalClientForm.find('input[name="first_name"]');
-    var modalLastNameInput = modalClientForm.find('input[name="last_name"]');
-    var modalExistingClientInput = $('#modal_existing_client_id');
-
-    function syncSaleClientSelection(clientData) {
-        if (!clientData || !clientData.id) {
-            return;
-        }
-        var text = clientData.text || (
-            clientData.user
-                ? ((clientData.user.full_name || '') + ' / ' + (clientData.user.dni || '')).trim()
-                : ''
-        );
-        var newOption = new Option(text, clientData.id, false, true);
-        select_client.find('option[value="' + clientData.id + '"]').remove();
-        select_client.append(newOption).trigger('change');
-        var wrap = $('#saleClientPropertiesWrap');
+    function clearSaleClientPanel() {
+        $('#saleClientPropertiesWrap').hide();
+        window.saleSelectedClientData = null;
         var listEl = document.getElementById('saleClientPropertiesList');
-        if (listEl && window.ClientPredios) {
-            wrap.show();
-            ClientPredios.renderSalePropertiesList(listEl, clientData);
+        if (listEl) {
+            listEl.innerHTML = '';
+            delete listEl._salePredioProps;
         }
-        fvSale.revalidateField('client');
     }
 
-    function fillExistingClientForm(clientData) {
+    function showSaleClientPredios(clientData) {
+        var wrap = $('#saleClientPropertiesWrap');
+        var listEl = document.getElementById('saleClientPropertiesList');
+        if (!listEl) {
+            return;
+        }
+        window.saleSelectedClientData = clientData || null;
+        wrap.show();
+        var props = (clientData && clientData.properties) ? clientData.properties : [];
+        if (!props.length) {
+            listEl.innerHTML =
+                '<div class="alert alert-warning py-2 mb-0 small">' +
+                '<i class="fas fa-exclamation-circle"></i> No ha vinculado predios.' +
+                '</div>' +
+                '<button type="button" class="btn btn-sm btn-primary mt-2 btn-sale-link-client-predios">' +
+                '<i class="fas fa-link"></i> Vincular predios</button>';
+            delete listEl._salePredioProps;
+            return;
+        }
+        if (!window.ClientPredios) {
+            return;
+        }
+        ClientPredios.renderSalePropertiesList(listEl, clientData || {});
+    }
+
+    function loadClientIntoSaleModal(clientData, options) {
+        options = options || {};
         if (!clientData || !clientData.id) {
             return;
         }
@@ -1411,8 +1661,206 @@ $(function () {
                 types: window.__salePredioTypes || [],
                 departments: window.__salePredioDepartments || [],
                 productsCatalog: window.__salePredioProducts || [],
+                openForLinking: !!options.openForLinking,
             });
         }
+    }
+
+    function resetSaleClientModalTitle() {
+        $('#myModalClient .modal-title').html(
+            '<b><i class="fa fa-plus"></i> Nuevo registro de un cliente</b>'
+        );
+    }
+
+    function openSaleClientModalForPredioLink(clientData) {
+        var clientId = clientData && clientData.id ? parseInt(clientData.id, 10) : parseInt(select_client.val(), 10);
+        if (!clientId) {
+            return;
+        }
+
+        function openWithData(data) {
+            loadClientIntoSaleModal(data, {openForLinking: true});
+            $('#myModalClient .modal-title').html(
+                '<b><i class="fas fa-link"></i> Vincular predios al cliente</b>'
+            );
+            $('#myModalClient').modal('show');
+        }
+
+        if (clientData && clientData.id && clientData.user) {
+            openWithData(clientData);
+            return;
+        }
+        $.ajax({
+            url: pathname,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            dataType: 'json',
+            data: {
+                action: 'get_client',
+                client_id: clientId,
+            },
+            success: function (data) {
+                if (!data || data.error) {
+                    if (typeof message_error === 'function') {
+                        message_error((data && data.error) || 'No se pudo cargar el cliente.');
+                    }
+                    return;
+                }
+                window.saleSelectedClientData = data;
+                openWithData(data);
+            },
+            error: function () {
+                if (typeof message_error === 'function') {
+                    message_error('No se pudo cargar el cliente para vincular predios.');
+                }
+            },
+        });
+    }
+
+    window.openSaleClientModalForPredioLink = openSaleClientModalForPredioLink;
+
+    function fetchAndShowSaleClientPredios(clientId, fallbackData) {
+        if (!clientId) {
+            clearSaleClientPanel();
+            return;
+        }
+        if (fallbackData && fallbackData.user && Array.isArray(fallbackData.properties)) {
+            showSaleClientPredios(fallbackData);
+            return;
+        }
+        $.ajax({
+            url: pathname,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            dataType: 'json',
+            data: {
+                action: 'get_client',
+                client_id: clientId,
+            },
+            success: function (data) {
+                if (!data || data.error) {
+                    if (typeof message_error === 'function') {
+                        message_error((data && data.error) || 'No se pudo cargar el cliente.');
+                    }
+                    return;
+                }
+                showSaleClientPredios(data);
+            },
+            error: function () {
+                if (typeof message_error === 'function') {
+                    message_error('No se pudo cargar los predios del cliente.');
+                }
+            },
+        });
+    }
+
+    window.clearSaleClientPanel = clearSaleClientPanel;
+    window.fetchAndShowSaleClientPredios = fetchAndShowSaleClientPredios;
+    window.showSaleClientPredios = showSaleClientPredios;
+
+    if (select_client.hasClass('select2-hidden-accessible')) {
+        select_client.select2('destroy');
+    }
+    select_client.empty();
+    select_client.append(new Option('', '', false, false));
+
+    try {
+        select_client.select2({
+            theme: "bootstrap4",
+            language: 'es',
+            allowClear: true,
+            ajax: {
+                delay: 120,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                url: pathname,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_client'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+            },
+            placeholder: 'Ingrese una descripción',
+            minimumInputLength: 1,
+        })
+            .on('select2:select', function (e) {
+                safeFvSaleCall(function () {
+                    fvSale.revalidateField('client');
+                });
+                var clientData = e.params && e.params.data ? e.params.data : null;
+                if (clientData && clientData.id) {
+                    fetchAndShowSaleClientPredios(clientData.id, clientData);
+                }
+            })
+            .on('select2:clear', function () {
+                select_client.val(null).trigger('change.select2');
+                clearSaleClientPanel();
+                safeFvSaleCall(function () {
+                    fvSale.revalidateField('client');
+                });
+            })
+            .on('change', function () {
+                var v = $(this).val();
+                if (!v) {
+                    clearSaleClientPanel();
+                    safeFvSaleCall(function () {
+                        fvSale.revalidateField('client');
+                    });
+                }
+            });
+    } catch (e) {
+        console.error('Error inicializando buscador de cliente:', e);
+    }
+
+    $('.btnAddClient').on('click', function () {
+        modalExistingClientInput.val('');
+        resetSaleClientModalTitle();
+        $('#myModalClient').modal('show');
+    });
+
+    $('#saleClientPropertiesWrap').on('click', '.btn-sale-link-client-predios', function () {
+        openSaleClientModalForPredioLink(window.saleSelectedClientData);
+    });
+
+    var modalClientForm = $('#frmClient');
+    var modalDniInput = modalClientForm.find('input[name="dni"]');
+    var modalFirstNameInput = modalClientForm.find('input[name="first_name"]');
+    var modalLastNameInput = modalClientForm.find('input[name="last_name"]');
+    var modalExistingClientInput = $('#modal_existing_client_id');
+
+    function syncSaleClientSelection(clientData) {
+        if (!clientData || !clientData.id) {
+            return;
+        }
+        var text = clientData.text || (
+            clientData.user
+                ? ((clientData.user.full_name || '') + ' / ' + (clientData.user.dni || '')).trim()
+                : ''
+        );
+        var newOption = new Option(text, clientData.id, false, true);
+        select_client.find('option[value="' + clientData.id + '"]').remove();
+        select_client.append(newOption).trigger('change');
+        fetchAndShowSaleClientPredios(clientData.id, clientData);
+        fvSale.revalidateField('client');
+    }
+
+    function fillExistingClientForm(clientData) {
+        if (!clientData || !clientData.id) {
+            return;
+        }
+        loadClientIntoSaleModal(clientData, {openForLinking: false});
         syncSaleClientSelection(clientData);
         ['first_name', 'last_name', 'dni', 'email', 'mobile', 'department', 'province', 'district', 'address'].forEach(function (field) {
             try {
@@ -1485,6 +1933,7 @@ $(function () {
 
     $('#myModalClient').on('hidden.bs.modal', function () {
         modalExistingClientInput.val('');
+        resetSaleClientModalTitle();
         fvClient.resetForm(true);
         var modalRoot = document.getElementById('modalClientPrediosRoot');
         if (modalRoot && window.ClientPredios) {
@@ -1536,111 +1985,7 @@ $(function () {
         fvClient.revalidateField('birthdate');
     });*/
 
-    /* Sale */
-
-    select_paymentcondition
-        .on('change', function () {
-            var id = $(this).val();
-            hideRowsVents([
-                {'pos': 0, 'enable': false},
-                {'pos': 1, 'enable': false},
-                {'pos': 2, 'enable': false},
-                {'pos': 3, 'enable': false}
-            ]);
-            fvSale.disableValidator('card_number');
-            fvSale.disableValidator('titular');
-            fvSale.disableValidator('amount_debited');
-            fvSale.disableValidator('cash');
-            fvSale.disableValidator('change');
-            switch (id) {
-                case "contado":
-                    fvSale.disableValidator('end_credit');
-                    if (input_custom_endcredit_enabled.length) {
-                        input_custom_endcredit_enabled.prop('checked', false);
-                    }
-                    fvSale.enableValidator('payment_method');
-                    select_paymentmethod.prop('disabled', false).val('efectivo').trigger('change');
-                    payMethodGrid.removeClass('is-disabled');
-                    window.updateCreditCuotasHelp();
-                    break;
-                case "credito":
-                    fvSale.enableValidator('end_credit');
-                    fvSale.disableValidator('payment_method');
-                    select_paymentmethod.val('efectivo');
-                    hideRowsVents([{'pos': 2, 'enable': true}, {'pos': 3, 'enable': true}]);
-                    select_paymentmethod.prop('disabled', true);
-                    payMethodGrid.addClass('is-disabled');
-                    $('.factora-credit-inicial-grid').removeClass('is-disabled');
-                    updatePayMethodCardsActive();
-                    fvSale.revalidateField('credit_down_payment');
-                    window.updateCreditCuotasHelp();
-                    break;
-            }
-            syncCustomEndCreditUi();
-        });
-
-    select_paymentmethod.on('change', function () {
-        var id = $(this).val();
-        hideRowsVents([
-            {'pos': 0, 'enable': false},
-            {'pos': 1, 'enable': false},
-            {'pos': 2, 'enable': false},
-            {'pos': 3, 'enable': false}
-        ]);
-        input_cash.val(input_cash.val());
-        input_amountdebited.val('0.00');
-        switch (id) {
-            case "efectivo":
-                fvSale.enableValidator('change');
-                fvSale.disableValidator('card_number');
-                fvSale.disableValidator('titular');
-                fvSale.disableValidator('amount_debited');
-                input_cash.trigger("touchspin.updatesettings", {max: 100000000});
-                hideRowsVents([{'pos': 0, 'enable': true}, {'pos': 3, 'enable': select_paymentcondition.val() === 'credito'}]);
-                break;
-            case "yape":
-            case "plin":
-                input_cash.val('0.00');
-                input_change.val('0.00');
-                input_cardnumber.val('');
-                input_titular.val('');
-                input_amountdebited.val('0.00');
-                fvSale.disableValidator('change');
-                fvSale.disableValidator('card_number');
-                fvSale.disableValidator('titular');
-                fvSale.disableValidator('amount_debited');
-                if (select_paymentcondition.val() === 'credito') {
-                    hideRowsVents([{'pos': 2, 'enable': true}, {'pos': 3, 'enable': true}]);
-                }
-                break;
-            case "tarjeta_debito_credito":
-                fvSale.disableValidator('change');
-                fvSale.enableValidator('card_number');
-                fvSale.enableValidator('titular');
-                fvSale.enableValidator('amount_debited');
-                input_amountdebited.val(vents.details.total.toFixed(2));
-                input_titular.val('');
-                hideRowsVents([
-                    {'pos': 1, 'enable': true},
-                    {'pos': 3, 'enable': select_paymentcondition.val() === 'credito'}
-                ]);
-                break;
-            case "efectivo_tarjeta":
-                input_change.val('0.00');
-                fvSale.enableValidator('change');
-                fvSale.enableValidator('card_number');
-                fvSale.enableValidator('titular');
-                fvSale.enableValidator('amount_debited');
-                input_cash.trigger("touchspin.updatesettings", {max: vents.details.total});
-                hideRowsVents([
-                    {'pos': 0, 'enable': true},
-                    {'pos': 1, 'enable': true},
-                    {'pos': 3, 'enable': select_paymentcondition.val() === 'credito'}
-                ]);
-                break;
-        }
-        updatePayMethodCardsActive();
-    });
+    /* Sale — payment method handler registered above (onPaymentMethodChanged) */
 
     input_cash
         .TouchSpin({
@@ -1652,28 +1997,19 @@ $(function () {
             verticalbuttons: true,
             maxboostedstep: 10,
         })
-        .off('change').on('change touchspin.on.min touchspin.on.max', function () {
-        var paymentmethod = select_paymentmethod.val();
-        fvSale.revalidateField('cash');
-        var total = parseFloat(vents.details.total);
-        switch (paymentmethod) {
-            case "efectivo_tarjeta":
-                fvSale.revalidateField('amount_debited');
-                fvSale.revalidateField('change');
-                //input_change.val('0.00');
-                break;
-            case "efectivo":
-                var cash = parseFloat($(this).val());
-                var change = cash - total;
-                input_change.val(change.toFixed(2));
-                fvSale.revalidateField('change');
-                break;
-        }
-        return false;
-    })
+        .off('change.saleCash input.saleCash keyup.saleCash')
+        .on(
+            'change.saleCash input.saleCash keyup.saleCash touchspin.on.min touchspin.on.max touchspin.on.stopspin',
+            function () {
+                onSaleCashInputChanged();
+                return false;
+            }
+        )
         .keypress(function (e) {
             return validate_decimals($(this), e);
         });
+
+    onPaymentConditionChanged();
 
     input_cardnumber
         .on('keypress', function (e) {
@@ -1788,15 +2124,6 @@ $(function () {
             }
         });
     });
-
-    hideRowsVents([
-        {'pos': 0, 'enable': true},
-        {'pos': 1, 'enable': false},
-        {'pos': 2, 'enable': false},
-        {'pos': 3, 'enable': false}
-    ]);
-
-    window.syncCreditInicialMethodUi();
 
     $('input[name="credit_quota_count"]').on('change keyup blur', function () {
         window.updateCreditCuotasHelp();

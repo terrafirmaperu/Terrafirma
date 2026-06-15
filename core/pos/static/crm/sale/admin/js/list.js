@@ -8,6 +8,52 @@ function saleAdminAjaxUrl() {
     return pathname;
 }
 
+function openTerrafirmaPrintUrl(baseUrl) {
+    if (!baseUrl) {
+        return;
+    }
+    if (window.TerrafirmaPrint && typeof window.TerrafirmaPrint.open === 'function') {
+        window.TerrafirmaPrint.open(baseUrl);
+        return;
+    }
+    var url = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') +
+        'format=html&auto=popup&t=' + Date.now();
+    var features = 'width=1,height=1,left=0,top=0,toolbar=0,menubar=0,location=0,status=0';
+    var printWin = window.open(url, 'terrafirma_print_' + Date.now(), features);
+    if (!printWin && window.TerrafirmaPrint && typeof window.TerrafirmaPrint.printViaNavigate === 'function') {
+        window.TerrafirmaPrint.printViaNavigate(url);
+    }
+}
+
+function openSaleVoucherPrint(saleId, voucher) {
+    if (!saleId) {
+        return;
+    }
+    var base = '/pos/crm/sale/print/voucher/' + String(saleId) + '/' + String(voucher) + '/';
+    openTerrafirmaPrintUrl(base);
+}
+
+function openSaleTicketFormatModal(saleId) {
+    if (!saleId) {
+        return;
+    }
+    $('#saleTicketFormatId').val(saleId);
+    var $modal = $('#myModalSaleTicketFormat');
+    if (!$modal.parent().is('body')) {
+        $modal.appendTo('body');
+    }
+    $modal.modal('show');
+}
+
+function printSaleTicketFormat(voucherType) {
+    var saleId = $('#saleTicketFormatId').val();
+    if (!saleId) {
+        return;
+    }
+    $('#myModalSaleTicketFormat').modal('hide');
+    openSaleVoucherPrint(saleId, voucherType);
+}
+
 function contractDocxFilenameFromXhr(xhr, saleId, suggestedBasename) {
     var disp = xhr.getResponseHeader('Content-Disposition');
     if (disp) {
@@ -181,6 +227,15 @@ function getData(all) {
                 }
             },
             {data: "payment_condition.name"},
+            {
+                data: null,
+                render: function (data, type, row) {
+                    if (!row.collector || !row.collector.full_name) {
+                        return '<span class="text-muted">—</span>';
+                    }
+                    return row.collector.full_name;
+                }
+            },
             {data: "payment_method.name"},
             {data: "credit_down_payment"},
             {data: "type_voucher.name"},
@@ -203,14 +258,14 @@ function getData(all) {
                 }
             },
             {
-                targets: [5],
+                targets: [6],
                 class: 'text-center',
                 render: function (data, type, row) {
                     return data;
                 }
             },
             {
-                targets: [6],
+                targets: [7],
                 class: 'text-center',
                 render: function (data, type, row) {
                     if (!row.payment_condition || row.payment_condition.id !== 'credito') {
@@ -231,7 +286,7 @@ function getData(all) {
                 }
             },
             {
-                targets: [7, 8],
+                targets: [8, 9],
                 class: 'text-center',
                 render: function (data, type, row) {
                     return data;
@@ -250,7 +305,7 @@ function getData(all) {
                 render: function (data, type, row) {
                     var buttons = '';
                     buttons += '<a class="btn btn-info btn-xs btn-flat" rel="detail"><i class="fas fa-folder-open"></i></a> ';
-                    buttons += '<a href="/pos/crm/sale/print/voucher/' + row.id + '/?t=' + Date.now() + '" target="_blank" class="btn btn-primary btn-xs btn-flat"><i class="fas fa-print"></i></a> ';
+                    buttons += '<a href="#" class="btn btn-primary btn-xs btn-flat" rel="print_voucher" data-id="' + row.id + '" data-voucher-type="' + (row.type_voucher && row.type_voucher.id ? row.type_voucher.id : 'ticket') + '"><i class="fas fa-print"></i></a> ';
                     var cbn = String(row.contract_docx_basename || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
                     buttons += '<a href="#" class="btn btn-success btn-xs btn-flat" rel="contract" data-sale-id="' + row.id + '" data-contract-basename="' + cbn + '" title="Ver contrato en ventana"><i class="fas fa-file-signature"></i> Ver contrato</a> ';
                     if (row.is_voided) {
@@ -344,6 +399,9 @@ $(function () {
                 invoice.push({'id': 'Cód. cliente', 'name': row.client.client_code});
             }
             invoice.push({'id': 'Forma de Pago', 'name': (row.payment_condition && row.payment_condition.name) || '—'});
+            if (row.collector && row.collector.full_name) {
+                invoice.push({'id': 'Lugar de cobro', 'name': row.collector.full_name});
+            }
             invoice.push({'id': 'Método de Pago', 'name': (row.payment_method && row.payment_method.name) || '—'});
             if (row.payment_condition && row.payment_condition.id === 'credito') {
                 invoice.push({'id': 'Vencimiento crédito', 'name': row.end_credit});
@@ -374,11 +432,9 @@ $(function () {
                 invoice.push({'id': 'Número de tarjeta', 'name': row.card_number});
                 invoice.push({'id': 'Titular de tarjeta', 'name': row.titular});
                 invoice.push({'id': 'Monto a debitar', 'name': 'S/ ' + row.amount_debited});
-            } else if (row.payment_method && row.payment_method.id === 'efectivo_tarjeta') {
+            } else if (row.payment_method && row.payment_method.id === 'efectivo_yape') {
                 invoice.push({'id': 'Efectivo', 'name': 'S/ ' + row.cash});
-                invoice.push({'id': 'Número de tarjeta', 'name': row.card_number});
-                invoice.push({'id': 'Titular de tarjeta', 'name': row.titular});
-                invoice.push({'id': 'Monto a debitar', 'name': 'S/ ' + row.amount_debited});
+                invoice.push({'id': 'Yape', 'name': 'S/ ' + row.amount_debited});
             }
 
             $('#tblInvoice').DataTable({
@@ -411,7 +467,26 @@ $(function () {
         .on('click', 'a[rel="contract"]', function (e) {
             e.preventDefault();
             openSaleContractModal($(this).data('sale-id'), $(this).attr('data-contract-basename') || '');
+        })
+        .on('click', 'a[rel="print_voucher"]', function (e) {
+            e.preventDefault();
+            var saleId = $(this).data('id');
+            var voucherType = $(this).data('voucher-type') || 'ticket';
+            if (voucherType === 'ticket') {
+                openSaleTicketFormatModal(saleId);
+            } else {
+                openSaleVoucherPrint(saleId, 'ticket');
+            }
         });
+
+    $('#btnSaleTicketFormatTermica').on('click', function () {
+        printSaleTicketFormat('ticket-termica');
+    });
+    $('#btnSaleTicketFormatRppos').on('click', function () {
+        printSaleTicketFormat('ticket-rppos');
+    });
+
+    $('#myModalSaleTicketFormat').appendTo('body');
 
     $('#myModalContract').on('hidden.bs.modal', function () {
         $('#contractPreviewFrame').attr('src', 'about:blank');

@@ -14,7 +14,7 @@ El sistema reemplaza por párrafo completo los bloques que contienen:
   - Datos del cliente (nombre, DNI, dirección, distrito, provincia, departamento)
   - Monto total de la venta (número y letras)
   - Etiqueta y monto de la cuota pagada
-  - Forma de pago y nombre del pagador
+  - Forma de pago y cobrador en campo (Admin Cobranzas — lugar de cobro del pago registrado, o de la venta, o «Oficina»)
   - Fecha de firma (párrafo con "Huancavelica" y "conformidad")
   - Nombre y cargo al pie (párrafos finales solo con …)
 

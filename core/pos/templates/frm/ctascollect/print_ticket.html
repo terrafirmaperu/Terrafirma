@@ -3,71 +3,325 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Pago de cuota - Ticket</title>
+    <title>Pago de cuota - Ticket RP Pos 58mm</title>
     <style>
         @page {
-            size: 58mm auto;
+            size: 48mm 172mm;
             margin: 0;
         }
 
-        body {
-            font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
-            font-size: 8px;
+        html, body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            line-height: 1.25;
             color: #000;
             margin: 0;
             padding: 0;
+            width: 48mm;
+            height: 172mm;
+            overflow: hidden;
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
-        .content {
-            width: 58mm;
-            padding: 8px;
+        * {
+            box-sizing: border-box;
         }
 
-        .center { text-align: center; }
-        .line { border-top: 1px dotted #000; margin: 6px 0; }
-        .label { font-weight: bold; }
-        .small { font-size: 7px; }
-        .logo-wrap { text-align: center; margin-bottom: 4px; }
-        .img-logo { display: block; width: 18mm; max-width: 100%; height: auto; margin: 0 auto; }
-        .signature-block { margin-top: 10px; }
+        .page {
+            width: 48mm;
+            height: 172mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wrap {
+            position: absolute;
+            top: 0;
+            left: 48mm;
+            width: 172mm;
+            height: 48mm;
+            transform: rotate(90deg);
+            transform-origin: top left;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.8mm 0;
+        }
+
+        .ticket {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 172mm;
+        }
+
+        .col-brand {
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 1mm 1.5mm;
+            border-right: 1px solid #000;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .col-detail {
+            flex: 1 1 45%;
+            padding: 1mm 1.5mm;
+            border-right: 1px solid #000;
+            text-align: center;
+        }
+
+        .col-sign {
+            flex: 0 0 30%;
+            max-width: 30%;
+            padding: 1mm 1.5mm;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-logo {
+            display: block;
+            width: 24mm;
+            height: auto;
+            margin: 0 auto 1mm auto;
+        }
+
+        .brand-ruc {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 0 0.6mm 0;
+        }
+
+        .brand-addr {
+            font-size: 12px;
+            line-height: 1.18;
+            margin: 0;
+            overflow: hidden;
+            max-height: 11mm;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0 0 1mm 0;
+            padding-bottom: 0.6mm;
+            border-bottom: 1px dotted #000;
+            letter-spacing: 0.3px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 2mm;
+            row-gap: 0.8mm;
+            text-align: center;
+        }
+
+        .row {
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .row.full {
+            grid-column: 1 / -1;
+            line-height: 1.18;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .amount {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .when {
+            font-size: 10px;
+            margin: 0.8mm 0 0 0;
+            line-height: 1.2;
+        }
+
         .signature-space {
-            height: 16mm;
-            border-bottom: 1px solid #000;
-            margin: 6px 2px 4px 2px;
+            width: 85%;
+            height: 9mm;
+            border-bottom: 1.5px solid #000;
+            margin: 0 auto 0.8mm auto;
         }
-        .signature-label { font-size: 7px; font-weight: bold; }
+
+        .signature-label {
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+        }
+
+        .footer-note {
+            width: 172mm;
+            margin: 0.8mm 0 0 0;
+            padding: 0.8mm 2mm 0;
+            border-top: 1px dotted #000;
+            font-size: 11px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .footer-note strong {
+            font-weight: bold;
+        }
+
+        @media print {
+            @page {
+                size: 48mm 172mm;
+                margin: 0;
+            }
+
+            html, body, .page {
+                width: 48mm !important;
+                height: 172mm !important;
+                overflow: hidden !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .no-print {
+            position: fixed;
+            top: 8px;
+            right: 8px;
+            left: 8px;
+            z-index: 999;
+            padding: 10px 12px;
+            font-size: 12px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            line-height: 1.4;
+        }
+
+        .no-print button {
+            margin-top: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-<div class="content">
-    <div class="center">
-        <div class="logo-wrap">
-            <img src="{% comprobante_logo %}" class="img-logo" alt="Terrafirma">
+<div class="page">
+    <div class="wrap">
+        <div class="ticket">
+            <div class="col-brand">
+                <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
+                <p class="brand-ruc">RUC {% comprobante_ruc %}</p>
+                <p class="brand-addr">{{ company.address }}</p>
+            </div>
+
+            <div class="col-detail">
+                <div class="title">PAGO DE CUOTA</div>
+                <div class="grid">
+                    <div class="row"><span class="label">Recibo:</span> {{ payment.id }}</div>
+                    <div class="row"><span class="label">Venta:</span> {{ sale.nro }}</div>
+                    <div class="row full"><span class="label">Cliente:</span> {{ sale.client.user.get_full_name }}</div>
+                    <div class="row"><span class="label">DNI:</span> {{ sale.client.user.dni }}</div>
+                    <div class="row amount"><span class="label">Monto:</span> S/ {{ payment.valor|floatformat:2 }}</div>
+                    <div class="row full"><span class="label">Detalle:</span> {{ payment.desc }}</div>
+                    <div class="row full"><span class="label">Saldo pend.:</span> S/ {{ ctas.saldo|floatformat:2 }}</div>
+                </div>
+            </div>
+
+            <div class="col-sign">
+                <div class="signature-space"></div>
+                <p class="signature-label">Firma del cliente</p>
+                <p class="when">Fecha: {{ payment.date_joined|date:'d/m/Y' }} · Hora: {% now 'H:i' %}</p>
+            </div>
         </div>
-        <div class="small">{{ company.address }}</div>
-        <div class="small">RUC: {% comprobante_ruc %}</div>
-    </div>
-    <div class="line"></div>
-    <div class="center label">PAGO DE CUOTA</div>
-    <div class="line"></div>
 
-    <div><span class="label">Recibo N°:</span> {{ payment.id }}</div>
-    <div><span class="label">Fecha:</span> {{ payment.date_joined|date:'Y-m-d' }}</div>
-    <div><span class="label">Venta:</span> {{ sale.nro }}</div>
-    <div><span class="label">Cliente:</span> {{ sale.client.user.get_full_name }}</div>
-    <div><span class="label">DNI:</span> {{ sale.client.user.dni }}</div>
-    <div><span class="label">Detalle:</span> {{ payment.desc }}</div>
-    <div><span class="label">Monto:</span> S/ {{ payment.valor|floatformat:2 }}</div>
-    <div><span class="label">Saldo pendiente:</span> S/ {{ ctas.saldo|floatformat:2 }}</div>
-
-    <div class="line"></div>
-    <div class="center small">Gracias por su pago</div>
-    <div class="center small">Conserve este comprobante</div>
-
-    <div class="signature-block">
-        <div class="signature-space"></div>
-        <div class="center signature-label">Firma del cliente</div>
+        <p class="footer-note">
+            <strong>Seguimiento proceso</strong> www.terrafirmaperu.com —
+            Su DNI como Usuario y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
+        </p>
     </div>
 </div>
+
+<div class="no-print">
+    POS58 Printer(2) · Vertical · Papel 48 mm · Márgenes ninguno
+    <div><button type="button" onclick="window.print()">Imprimir</button></div>
+</div>
+<script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var mode = params.get('auto');
+
+        function goBack() {
+            var ret = null;
+            try {
+                ret = sessionStorage.getItem('terrafirma_print_return');
+                sessionStorage.removeItem('terrafirma_print_return');
+            } catch (e) {
+                /* ignore */
+            }
+            if (ret) {
+                window.location.replace(ret);
+            } else {
+                window.history.back();
+            }
+        }
+
+        function runPrint(afterPrint) {
+            window.focus();
+            window.print();
+            if (typeof afterPrint === 'function') {
+                setTimeout(afterPrint, 150);
+            }
+        }
+
+        function whenReady(fn) {
+            if (document.readyState === 'complete') {
+                fn();
+            } else {
+                window.addEventListener('load', fn, { once: true });
+            }
+        }
+
+        if (mode === 'popup') {
+            whenReady(function () {
+                setTimeout(function () {
+                    runPrint(function () {
+                        window.close();
+                    });
+                }, 80);
+            });
+            return;
+        }
+
+        if (mode === '1') {
+            whenReady(function () {
+                setTimeout(function () {
+                    runPrint(goBack);
+                }, 80);
+            });
+            return;
+        }
+
+        whenReady(function () {
+            setTimeout(function () { window.print(); }, 200);
+        });
+    })();
+</script>
 </body>
 </html>

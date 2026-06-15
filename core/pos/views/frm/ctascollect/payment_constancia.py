@@ -158,6 +158,18 @@ def _predio_part(value):
     return (value or '').strip()
 
 
+def _collector_name_for_constancia(payment):
+    payment_collector = getattr(payment, 'collector', None)
+    if payment_collector and (payment_collector.name or '').strip():
+        return payment_collector.name.strip().upper()
+    sale = payment.ctascollect.sale
+    collector = getattr(sale, 'collector', None)
+    if collector and (collector.name or '').strip():
+        return collector.name.strip().upper()
+    from core.pos.models import Collector
+    return Collector.DEFAULT_NAME.upper()
+
+
 def _constancia_context(payment):
     ctas = payment.ctascollect
     sale = ctas.sale
@@ -205,6 +217,7 @@ def _constancia_context(payment):
         if addr:
             predio_parts.append(addr)
     predio_desc = ', '.join(predio_parts).upper() if predio_parts else ''
+    collector_name = _collector_name_for_constancia(payment)
     return {
         'name': full_name,
         'dni': dni,
@@ -219,6 +232,7 @@ def _constancia_context(payment):
         'quota_words': _soles_en_letras(quota_amount),
         'payment_method': _payment_method_text(payment),
         'beneficiary': full_name,
+        'collector_name': collector_name,
         'company_name': company_profile['legal_name'],
         'rep_name': rep_name,
         'rep_title': 'REPRESENTANTE',

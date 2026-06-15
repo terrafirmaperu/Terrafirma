@@ -285,6 +285,20 @@ for p in Permission.objects.filter(content_type__model=CtasCollect._meta.label.s
     module.permits.add(p)
 print('insertado {}'.format(module.name))
 
+module = Module()
+module.moduletype = mt_administrativo
+module.name = 'Admin Cobranzas'
+module.url = '/pos/frm/collector/'
+module.is_active = True
+module.is_vertical = True
+module.is_visible = True
+module.icon = 'fas fa-user-tag'
+module.description = 'Registro de cobradores asignados a ventas al crédito'
+module.save()
+for p in Permission.objects.filter(content_type__model=Collector._meta.label.split('.')[1].lower()):
+    module.permits.add(p)
+print('insertado {}'.format(module.name))
+
 '''module = Module()
 module.moduletype = mt_administrativo
 module.name = 'Cuentas por pagar'
