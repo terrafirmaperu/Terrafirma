@@ -362,18 +362,30 @@ function openQuotaPaymentPrintForPayment(paymentId, voucher) {
     if (!paymentId) {
         return;
     }
-    var base = window.ctasCollectPrintBaseUrl || '/pos/frm/ctas/collect/print/voucher/';
-    var path = base + String(paymentId) + '/' + String(voucher) + '/';
-    var url = path + '?format=html&auto=popup&t=' + Date.now();
+    var base = (window.ctasCollectPrintBaseUrl || '/pos/frm/ctas/collect/print/voucher/') +
+        String(paymentId) + '/' + String(voucher) + '/';
+    if (voucher === 'constancia') {
+        window.open(base + '?t=' + Date.now(), '_blank');
+        return;
+    }
+    if (window.TerrafirmaPrint && typeof window.TerrafirmaPrint.open === 'function') {
+        window.TerrafirmaPrint.open(base);
+        return;
+    }
+    var url = base + '?format=html&auto=popup&t=' + Date.now();
     var features = 'width=1,height=1,left=0,top=0,toolbar=0,menubar=0,location=0,status=0';
     var printWin = window.open(url, 'terrafirma_print_' + paymentId, features);
     if (!printWin) {
+        if (window.TerrafirmaPrint && typeof window.TerrafirmaPrint.printViaNavigate === 'function') {
+            window.TerrafirmaPrint.printViaNavigate(url);
+            return;
+        }
         try {
             sessionStorage.setItem('terrafirma_print_return', window.location.pathname + window.location.search);
         } catch (e) {
             /* ignore */
         }
-        window.location.href = path + '?format=html&auto=1&t=' + Date.now();
+        window.location.href = base + '?format=html&auto=1&t=' + Date.now();
     }
 }
 

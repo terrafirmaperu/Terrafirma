@@ -5,6 +5,7 @@ from decimal import Decimal
 
 from django.contrib.auth.models import Group
 from django.db import transaction
+from django.utils import timezone
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -148,6 +149,7 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
 
                 with transaction.atomic():
                     sale = Sale()
+                    sale.date_joined = timezone.localdate()
                     sale.employee_id = request.user.id
                     sale.client_id = client_id
                     sale.payment_method = request.POST['payment_method']

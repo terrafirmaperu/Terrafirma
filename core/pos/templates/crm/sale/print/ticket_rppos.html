@@ -235,23 +235,6 @@
         </p>
     </div>
 </div>
-<script>
-    (function () {
-        var mode = new URLSearchParams(window.location.search).get('auto');
-        if (mode !== 'popup') {
-            return;
-        }
-        function runPrint() {
-            window.focus();
-            window.print();
-            setTimeout(function () { window.close(); }, 150);
-        }
-        if (document.readyState === 'complete') {
-            setTimeout(runPrint, 80);
-        } else {
-            window.addEventListener('load', function () { setTimeout(runPrint, 80); }, { once: true });
-        }
-    })();
-</script>
+{% include 'includes/terrafirma_ticket_autoprint.html' %}
 </body>
 </html>

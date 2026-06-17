@@ -805,22 +805,45 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     parameters,
                     function (request) {
                         dialog_action('Notificación', '¿Desea Imprimir el Comprobante?', function () {
-                            window.open('/pos/crm/sale/print/voucher/' + request.id + '/?t=' + Date.now(), '_blank');
-                            openContrataModal(request, urlrefresh);
-                        }, function () {
-                            openContrataModal(request, urlrefresh);
-                        });
+                            openSaleVoucherAfterCreate(request.id);
+                        }, function () {});
+                        openContrataModal(request, urlrefresh);
                     },
                 );
             });
         });
 });
 
+function openSaleVoucherAfterCreate(saleId) {
+    if (!saleId) {
+        return;
+    }
+    var base = '/pos/crm/sale/print/voucher/' + String(saleId) + '/ticket-rppos/';
+    if (window.TerrafirmaPrint && typeof window.TerrafirmaPrint.open === 'function') {
+        window.TerrafirmaPrint.open(base);
+        return;
+    }
+    var url = base + '?format=html&auto=popup&t=' + Date.now();
+    var features = 'width=1,height=1,left=0,top=0,toolbar=0,menubar=0,location=0,status=0';
+    window.open(url, 'terrafirma_print_' + saleId, features);
+}
+
 function printInvoice(id) {
-    var printWindow = window.open("/pos/crm/sale/print/voucher/" + id + "/?t=" + Date.now(), 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
-    printWindow.addEventListener('load', function () {
-        printWindow.print();
-    }, true);
+    if (!id) {
+        return;
+    }
+    var base = '/pos/crm/sale/print/voucher/' + String(id) + '/ticket-rppos/';
+    if (window.TerrafirmaPrint && typeof window.TerrafirmaPrint.open === 'function') {
+        window.TerrafirmaPrint.open(base);
+        return;
+    }
+    var url = base + '?format=html&auto=popup&t=' + Date.now();
+    var printWindow = window.open(url, 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+    if (printWindow) {
+        printWindow.addEventListener('load', function () {
+            printWindow.print();
+        }, true);
+    }
 }
 
 function openContrataModal(saleData, urlrefresh) {
@@ -919,9 +942,10 @@ function downloadPaymentSchedule(saleId) {
 }
 
 function finalizeContrataFlow() {
-    $('#myModalContrata').modal('hide');
-    if (pendingRedirectAfterContrata) {
-        location.href = pendingRedirectAfterContrata;
+    var target = pendingRedirectAfterContrata;
+    pendingRedirectAfterContrata = null;
+    if (target) {
+        location.href = target;
     }
 }
 
@@ -1961,6 +1985,10 @@ $(function () {
         downloadPaymentSchedule(pendingContractSaleId);
     });
     $('#btnContrataDone, #btnContrataSkip').on('click', function () {
+        $('#myModalContrata').modal('hide');
+    });
+
+    $('#myModalContrata').on('hidden.bs.modal', function () {
         finalizeContrataFlow();
     });
 

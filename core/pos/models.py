@@ -578,8 +578,8 @@ class Sale(models.Model):
     payment_condition = models.CharField(choices=payment_condition, max_length=50, default='contado')
     payment_method = models.CharField(choices=payment_method, max_length=50, default='efectivo')
     type_voucher = models.CharField(choices=voucher, max_length=50, default='ticket')
-    date_joined = models.DateField(default=datetime.now)
-    end_credit = models.DateField(default=datetime.now)
+    date_joined = models.DateField(default=timezone.localdate)
+    end_credit = models.DateField(default=timezone.localdate)
     credit_quota_count = models.PositiveSmallIntegerField(
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(5)],

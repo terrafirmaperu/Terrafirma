@@ -262,66 +262,6 @@
     POS58 Printer(2) · Vertical · Papel 48 mm · Márgenes ninguno
     <div><button type="button" onclick="window.print()">Imprimir</button></div>
 </div>
-<script>
-    (function () {
-        var params = new URLSearchParams(window.location.search);
-        var mode = params.get('auto');
-
-        function goBack() {
-            var ret = null;
-            try {
-                ret = sessionStorage.getItem('terrafirma_print_return');
-                sessionStorage.removeItem('terrafirma_print_return');
-            } catch (e) {
-                /* ignore */
-            }
-            if (ret) {
-                window.location.replace(ret);
-            } else {
-                window.history.back();
-            }
-        }
-
-        function runPrint(afterPrint) {
-            window.focus();
-            window.print();
-            if (typeof afterPrint === 'function') {
-                setTimeout(afterPrint, 150);
-            }
-        }
-
-        function whenReady(fn) {
-            if (document.readyState === 'complete') {
-                fn();
-            } else {
-                window.addEventListener('load', fn, { once: true });
-            }
-        }
-
-        if (mode === 'popup') {
-            whenReady(function () {
-                setTimeout(function () {
-                    runPrint(function () {
-                        window.close();
-                    });
-                }, 80);
-            });
-            return;
-        }
-
-        if (mode === '1') {
-            whenReady(function () {
-                setTimeout(function () {
-                    runPrint(goBack);
-                }, 80);
-            });
-            return;
-        }
-
-        whenReady(function () {
-            setTimeout(function () { window.print(); }, 200);
-        });
-    })();
-</script>
+{% include 'includes/terrafirma_ticket_autoprint.html' %}
 </body>
 </html>

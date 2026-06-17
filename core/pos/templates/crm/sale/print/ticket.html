@@ -83,7 +83,7 @@
 <body>
 <div class="content">
     <div class="logo-wrap">
-        <img src="{% comprobante_logo %}" class="img-logo" alt="Terrafirma">
+        <img src="{{ comprobante_logo }}" class="img-logo" alt="Terrafirma">
     </div>
     <p class="text-center desc-company">
         {{ company.address }}<br>
@@ -197,32 +197,6 @@
         Que tenga un excelente día
     </p>
 </div>
-<script>
-    (function () {
-        var params = new URLSearchParams(window.location.search);
-        var mode = params.get('auto');
-        function runPrint(afterPrint) {
-            window.focus();
-            window.print();
-            if (typeof afterPrint === 'function') {
-                setTimeout(afterPrint, 150);
-            }
-        }
-        function whenReady(fn) {
-            if (document.readyState === 'complete') {
-                fn();
-            } else {
-                window.addEventListener('load', fn, { once: true });
-            }
-        }
-        if (mode === 'popup') {
-            whenReady(function () {
-                setTimeout(function () {
-                    runPrint(function () { window.close(); });
-                }, 80);
-            });
-        }
-    })();
-</script>
+{% include 'includes/terrafirma_ticket_autoprint.html' %}
 </body>
 </html>
