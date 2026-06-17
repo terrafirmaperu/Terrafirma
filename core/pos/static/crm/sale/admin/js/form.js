@@ -506,6 +506,62 @@ document.addEventListener('DOMContentLoaded', function (e) {
         });
 });
 
+function ensureSaleFieldGroups() {
+    var fields = ['select[name="collector"]', 'select[name="client"]'];
+    fields.forEach(function (sel) {
+        document.querySelectorAll(sel).forEach(function (el) {
+            if (typeof FormValidation !== 'undefined'
+                && FormValidation.utils
+                && !FormValidation.utils.closest(el, '.form-group')) {
+                var wrap = document.createElement('div');
+                wrap.className = 'form-group mb-0';
+                el.parentNode.insertBefore(wrap, el);
+                wrap.appendChild(el);
+            }
+        });
+    });
+}
+
+function performSaleFormSubmit(frmSaleEl) {
+    var parameters = new FormData($(frmSaleEl)[0]);
+    parameters.append('action', $('input[name="action"]').val());
+    parameters.append('payment_method', select_paymentmethod.val());
+    parameters.append('payment_condition', select_paymentcondition.val());
+    parameters.append('end_credit', input_endcredit.val());
+    parameters.append('cash', input_cash.val());
+    parameters.append('change', input_change.val());
+    parameters.append('card_number', input_cardnumber.val());
+    parameters.append('titular', input_titular.val());
+    parameters.append('dscto', $('input[name="dscto"]').val());
+    parameters.append('amount_debited', input_amountdebited.val());
+    parameters.append('credit_quota_count', $('input[name="credit_quota_count"]').val());
+    parameters.append('credit_down_payment', $('input[name="credit_down_payment"]').val());
+    parameters.append('credit_down_payment_method', $('#credit_down_payment_method').val());
+    if (vents.details.products.length === 0) {
+        message_error('Debe tener al menos un item en el detalle de la venta');
+        $('.nav-tabs a[href="#menu1"]').tab('show');
+        return false;
+    }
+    parameters.append('products', JSON.stringify(vents.details.products));
+    var urlrefresh = frmSaleEl.getAttribute('data-url');
+    validateSaleProductsBeforeSave(function (ok) {
+        if (!ok) {
+            return;
+        }
+        submit_formdata_with_ajax('Notificación',
+            '¿Estas seguro de realizar la siguiente acción?',
+            pathname,
+            parameters,
+            function (request) {
+                dialog_action('Notificación', '¿Desea Imprimir el Comprobante?', function () {
+                    openSaleVoucherAfterCreate(request.id);
+                }, function () {});
+                openContrataModal(request, urlrefresh);
+            },
+        );
+    });
+}
+
 function initSaleFormValidation() {
     if (typeof fvSale !== 'undefined' && fvSale) {
         return;
@@ -551,6 +607,12 @@ function initSaleFormValidation() {
     }
 
     const frmSale = document.getElementById('frmSale');
+    if (!frmSale) {
+        console.error('frmSale no encontrado');
+        return;
+    }
+    ensureSaleFieldGroups();
+    try {
     fvSale = FormValidation.formValidation(frmSale, {
             locale: 'es_ES',
             localization: FormValidation.locales.es_ES,
@@ -558,12 +620,7 @@ function initSaleFormValidation() {
                 trigger: new FormValidation.plugins.Trigger(),
                 submitButton: new FormValidation.plugins.SubmitButton(),
                 bootstrap: new FormValidation.plugins.Bootstrap(),
-                // excluded: new FormValidation.plugins.Excluded(),
-                icon: new FormValidation.plugins.Icon({
-                    valid: 'fa fa-check',
-                    invalid: 'fa fa-times',
-                    validating: 'fa fa-refresh',
-                }),
+                // Sin Icon: evita elementos extra que rompen Select2 en input-group
             },
             fields: {
                 client: {
@@ -793,47 +850,16 @@ function initSaleFormValidation() {
             }
         })
         .on('core.form.valid', function () {
-            var parameters = new FormData($(fvSale.form)[0]);
-            parameters.append('action', $('input[name="action"]').val());
-            parameters.append('payment_method', select_paymentmethod.val());
-            parameters.append('payment_condition', select_paymentcondition.val());
-            parameters.append('end_credit', input_endcredit.val());
-            parameters.append('cash', input_cash.val());
-            parameters.append('change', input_change.val());
-            parameters.append('card_number', input_cardnumber.val());
-            parameters.append('titular', input_titular.val());
-            parameters.append('dscto', $('input[name="dscto"]').val());
-            parameters.append('amount_debited', input_amountdebited.val());
-            parameters.append('credit_quota_count', $('input[name="credit_quota_count"]').val());
-            parameters.append('credit_down_payment', $('input[name="credit_down_payment"]').val());
-            parameters.append('credit_down_payment_method', $('#credit_down_payment_method').val());
-            if (vents.details.products.length === 0) {
-                message_error('Debe tener al menos un item en el detalle de la venta');
-                $('.nav-tabs a[href="#menu1"]').tab('show');
-                return false;
-            }
-            parameters.append('products', JSON.stringify(vents.details.products));
-            let urlrefresh = fvSale.form.getAttribute('data-url');
-            validateSaleProductsBeforeSave(function (ok) {
-                if (!ok) {
-                    return;
-                }
-                submit_formdata_with_ajax('Notificación',
-                    '¿Estas seguro de realizar la siguiente acción?',
-                    pathname,
-                    parameters,
-                    function (request) {
-                        dialog_action('Notificación', '¿Desea Imprimir el Comprobante?', function () {
-                            openSaleVoucherAfterCreate(request.id);
-                        }, function () {});
-                        openContrataModal(request, urlrefresh);
-                    },
-                );
-            });
+            performSaleFormSubmit(frmSale);
         })
         .on('core.form.invalid', function () {
             message_error('Revise los datos de la venta: cliente, productos, método de pago y montos.');
         });
+    } catch (err) {
+        console.error('initSaleFormValidation:', err);
+        fvSale = undefined;
+        message_error('Validación automática limitada. Puede facturar; revise cliente y montos antes de guardar.');
+    }
 }
 
 function openSaleVoucherAfterCreate(saleId) {
@@ -1140,6 +1166,18 @@ $(function () {
     input_titular = $('input[name="titular"]');
 
     initSaleFormValidation();
+
+    $('#frmSale').on('submit.saleFallback', function (e) {
+        if (typeof fvSale === 'undefined' || !fvSale) {
+            e.preventDefault();
+            if (!select_client.val()) {
+                message_error('Seleccione un cliente');
+                return false;
+            }
+            performSaleFormSubmit(this);
+            return false;
+        }
+    });
 
     window.syncCreditInicialMethodUi = function () {
         var wrap = $('.credit-inicial-metodo-wrap');
@@ -1821,6 +1859,8 @@ $(function () {
             theme: "bootstrap4",
             language: 'es',
             allowClear: true,
+            width: '100%',
+            dropdownParent: $('#frmSale'),
             ajax: {
                 delay: 120,
                 type: 'POST',

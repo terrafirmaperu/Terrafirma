@@ -46,10 +46,58 @@
             line-height: 29px;
             padding-left: 0;
         }
+        /* Select2 cliente dentro de input-group (evita barra negra / layout roto) */
+        .input-group-search > .sale-client-select-wrap {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 1%;
+        }
+        .sale-client-select-wrap .select2-container {
+            width: 100% !important;
+        }
+        .sale-client-select-wrap .select2-container--bootstrap4 .select2-selection--single {
+            height: calc(2.25rem + 2px);
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .sale-client-select-wrap select.select2,
+        .sale-client-select-wrap select.select2-hidden-accessible {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+        .input-group-search .select2-container--bootstrap4 .select2-selection {
+            border-right: 0;
+        }
     </style>
     <script src="{% static 'crm/client/js/predios.js' %}?v=20260615-sale-predio-link"></script>
     <script src="{% static 'js/terrafirma_print.js' %}?v=20260616"></script>
-    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260617-sale-fvfix"></script>
+    <script>
+    /* Parche ventas: collector sin form-group rompe FormValidation en producción */
+    $(function () {
+        function patchSaleFormBeforeValidation() {
+            var row = document.getElementById('rowCollector');
+            if (row && !row.classList.contains('form-group')) {
+                row.classList.add('form-group', 'mb-0');
+            }
+            var client = document.querySelector('select[name="client"]');
+            if (client && !client.closest('.sale-client-select-wrap')) {
+                var wrap = document.createElement('div');
+                wrap.className = 'sale-client-select-wrap';
+                client.parentNode.insertBefore(wrap, client);
+                wrap.appendChild(client);
+            }
+        }
+        patchSaleFormBeforeValidation();
+    });
+    </script>
+    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260618-sale-fix"></script>
 {% endblock %}
 
 {% block content %}
@@ -127,7 +175,9 @@
                                     <div class="form-group">
                                         <label class="control-label">Buscar cliente:</label>
                                         <div class="input-group input-group-search">
-                                            {{ form.client }}
+                                            <div class="sale-client-select-wrap">
+                                                {{ form.client }}
+                                            </div>
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary dropdown-toggle" type="button"
                                                         data-toggle="dropdown" aria-haspopup="true"
@@ -381,14 +431,16 @@
                         <i class="fas fa-times"></i> Cancelar
                     </a>
                 </div>
-                <div id="rowCollector" class="sale-footer-collector">
+                <div id="rowCollector" class="sale-footer-collector form-group mb-0">
                     <label class="sr-only" for="id_collector">Lugar de cobro</label>
                     <div class="sale-collector-combo d-flex align-items-center">
                         <span class="sale-collector-icon" title="Admin Cobranzas — lugar de cobro">
                             <i class="fas fa-coins"></i>
                         </span>
                         <div class="sale-collector-select-wrap">
-                            {{ form.collector|add_class:"form-control select2"|attr:"style:width:100%;" }}
+                            <div class="form-group mb-0">
+                                {{ form.collector|add_class:"form-control select2"|attr:"style:width:100%;" }}
+                            </div>
                         </div>
                     </div>
                 </div>

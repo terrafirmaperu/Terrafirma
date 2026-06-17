@@ -345,7 +345,7 @@ class SaleForm(ModelForm):
             'cash_register_session',
         )
         widgets = {
-            'client': forms.Select(attrs={'class': 'custom-select select2'}),
+            'client': forms.Select(attrs={'class': 'form-control select2'}),
             'collector': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'payment_condition': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'payment_method': forms.Select(
