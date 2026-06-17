@@ -506,11 +506,24 @@ document.addEventListener('DOMContentLoaded', function (e) {
         });
 });
 
-document.addEventListener('DOMContentLoaded', function (e) {
+function initSaleFormValidation() {
+    if (typeof fvSale !== 'undefined' && fvSale) {
+        return;
+    }
+
     function validateChange() {
-        var cash = parseFloat(input_cash.val())
-        var method_payment = select_paymentmethod.val();
-        var total = parseFloat(vents.details.total);
+        var $cash = (typeof input_cash !== 'undefined' && input_cash && input_cash.length)
+            ? input_cash
+            : $('input[name="cash"]');
+        var $method = (typeof select_paymentmethod !== 'undefined' && select_paymentmethod && select_paymentmethod.length)
+            ? select_paymentmethod
+            : $('select[name="payment_method"]');
+        if (!$cash.length || !$method.length) {
+            return {valid: true};
+        }
+        var cash = parseFloat(($cash.val() || '0').toString().replace(',', '.')) || 0;
+        var method_payment = $method.val();
+        var total = parseFloat(vents.details.total) || 0;
         if (method_payment === 'efectivo') {
             if (cash < total) {
                 return {valid: false, message: 'El efectivo debe ser mayor o igual al total a pagar'};
@@ -525,8 +538,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     message: 'El efectivo debe ser menor al total; el resto se paga por Yape',
                 };
             }
-            input_amountdebited.val((total - cash).toFixed(2));
-            input_change.val('0.00');
+            var $debited = (typeof input_amountdebited !== 'undefined' && input_amountdebited && input_amountdebited.length)
+                ? input_amountdebited
+                : $('input[name="amount_debited"]');
+            var $change = (typeof input_change !== 'undefined' && input_change && input_change.length)
+                ? input_change
+                : $('input[name="change"]');
+            $debited.val((total - cash).toFixed(2));
+            $change.val('0.00');
         }
         return {valid: true};
     }
@@ -811,8 +830,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     },
                 );
             });
+        })
+        .on('core.form.invalid', function () {
+            message_error('Revise los datos de la venta: cliente, productos, método de pago y montos.');
         });
-});
+}
 
 function openSaleVoucherAfterCreate(saleId) {
     if (!saleId) {
@@ -1116,6 +1138,8 @@ $(function () {
     input_cash = $('input[name="cash"]');
     input_change = $('input[name="change"]');
     input_titular = $('input[name="titular"]');
+
+    initSaleFormValidation();
 
     window.syncCreditInicialMethodUi = function () {
         var wrap = $('.credit-inicial-metodo-wrap');
