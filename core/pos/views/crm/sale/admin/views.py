@@ -15,10 +15,11 @@ from django.views.generic import CreateView, DeleteView, FormView
 from weasyprint import HTML, CSS
 
 from config import settings
+from core.pos.client_marital import apply_client_marital_extras
 from core.pos.client_properties import client_predios_template_context, save_client_properties_from_request
 from core.pos.product_sale import active_promo_price_subquery, product_json_for_sale_row
 from core.pos.dni_lookup import lookup_dni_data
-from core.pos.forms import ClientForm, SaleForm
+from core.pos.forms import ClientForm, SaleForm, parse_client_marital_status
 from core.pos.mixins import CashRegisterRequiredMixin
 from core.pos.models import (
     CashRegisterSession,
@@ -486,6 +487,10 @@ class SaleAdminCreateView(CashRegisterRequiredMixin, PermissionMixin, CreateView
 
                     client.user_id = user.id
                     client.mobile = request.POST['mobile']
+                    client.marital_status = parse_client_marital_status(
+                        request.POST.get('marital_status')
+                    )
+                    apply_client_marital_extras(client, request)
                     client.department = (request.POST.get('department') or '').strip()
                     client.province = (request.POST.get('province') or '').strip()
                     client.district = (request.POST.get('district') or '').strip()

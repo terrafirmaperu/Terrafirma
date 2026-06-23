@@ -14,10 +14,12 @@ SUPERVISOR_DELETE_SESSION_KEY = 'supervisor_delete_approved_at'
 SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY = 'supervisor_predio_unlock_approved_at'
 SUPERVISOR_COLLECTOR_SESSION_KEY = 'supervisor_collector_approved_at'
 SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY = 'supervisor_collector_save_approved_at'
+SUPERVISOR_QUOTA_EDIT_SESSION_KEY = 'supervisor_quota_edit_approved_at'
 SUPERVISOR_DELETE_WINDOW_SEC = 180
 SUPERVISOR_PREDIO_UNLOCK_WINDOW_SEC = 180
 SUPERVISOR_COLLECTOR_WINDOW_SEC = 1800
 SUPERVISOR_COLLECTOR_SAVE_WINDOW_SEC = 180
+SUPERVISOR_QUOTA_EDIT_WINDOW_SEC = 180
 
 
 def _consume_supervisor_approval(request, session_key, window_sec):
@@ -41,6 +43,14 @@ def consume_supervisor_predio_unlock(request):
         request,
         SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY,
         SUPERVISOR_PREDIO_UNLOCK_WINDOW_SEC,
+    )
+
+
+def consume_supervisor_quota_edit(request):
+    return _consume_supervisor_approval(
+        request,
+        SUPERVISOR_QUOTA_EDIT_SESSION_KEY,
+        SUPERVISOR_QUOTA_EDIT_WINDOW_SEC,
     )
 
 

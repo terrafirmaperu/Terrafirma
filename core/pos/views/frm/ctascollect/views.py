@@ -21,13 +21,14 @@ from core.pos.product_worker import (
     parse_worker_entregable_value,
     resolve_worker_entregable_for_sale,
 )
+from core.pos.quota_plan import apply_quota_plan_to_sale_and_ctas, parse_quota_plan_payload
 from core.pos.views.frm.ctascollect.payment_constancia import (
     DOCX_CONTENT_TYPE,
     build_constancia_docx,
     constancia_template_path,
 )
 from core.reports.forms import ReportForm
-from core.security.mixins import PermissionMixin, SupervisorDeleteApprovalMixin
+from core.security.mixins import PermissionMixin, SupervisorDeleteApprovalMixin, consume_supervisor_quota_edit
 
 _CTACOLLECT_PAY_METHOD_LABELS = {
     'efectivo': 'Efectivo',
@@ -105,6 +106,24 @@ class CtasCollectListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
                 ctascollect = det.ctascollect
                 det.delete()
                 ctascollect.validate_debt()
+            elif action == 'save_quota_plan':
+                allowed, auth_error = consume_supervisor_quota_edit(request)
+                if not allowed:
+                    data['error'] = auth_error
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+                with transaction.atomic():
+                    ctas = CtasCollect.objects.select_for_update().select_related('sale').get(
+                        pk=int(request.POST['id'])
+                    )
+                    if ctas.sale.payment_condition != 'credito':
+                        data['error'] = 'Solo se pueden modificar cuotas de ventas a crédito.'
+                        return HttpResponse(json.dumps(data), content_type='application/json')
+                    plan = parse_quota_plan_payload(
+                        request.POST.get('quota_plan_json', '[]'),
+                        ctas.sale.total,
+                    )
+                    apply_quota_plan_to_sale_and_ctas(ctas.sale, ctas, plan)
+                    data = ctas.toJSON()
             else:
                 data['error'] = 'No ha ingresado una opción'
         except Exception as e:

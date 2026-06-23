@@ -12,6 +12,7 @@ from core.security.mixins import (
     SUPERVISOR_COLLECTOR_SESSION_KEY,
     SUPERVISOR_DELETE_SESSION_KEY,
     SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY,
+    SUPERVISOR_QUOTA_EDIT_SESSION_KEY,
 )
 from core.security.supervisor_predio import user_can_authorize_predio_unlock
 
@@ -127,5 +128,33 @@ class VerifySupervisorPredioUnlockView(LoginRequiredMixin, View):
                 status=403,
             )
         request.session[SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY] = time.time()
+        request.session.modified = True
+        return JsonResponse({'success': True})
+
+
+@method_decorator(require_POST, name='dispatch')
+class VerifySupervisorQuotaEditView(LoginRequiredMixin, View):
+    """Valida superusuario Neo para modificar cuotas en cuentas por cobrar."""
+
+    login_url = '/login/'
+
+    def post(self, request):
+        username = (request.POST.get('supervisor_username') or '').strip()
+        password = request.POST.get('supervisor_password') or ''
+        user = authenticate(request, username=username, password=password)
+        if user is None or not user.is_active:
+            return JsonResponse(
+                {'success': False, 'error': 'Usuario o contraseña incorrectos.'},
+                status=400,
+            )
+        if not user.is_superuser:
+            return JsonResponse(
+                {
+                    'success': False,
+                    'error': 'Solo el administrador Neo puede autorizar cambios de cuotas.',
+                },
+                status=403,
+            )
+        request.session[SUPERVISOR_QUOTA_EDIT_SESSION_KEY] = time.time()
         request.session.modified = True
         return JsonResponse({'success': True})

@@ -431,6 +431,79 @@ function escapeHtmlText(text) {
         .replace(/"/g, '&quot;');
 }
 
+var pendingQuotaEditRow = null;
+
+function updateEditQuotasSum() {
+    var sum = 0;
+    $('#editQuotasTableBody tr').each(function () {
+        var v = parseFloat(String($(this).find('.edit-quota-amount').val() || '0').replace(',', '.'));
+        if (!isNaN(v)) {
+            sum += v;
+        }
+    });
+    $('#editQuotasSumLabel').text('S/ ' + sum.toFixed(2));
+}
+
+function openEditQuotasAuthModal(row) {
+    pendingQuotaEditRow = row;
+    $('#supervisor_quota_password').val('');
+    $('#myModalSupervisorQuotaEdit').modal('show');
+}
+
+function fillEditQuotasModal(row) {
+    $('#editQuotasCtasCollectId').val(row.id);
+    var clientLine = '—';
+    if (row.sale && row.sale.client && row.sale.client.user) {
+        clientLine = (row.sale.client.user.full_name || '') +
+            ' / DNI ' + (row.sale.client.user.dni || '');
+    }
+    $('#editQuotasClientLine').text(clientLine);
+    var saleTotal = row.sale && row.sale.total ? row.sale.total : row.debt;
+    $('#editQuotasTotalLine').text(
+        'Total venta: S/ ' + saleTotal + ' · Saldo pendiente: S/ ' + row.saldo
+    );
+
+    var tbody = $('#editQuotasTableBody');
+    tbody.empty();
+    (row.quota_plan || []).forEach(function (q) {
+        var label = q.label || ('Cuota ' + q.num);
+        if (q.num === 0) {
+            label = 'Inicial';
+        }
+        var tr = $('<tr></tr>').attr('data-num', q.num);
+        tr.append($('<td></td>').text(label));
+        tr.append(
+            $('<td></td>').html(
+                '<input type="date" class="form-control form-control-sm edit-quota-date" value="' +
+                escapeHtmlText(q.due_date || '') + '">'
+            )
+        );
+        tr.append(
+            $('<td></td>').html(
+                '<input type="number" step="0.01" min="0" class="form-control form-control-sm edit-quota-amount" value="' +
+                escapeHtmlText(q.amount || '0') + '">'
+            )
+        );
+        tbody.append(tr);
+    });
+    updateEditQuotasSum();
+    $('#myModalEditQuotas').modal('show');
+}
+
+function collectEditQuotasPlan() {
+    var plan = [];
+    $('#editQuotasTableBody tr').each(function () {
+        var num = parseInt($(this).attr('data-num'), 10);
+        plan.push({
+            num: num,
+            label: num === 0 ? 'Inicial' : 'Cuota ' + num,
+            due_date: $(this).find('.edit-quota-date').val(),
+            amount: $(this).find('.edit-quota-amount').val()
+        });
+    });
+    return plan;
+}
+
 function predioReferenceLine(row) {
     var ref = row && row.predio_reference ? String(row.predio_reference).trim() : '';
     if (!ref) {
@@ -556,6 +629,9 @@ function getData(all) {
                     } else if (qp && !row.state) {
                         buttons += '<a class="btn btn-success btn-xs btn-flat disabled" title="Cuotas canceladas"><i class="fas fa-check-circle"></i></a> ';
                     }
+                    if (qp) {
+                        buttons += '<a rel="edit_quotas" class="btn btn-warning btn-xs btn-flat" title="Modificar cuotas (requiere Neo)"><i class="fas fa-key"></i></a> ';
+                    }
                     buttons += '<a href="/pos/frm/ctas/collect/delete/' + row.id + '/" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash"></i></a>';
                     return buttons;
                 }
@@ -637,6 +713,8 @@ function getData(all) {
 $(function () {
 
     $('#myModalPayQuota').appendTo('body');
+    $('#myModalSupervisorQuotaEdit').appendTo('body');
+    $('#myModalEditQuotas').appendTo('body');
     $('#myModalTicketFormat').appendTo('body');
     $('#myModalTicketFormat').on('hidden.bs.modal', function () {
         if ($('#myModalPayments').data('reopen-after-ticket')) {
@@ -687,6 +765,14 @@ $(function () {
                 row = tblCtasCollect.row(tr.row).data();
             if (row && row.sale && row.sale.id) {
                 window.open('/pos/crm/sale/print/payment-schedule/' + row.sale.id + '/', '_blank');
+            }
+        })
+        .on('click', 'a[rel="edit_quotas"]', function () {
+            $('.tooltip').remove();
+            var tr = tblCtasCollect.cell($(this).closest('td, li')).index(),
+                row = tblCtasCollect.row(tr.row).data();
+            if (row) {
+                openEditQuotasAuthModal(row);
             }
         })
         .on('click', 'a[rel="payments"]', function () {
@@ -819,6 +905,102 @@ $(function () {
 
     $('#btnSubmitPayQuota').on('click', function () {
         submitPayQuota();
+    });
+
+    $('#btnConfirmSupervisorQuotaEdit').on('click', function () {
+        var authUrl = window.SUPERVISOR_QUOTA_EDIT_URL || '/security/verify-supervisor-quota-edit/';
+        var $btn = $(this);
+        $btn.prop('disabled', true);
+        $.ajax({
+            url: authUrl,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            dataType: 'json',
+            data: {
+                supervisor_username: $('#supervisor_quota_username').val(),
+                supervisor_password: $('#supervisor_quota_password').val()
+            },
+            success: function (resp) {
+                if (!resp.success) {
+                    message_error(resp.error || 'No se pudo autorizar.');
+                    return;
+                }
+                $('#myModalSupervisorQuotaEdit').modal('hide');
+                if (pendingQuotaEditRow) {
+                    fillEditQuotasModal(pendingQuotaEditRow);
+                }
+            },
+            error: function (xhr) {
+                var msg = 'Usuario o contraseña incorrectos.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    msg = xhr.responseJSON.error;
+                }
+                message_error(msg);
+            },
+            complete: function () {
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+
+    $('#btnSaveEditQuotas').on('click', function () {
+        var id = $('#editQuotasCtasCollectId').val();
+        if (!id) {
+            return;
+        }
+        var plan = collectEditQuotasPlan();
+        var $btn = $(this);
+        $btn.prop('disabled', true);
+        $.ajax({
+            url: pathname,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            dataType: 'json',
+            data: {
+                action: 'save_quota_plan',
+                id: id,
+                quota_plan_json: JSON.stringify(plan)
+            },
+            success: function (resp) {
+                if (resp.error) {
+                    message_error(resp.error);
+                    return;
+                }
+                $('#myModalEditQuotas').modal('hide');
+                pendingQuotaEditRow = null;
+                if (typeof toastr !== 'undefined') {
+                    toastr.success('Plan de cuotas actualizado.');
+                }
+                if (tblCtasCollect) {
+                    tblCtasCollect.ajax.reload(null, false);
+                }
+            },
+            error: function (xhr) {
+                var msg = 'No se pudo guardar el plan de cuotas.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    msg = xhr.responseJSON.error;
+                } else if (typeof xhr.responseText === 'string' && xhr.responseText) {
+                    try {
+                        var parsed = JSON.parse(xhr.responseText);
+                        if (parsed.error) {
+                            msg = parsed.error;
+                        }
+                    } catch (e) {}
+                }
+                message_error(msg);
+            },
+            complete: function () {
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+
+    $(document).on('input change', '#editQuotasTableBody .edit-quota-amount', function () {
+        updateEditQuotasSum();
     });
 
     $(document).on('click', '.pay-quota-method', function () {

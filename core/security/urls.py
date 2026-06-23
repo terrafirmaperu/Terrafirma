@@ -11,6 +11,7 @@ from .views.supervisor_delete import (
     VerifySupervisorCollectorView,
     VerifySupervisorDeleteView,
     VerifySupervisorPredioUnlockView,
+    VerifySupervisorQuotaEditView,
 )
 
 urlpatterns = [
@@ -29,6 +30,11 @@ urlpatterns = [
         'verify-supervisor-predio-unlock/',
         VerifySupervisorPredioUnlockView.as_view(),
         name='verify_supervisor_predio_unlock',
+    ),
+    path(
+        'verify-supervisor-quota-edit/',
+        VerifySupervisorQuotaEditView.as_view(),
+        name='verify_supervisor_quota_edit',
     ),
     # module_type
     path('module/type/', TypeListView.as_view(), name='moduletype_list'),

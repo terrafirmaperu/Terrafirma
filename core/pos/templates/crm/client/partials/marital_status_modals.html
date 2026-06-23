@@ -1,0 +1,227 @@
+<div id="maritalStatusExtras" class="row marital-status-extras" style="display: none;">
+    <div class="col-md-12">
+        <div class="alert alert-light border py-2 mb-3" id="maritalCasadoBar" style="display: none;">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-open-marital-casado">
+                <i class="fas fa-heart"></i> Datos del cónyuge y acta de matrimonio
+            </button>
+            <span class="badge badge-secondary ml-2">Opcional</span>
+            <span class="ml-2 text-muted small" id="maritalCasadoSummary"></span>
+        </div>
+        <div class="alert alert-light border py-2 mb-3" id="maritalViudoBar" style="display: none;">
+            <button type="button" class="btn btn-outline-secondary btn-sm btn-open-marital-viudo">
+                <i class="fas fa-file-upload"></i> Acta de defunción
+            </button>
+            <span class="badge badge-secondary ml-2">Opcional</span>
+            <span class="ml-2 text-muted small" id="maritalViudoSummary"></span>
+        </div>
+        <div class="alert alert-light border py-2 mb-3" id="maritalDivorciadoBar" style="display: none;">
+            <button type="button" class="btn btn-outline-warning btn-sm btn-open-marital-divorciado">
+                <i class="fas fa-file-upload"></i> Documento de divorcio
+            </button>
+            <span class="badge badge-secondary ml-2">Opcional</span>
+            <span class="ml-2 text-muted small" id="maritalDivorciadoSummary"></span>
+        </div>
+        <div class="alert alert-light border py-2 mb-3" id="maritalSeparadoBar" style="display: none;">
+            <button type="button" class="btn btn-outline-info btn-sm btn-open-marital-separado">
+                <i class="fas fa-file-upload"></i> Documento de separación
+            </button>
+            <span class="badge badge-secondary ml-2">Opcional</span>
+            <span class="ml-2 text-muted small" id="maritalSeparadoSummary"></span>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade marital-modal-casado" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-heart text-primary"></i> Datos del cónyuge
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">
+                    Estos datos son opcionales. Puede guardar el cliente sin completarlos.
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Nombres del cónyuge</label>
+                            <input type="text" name="spouse_first_name" class="form-control"
+                                   maxlength="150" autocomplete="off"
+                                   value="{% if instance %}{{ instance.spouse_first_name|default:'' }}{% endif %}"
+                                   placeholder="Nombres">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Apellidos del cónyuge</label>
+                            <input type="text" name="spouse_last_name" class="form-control"
+                                   maxlength="150" autocomplete="off"
+                                   value="{% if instance %}{{ instance.spouse_last_name|default:'' }}{% endif %}"
+                                   placeholder="Apellidos">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>DNI del cónyuge</label>
+                            <div class="input-group">
+                                <input type="text" name="spouse_dni" class="form-control"
+                                       maxlength="12" autocomplete="off"
+                                       value="{% if instance %}{{ instance.spouse_dni|default:'' }}{% endif %}"
+                                       placeholder="Número de DNI">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-info btnLookupSpouseDni"
+                                            title="Buscar por DNI">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-0">
+                            <label>Acta de matrimonio</label>
+                            <input type="file" name="marriage_certificate" class="form-control-file"
+                                   accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                            <small class="form-text text-muted">PDF, JPG o PNG. Máx. 10 MB.</small>
+                            {% if instance and instance.marriage_certificate %}
+                            <div class="mt-2">
+                                <a href="{{ instance.marriage_certificate.url }}" target="_blank" rel="noopener"
+                                   class="btn btn-xs btn-outline-info">
+                                    <i class="fas fa-file-alt"></i> Ver acta actual
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-flat" data-dismiss="modal">
+                    <i class="fas fa-check"></i> Listo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade marital-modal-viudo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-upload"></i> Acta de defunción
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">
+                    Puede adjuntar el acta de defunción del cónyuge. Este dato es opcional.
+                </p>
+                <div class="form-group mb-0">
+                    <label>Archivo</label>
+                    <input type="file" name="death_certificate" class="form-control-file"
+                           accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                    <small class="form-text text-muted">PDF, JPG o PNG. Máx. 10 MB.</small>
+                    {% if instance and instance.death_certificate %}
+                    <div class="mt-2">
+                        <a href="{{ instance.death_certificate.url }}" target="_blank" rel="noopener"
+                           class="btn btn-xs btn-outline-info">
+                            <i class="fas fa-file-alt"></i> Ver acta actual
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-flat" data-dismiss="modal">
+                    <i class="fas fa-check"></i> Listo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade marital-modal-divorciado" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-upload text-warning"></i> Documento de divorcio
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">
+                    Puede adjuntar el documento de divorcio. Este dato es opcional.
+                </p>
+                <div class="form-group mb-0">
+                    <label>Archivo</label>
+                    <input type="file" name="divorce_certificate" class="form-control-file"
+                           accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                    <small class="form-text text-muted">PDF, JPG o PNG. Máx. 10 MB.</small>
+                    {% if instance and instance.divorce_certificate %}
+                    <div class="mt-2">
+                        <a href="{{ instance.divorce_certificate.url }}" target="_blank" rel="noopener"
+                           class="btn btn-xs btn-outline-info">
+                            <i class="fas fa-file-alt"></i> Ver documento actual
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-flat" data-dismiss="modal">
+                    <i class="fas fa-check"></i> Listo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade marital-modal-separado" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-upload text-info"></i> Documento de separación
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">
+                    Puede adjuntar el documento de separación. Este dato es opcional.
+                </p>
+                <div class="form-group mb-0">
+                    <label>Archivo</label>
+                    <input type="file" name="separation_certificate" class="form-control-file"
+                           accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                    <small class="form-text text-muted">PDF, JPG o PNG. Máx. 10 MB.</small>
+                    {% if instance and instance.separation_certificate %}
+                    <div class="mt-2">
+                        <a href="{{ instance.separation_certificate.url }}" target="_blank" rel="noopener"
+                           class="btn btn-xs btn-outline-info">
+                            <i class="fas fa-file-alt"></i> Ver documento actual
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-flat" data-dismiss="modal">
+                    <i class="fas fa-check"></i> Listo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

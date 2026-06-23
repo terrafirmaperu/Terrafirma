@@ -217,4 +217,8 @@ $(function () {
         return validate_form_text('numbers', e, null);
     });
 
+    if (window.ClientMaritalStatus) {
+        ClientMaritalStatus.init('#frmForm');
+    }
+
 });

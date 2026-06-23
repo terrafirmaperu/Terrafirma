@@ -14,7 +14,13 @@ from django.forms import model_to_dict
 from django.utils import timezone
 
 from config import settings
-from core.pos.choices import credit_down_payment_method, payment_condition, payment_method, voucher
+from core.pos.choices import (
+    credit_down_payment_method,
+    marital_status as marital_status_choices,
+    payment_condition,
+    payment_method,
+    voucher,
+)
 from core.user.models import User
 
 
@@ -362,6 +368,46 @@ class Client(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     mobile = models.CharField(max_length=10, verbose_name='Teléfono')
+    marital_status = models.CharField(
+        max_length=20,
+        choices=marital_status_choices,
+        blank=True,
+        default='',
+        verbose_name='Estado civil',
+    )
+    spouse_first_name = models.CharField(
+        max_length=150, blank=True, default='', verbose_name='Nombres del cónyuge',
+    )
+    spouse_last_name = models.CharField(
+        max_length=150, blank=True, default='', verbose_name='Apellidos del cónyuge',
+    )
+    spouse_dni = models.CharField(
+        max_length=12, blank=True, default='', verbose_name='DNI del cónyuge',
+    )
+    marriage_certificate = models.FileField(
+        upload_to='client/marriage/%Y/%m/',
+        null=True,
+        blank=True,
+        verbose_name='Acta de matrimonio',
+    )
+    death_certificate = models.FileField(
+        upload_to='client/death/%Y/%m/',
+        null=True,
+        blank=True,
+        verbose_name='Acta de defunción',
+    )
+    divorce_certificate = models.FileField(
+        upload_to='client/divorce/%Y/%m/',
+        null=True,
+        blank=True,
+        verbose_name='Documento de divorcio',
+    )
+    separation_certificate = models.FileField(
+        upload_to='client/separation/%Y/%m/',
+        null=True,
+        blank=True,
+        verbose_name='Documento de separación',
+    )
     department = models.CharField(max_length=80, null=True, blank=True, verbose_name='Departamento')
     province = models.CharField(max_length=80, null=True, blank=True, verbose_name='Provincia')
     district = models.CharField(max_length=80, null=True, blank=True, verbose_name='Distrito')
@@ -422,6 +468,30 @@ class Client(models.Model):
         item['user'] = self.user.toJSON()
         item['id'] = self.id
         item['mobile'] = self.mobile if self.mobile else ''
+        item['marital_status'] = {
+            'id': self.marital_status or '',
+            'name': self.get_marital_status_display() if self.marital_status else '',
+        }
+        item['spouse'] = {
+            'first_name': self.spouse_first_name or '',
+            'last_name': self.spouse_last_name or '',
+            'dni': self.spouse_dni or '',
+            'full_name': ' '.join(
+                p for p in (self.spouse_first_name or '', self.spouse_last_name or '') if p
+            ).strip(),
+        }
+        item['marriage_certificate'] = (
+            self.marriage_certificate.url if self.marriage_certificate else ''
+        )
+        item['death_certificate'] = (
+            self.death_certificate.url if self.death_certificate else ''
+        )
+        item['divorce_certificate'] = (
+            self.divorce_certificate.url if self.divorce_certificate else ''
+        )
+        item['separation_certificate'] = (
+            self.separation_certificate.url if self.separation_certificate else ''
+        )
         item['department'] = self.department if self.department else ''
         item['province'] = self.province if self.province else ''
         item['district'] = self.district if self.district else ''
@@ -597,6 +667,12 @@ class Sale(models.Model):
         max_length=50,
         default='efectivo',
         verbose_name='Inicial pagada con',
+    )
+    quota_plan_override = models.JSONField(
+        null=True,
+        blank=True,
+        verbose_name='Plan de cuotas personalizado',
+        help_text='Cuotas editadas por administrador en cuentas por cobrar.',
     )
     subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     dscto = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
@@ -850,12 +926,15 @@ class CtasCollect(models.Model):
 
     def get_quota_plan(self):
         """
-        Plan de pagos: inicial (si aplica) y cuotas 1..N sobre (total - inicial),
-        con fechas distribuidas hasta la fecha límite registrada.
+        Plan de pagos: inicial (si aplica) y cuotas 1..N.
+        Usa override de venta si fue ajustado por administrador.
         """
-        from datetime import timedelta
-
         sale = self.sale
+        override = sale.quota_plan_override
+        if override:
+            return list(override)
+
+        from datetime import timedelta
         if sale.payment_condition != 'credito':
             return []
         total = Decimal(str(sale.total)).quantize(Decimal('0.01'))

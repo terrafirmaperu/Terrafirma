@@ -7,8 +7,9 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView
 
 from config import settings
-from core.pos.forms import ClientForm, User, Client
+from core.pos.forms import ClientForm, User, Client, parse_client_marital_status
 from core.pos.dni_lookup import lookup_dni_data
+from core.pos.client_marital import apply_client_marital_extras
 from core.pos.client_properties import (
     client_predios_template_context,
     save_client_properties_from_request,
@@ -94,6 +95,10 @@ class ClientCreateView(PermissionMixin, CreateView):
                     client = Client()
                     client.user_id = user.id
                     client.mobile = request.POST['mobile']
+                    client.marital_status = parse_client_marital_status(
+                        request.POST.get('marital_status')
+                    )
+                    apply_client_marital_extras(client, request)
                     client.department = (request.POST.get('department') or '').strip()
                     client.province = (request.POST.get('province') or '').strip()
                     client.district = (request.POST.get('district') or '').strip()
@@ -149,6 +154,7 @@ class ClientUpdateView(PermissionMixin, UpdateView):
             'last_name': instance.user.last_name,
             'dni': instance.user.dni,
             'email': instance.user.email or '',
+            'marital_status': instance.marital_status or '',
         })
         return form
 
@@ -186,6 +192,10 @@ class ClientUpdateView(PermissionMixin, UpdateView):
                     client = instance
                     client.user_id = user.id
                     client.mobile = request.POST['mobile']
+                    client.marital_status = parse_client_marital_status(
+                        request.POST.get('marital_status')
+                    )
+                    apply_client_marital_extras(client, request)
                     client.department = (request.POST.get('department') or '').strip()
                     client.province = (request.POST.get('province') or '').strip()
                     client.district = (request.POST.get('district') or '').strip()
@@ -265,6 +275,7 @@ class ClientUpdateProfileView(ModuleMixin, UpdateView):
             'last_name': instance.user.last_name,
             'dni': instance.user.dni,
             'email': instance.user.email or '',
+            'marital_status': instance.marital_status or '',
         })
         return form
 
@@ -302,6 +313,10 @@ class ClientUpdateProfileView(ModuleMixin, UpdateView):
                     client = instance
                     client.user_id = user.id
                     client.mobile = request.POST['mobile']
+                    client.marital_status = parse_client_marital_status(
+                        request.POST.get('marital_status')
+                    )
+                    apply_client_marital_extras(client, request)
                     client.department = (request.POST.get('department') or '').strip()
                     client.province = (request.POST.get('province') or '').strip()
                     client.district = (request.POST.get('district') or '').strip()

@@ -1,0 +1,119 @@
+{% extends 'report.html' %}
+{% load static %}
+{% block head_report %}
+    <script src="{% static 'contracts_report/js/report.js' %}?v=20260623-contratos-ubicacion" type="text/javascript"></script>
+{% endblock %}
+{% block content_report %}
+    <div class="alert alert-info py-2 mb-3" id="contractsFilterSummary">
+        <i class="fas fa-filter"></i>
+        <strong>Filtro aplicado:</strong>
+        <span id="contractsFilterSummaryText">Seleccione filtros y pulse Buscar.</span>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label>Producto</label>
+                <select class="form-control" id="filterProduct">
+                    <option value="">Todos los productos</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label>Tipo de ubicación del predio</label>
+                <select class="form-control" id="filterLocationType">
+                    <option value="">Todas</option>
+                    <option value="community">Con comunidad</option>
+                    <option value="population_center">Con centro poblado</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label>Tipo de predio</label>
+                <select class="form-control" id="filterPredioType">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="toggleContractsLocationFilters">
+                <label class="custom-control-label" for="toggleContractsLocationFilters">
+                    Filtrar por ubicación del predio
+                    <span class="text-muted small">(departamento, provincia, distrito, comunidad, centro poblado)</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row d-none" id="contractsLocationFiltersPanel">
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Departamento del predio</label>
+                <select class="form-control contracts-location-filter" id="filterDepartment" disabled>
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Provincia del predio</label>
+                <select class="form-control contracts-location-filter" id="filterProvince" disabled>
+                    <option value="">Todas</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Distrito del predio</label>
+                <select class="form-control contracts-location-filter" id="filterDistrict" disabled>
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label>Comunidad</label>
+                <select class="form-control contracts-location-filter" id="filterCommunity" disabled>
+                    <option value="">Todas</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 d-none" id="contractsLocationFiltersPanelRow2">
+        <div class="col-lg-6">
+            <div class="form-group mb-lg-0">
+                <label>Centro poblado</label>
+                <select class="form-control contracts-location-filter" id="filterPopulationCenter" disabled>
+                    <option value="">Todos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 d-flex flex-wrap align-items-center">
+            <button class="btn btn-success mr-2" type="button" id="btnContractsSearch">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+            <button class="btn btn-warning" type="button" id="btnContractsClear">
+                <i class="fas fa-eraser"></i> Limpiar filtros
+            </button>
+        </div>
+    </div>
+    <hr>
+    <p class="small text-muted mb-2" id="contractsResultCount"></p>
+    <table class="table table-bordered table-striped" id="tblContractsReport" width="100%">
+        <thead>
+        <tr>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Estado civil</th>
+            <th>Celular</th>
+            <th>DNI</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+{% endblock %}

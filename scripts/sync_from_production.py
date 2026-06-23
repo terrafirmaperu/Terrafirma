@@ -156,6 +156,7 @@ def bootstrap():
         ['ensure_whatsapp_module'],
         ['ensure_advisory_progress_module', '--group-id=1'],
         ['ensure_collector_module', '--group-id=1'],
+        ['ensure_contracts_report_module'],
         ['repair_module_layout'],
         ['ensure_admin_group_access'],
         ['ensure_neo_superuser', f'--password={read_spec_value("NEO_ADMIN_PASSWORD")}'],

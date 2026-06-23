@@ -54,12 +54,17 @@ class Command(BaseCommand):
                 call_command('ensure_client_report_module', '--group-id=1')
             except Exception as exc:
                 self.stdout.write(self.style.WARNING('Reporte cliente: {}'.format(exc)))
+            try:
+                call_command('ensure_contracts_report_module')
+            except Exception as exc:
+                self.stdout.write(self.style.WARNING('Reporte contratos: {}'.format(exc)))
         else:
             self.stdout.write('Módulos de asesoría / layout...')
             try:
                 call_command('ensure_advisory_progress_module', '--group-id=1')
                 call_command('repair_module_layout')
                 call_command('ensure_collector_module', '--group-id=1')
+                call_command('ensure_contracts_report_module')
             except Exception as exc:
                 self.stdout.write(self.style.WARNING(str(exc)))
 

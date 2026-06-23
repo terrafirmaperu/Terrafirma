@@ -356,6 +356,14 @@ def _contract_placeholder_mapping(sale):
         'DNI_CLIENTE': _text(user.dni if user else '', '00000000'),
         'CLIENTE_CELULAR': _text(client.mobile if client else '', '000000000'),
         'CELULAR_CLIENTE': _text(client.mobile if client else '', '000000000'),
+        'CLIENTE_ESTADO_CIVIL': _upper(
+            client.get_marital_status_display() if client and client.marital_status else '',
+            '—',
+        ),
+        'ESTADO_CIVIL': _upper(
+            client.get_marital_status_display() if client and client.marital_status else '',
+            '—',
+        ),
         'CLIENTE_DIRECCION': _upper(client.address if client else '', '—'),
         'DIRECCION_CLIENTE': _upper(client.address if client else '', '—'),
         'CLIENTE_DEPARTAMENTO': client_department,

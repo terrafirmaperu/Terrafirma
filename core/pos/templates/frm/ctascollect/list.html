@@ -6,6 +6,7 @@
         window.ctasCollectPrintBaseUrl = "/pos/frm/ctas/collect/print/voucher/";
         window.ctasCollectCollectors = {{ collectors_json|safe }};
         window.ctasCollectDefaultCollectorId = {{ default_collector_id }};
+        window.SUPERVISOR_QUOTA_EDIT_URL = "{% url 'verify_supervisor_quota_edit' %}";
     </script>
     <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
     <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
@@ -46,7 +47,7 @@
         #myModalPayQuota .select2-dropdown { z-index: 1062; }
     </style>
     <script src="{% static 'js/terrafirma_print.js' %}?v=20260616"></script>
-    <script src="{% static 'frm/ctascollect/js/list.js' %}?v=20260616-print"></script>
+    <script src="{% static 'frm/ctascollect/js/list.js' %}?v=20260623-quota-key"></script>
 {% endblock %}
 
 {% block columns %}
@@ -290,6 +291,88 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalSupervisorQuotaEdit" class="modal fade" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-shield"></i> Autorización administrador
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">
+                        Para modificar las cuotas ingrese usuario y contraseña del
+                        <strong>administrador Neo</strong>.
+                    </p>
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" id="supervisor_quota_username"
+                               value="Neo" autocomplete="username">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="supervisor_quota_password"
+                               autocomplete="current-password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmSupervisorQuotaEdit">
+                        <i class="fas fa-key"></i> Autorizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalEditQuotas" class="modal fade" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-key text-warning"></i> Modificar plan de cuotas
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editQuotasCtasCollectId">
+                    <p class="mb-2" id="editQuotasClientLine"></p>
+                    <p class="text-muted small mb-2" id="editQuotasTotalLine"></p>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Cuota</th>
+                                <th style="width: 38%;">Fecha</th>
+                                <th style="width: 32%;">Monto (S/)</th>
+                            </tr>
+                            </thead>
+                            <tbody id="editQuotasTableBody"></tbody>
+                            <tfoot>
+                            <tr>
+                                <th colspan="2" class="text-right">Total</th>
+                                <th class="text-center" id="editQuotasSumLabel">S/ 0.00</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <small class="form-text text-muted mt-2">
+                        La suma de montos debe coincidir con el total de la venta.
+                    </small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="btnSaveEditQuotas">
+                        <i class="fas fa-save"></i> Guardar cuotas
+                    </button>
                 </div>
             </div>
         </div>

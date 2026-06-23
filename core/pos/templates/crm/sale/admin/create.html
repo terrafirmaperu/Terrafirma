@@ -76,6 +76,7 @@
             border-right: 0;
         }
     </style>
+    <script src="{% static 'crm/client/js/marital_status.js' %}?v=20260623-divorcio-separacion"></script>
     <script src="{% static 'crm/client/js/predios.js' %}?v=20260615-sale-predio-link"></script>
     <script src="{% static 'js/terrafirma_print.js' %}?v=20260616"></script>
     <script>
@@ -97,7 +98,7 @@
         patchSaleFormBeforeValidation();
     });
     </script>
-    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260618-sale-fix"></script>
+    <script src="{% static 'crm/sale/admin/js/form.js' %}?v=20260623-marital"></script>
 {% endblock %}
 
 {% block content %}
@@ -479,7 +480,7 @@
         </div>
     </div>
     <div id="myModalClient" class="modal fade" role="dialog">
-        <form class="form" id="frmClient" method="POST">
+        <form class="form" id="frmClient" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="existing_client_id" id="modal_existing_client_id" value="">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -514,6 +515,7 @@
                             {% endif %}
                             {% endfor %}
                             </div>
+                            {% include 'crm/client/partials/marital_status_modals.html' with instance=None %}
                             {% include 'crm/client/partials/predios_panel.html' with predios_root_id='modalClientPrediosRoot' predios_toggle_id='modalClientPrediosToggle' %}
                     </div>
                     <div class="modal-footer">

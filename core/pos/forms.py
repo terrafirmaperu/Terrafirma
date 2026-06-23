@@ -2,6 +2,8 @@ from django.forms import ModelForm
 from django import forms
 from django.utils import timezone
 
+from core.pos.choices import marital_status as marital_status_choices
+
 from .models import *
 
 
@@ -263,6 +265,13 @@ class ClientForm(ModelForm):
         required=False,
     )
 
+    marital_status = forms.ChoiceField(
+        choices=[('', 'Seleccione estado civil')] + list(marital_status_choices),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Estado civil',
+        required=True,
+    )
+
     department = forms.ChoiceField(
         choices=PERU_DEPARTMENTS,
         widget=forms.Select(attrs={'class': 'form-control'}),
@@ -318,9 +327,17 @@ class ClientForm(ModelForm):
         }
 
     field_order = [
-        'first_name', 'last_name', 'dni', 'email', 'mobile',
+        'first_name', 'last_name', 'dni', 'email', 'marital_status', 'mobile',
         'department', 'province', 'district', 'address',
     ]
+
+
+def parse_client_marital_status(raw):
+    val = (raw or '').strip()
+    valid = {choice[0] for choice in marital_status_choices}
+    if val not in valid:
+        raise ValueError('Seleccione un estado civil válido.')
+    return val
 
 
 class SaleForm(ModelForm):

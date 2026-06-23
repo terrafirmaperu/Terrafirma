@@ -6,6 +6,7 @@ from .views.debtspay_report.views import DebtsPayReportView
 from .views.ctascollect_report.views import CtasCollectReportView
 from .views.results_report.views import ResultsReportView
 from .views.client_report.views import ClientReportView
+from .views.contracts_report.views import ContractsReportView
 
 urlpatterns = [
     path('sale/', SaleReportView.as_view(), name='sale_report'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('ctas/collect/', CtasCollectReportView.as_view(), name='ctascollect_report'),
     path('results/', ResultsReportView.as_view(), name='results_report'),
     path('clients/', ClientReportView.as_view(), name='client_report'),
+    path('contracts/', ContractsReportView.as_view(), name='contracts_report'),
 ]

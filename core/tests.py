@@ -493,6 +493,18 @@ module.save()
 print('insertado {}'.format(module.name))
 
 module = Module()
+module.moduletype = mt_reportes
+module.name = 'Contratos'
+module.url = '/reports/contracts/'
+module.is_active = True
+module.is_vertical = True
+module.is_visible = True
+module.icon = 'fas fa-file-contract'
+module.description = 'Clientes con predio y producto vinculados para contratos'
+module.save()
+print('insertado {}'.format(module.name))
+
+module = Module()
 module.name = 'Cambiar password'
 module.url = '/user/update/password/'
 module.is_active = True

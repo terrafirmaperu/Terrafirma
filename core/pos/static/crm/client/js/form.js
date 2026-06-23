@@ -75,6 +75,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         },
                     }
                 },
+                marital_status: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Seleccione un estado civil'
+                        }
+                    }
+                },
                 address: {
                     validators: {
                         stringLength: {
@@ -263,5 +270,9 @@ $(function () {
     $('input[name="mobile"]').keypress(function (e) {
         return validate_form_text('numbers', e, null);
     });
+
+    if (window.ClientMaritalStatus) {
+        ClientMaritalStatus.init('#frmForm');
+    }
 
 });

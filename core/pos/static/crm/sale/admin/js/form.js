@@ -399,6 +399,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         }
                     }
                 },
+                marital_status: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Seleccione un estado civil'
+                        }
+                    }
+                },
                 address: {
                     validators: {
                         stringLength: {
@@ -1735,10 +1742,18 @@ $(function () {
             modalClientForm.find('[name="email"]').val(clientData.user.email || '');
         }
         modalClientForm.find('[name="mobile"]').val(clientData.mobile || '');
+        var maritalId = (clientData.marital_status && clientData.marital_status.id)
+            ? clientData.marital_status.id
+            : (clientData.marital_status || '');
+        modalClientForm.find('[name="marital_status"]').val(maritalId || '');
         modalClientForm.find('[name="department"]').val(clientData.department || '').trigger('change');
         modalClientForm.find('[name="province"]').val(clientData.province || '');
         modalClientForm.find('[name="district"]').val(clientData.district || '');
         modalClientForm.find('[name="address"]').val(clientData.address || '');
+
+        if (window.ClientMaritalStatus) {
+            ClientMaritalStatus.loadData('#frmClient', clientData);
+        }
 
         var modalRoot = document.getElementById('modalClientPrediosRoot');
         if (modalRoot && window.ClientPredios) {
@@ -1915,6 +1930,9 @@ $(function () {
     $('.btnAddClient').on('click', function () {
         modalExistingClientInput.val('');
         resetSaleClientModalTitle();
+        if (window.ClientMaritalStatus) {
+            ClientMaritalStatus.reset('#frmClient');
+        }
         $('#myModalClient').modal('show');
     });
 
@@ -1923,6 +1941,9 @@ $(function () {
     });
 
     var modalClientForm = $('#frmClient');
+    if (window.ClientMaritalStatus) {
+        ClientMaritalStatus.init('#frmClient');
+    }
     var modalDniInput = modalClientForm.find('input[name="dni"]');
     var modalFirstNameInput = modalClientForm.find('input[name="first_name"]');
     var modalLastNameInput = modalClientForm.find('input[name="last_name"]');
@@ -1950,7 +1971,7 @@ $(function () {
         }
         loadClientIntoSaleModal(clientData, {openForLinking: false});
         syncSaleClientSelection(clientData);
-        ['first_name', 'last_name', 'dni', 'email', 'mobile', 'department', 'province', 'district', 'address'].forEach(function (field) {
+        ['first_name', 'last_name', 'dni', 'email', 'marital_status', 'mobile', 'department', 'province', 'district', 'address'].forEach(function (field) {
             try {
                 fvClient.revalidateField(field);
             } catch (e) {}
@@ -2022,6 +2043,9 @@ $(function () {
     $('#myModalClient').on('hidden.bs.modal', function () {
         modalExistingClientInput.val('');
         resetSaleClientModalTitle();
+        if (window.ClientMaritalStatus) {
+            ClientMaritalStatus.reset('#frmClient');
+        }
         fvClient.resetForm(true);
         var modalRoot = document.getElementById('modalClientPrediosRoot');
         if (modalRoot && window.ClientPredios) {
