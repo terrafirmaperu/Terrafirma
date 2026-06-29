@@ -53,6 +53,19 @@ class CollectorCreateView(SupervisorCollectorMixin, PermissionMixin, CreateView)
         try:
             if action == 'add':
                 data = self.get_form().save()
+                from core.security.mixins import SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY
+                from core.security.supervisor_audit import log_supervisor_event, pop_supervisor_authorizer
+                supervisor = pop_supervisor_authorizer(request, SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY)
+                name = (request.POST.get('name') or '').strip()
+                log_supervisor_event(
+                    request,
+                    'action_collector_save',
+                    category='accion',
+                    detail='Registro nuevo en Admin Cobranzas.',
+                    change_summary='Alta de cobrador: «{}»'.format(name or '—'),
+                    supervisor_user=supervisor,
+                    object_type='Collector',
+                )
             elif action == 'validate_data':
                 return self.validate_data()
             else:
@@ -101,6 +114,21 @@ class CollectorUpdateView(SupervisorCollectorMixin, PermissionMixin, UpdateView)
         try:
             if action == 'edit':
                 data = self.get_form().save()
+                from core.security.mixins import SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY
+                from core.security.supervisor_audit import log_supervisor_event, pop_supervisor_authorizer
+                supervisor = pop_supervisor_authorizer(request, SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY)
+                old_name = self.object.name
+                new_name = (request.POST.get('name') or self.object.name or '').strip()
+                log_supervisor_event(
+                    request,
+                    'action_collector_save',
+                    category='accion',
+                    detail='Edición en Admin Cobranzas (id {}).'.format(self.object.pk),
+                    change_summary='Cobrador renombrado: «{}» → «{}»'.format(old_name, new_name),
+                    supervisor_user=supervisor,
+                    object_type='Collector',
+                    object_id=self.object.pk,
+                )
             elif action == 'validate_data':
                 return self.validate_data()
             else:

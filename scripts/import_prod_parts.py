@@ -68,7 +68,7 @@ def main():
         ['ensure_collector_module', '--group-id=1'],
         ['ensure_contracts_report_module'],
         ['repair_module_layout'],
-        ['ensure_admin_group_access'],
+        ['ensure_role_groups'],
         ['ensure_neo_superuser', f'--password={read_spec_value("NEO_ADMIN_PASSWORD")}'],
     ):
         subprocess.run([sys.executable, 'manage.py', *args], env=env, check=True)

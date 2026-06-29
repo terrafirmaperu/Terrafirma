@@ -548,32 +548,28 @@ module.description = 'Permite gestionar la información de la compañia'
 module.save()
 print('insertado {}'.format(module.name))
 
-group = Group()
-group.name = 'Administrador'
-group.save()
-print('insertado {}'.format(group.name))
+group, _created_admin = Group.objects.get_or_create(name='Administrador')
+if _created_admin:
+    print('insertado {}'.format(group.name))
+else:
+    print('grupo existente {}'.format(group.name))
 for m in Module.objects.filter().exclude(url__in=['/pos/crm/client/update/profile/', '/pos/crm/sale/client/']):
-    gm = GroupModule()
-    gm.module = m
-    gm.group = group
-    gm.save()
+    gm, _ = GroupModule.objects.get_or_create(module=m, group=group)
     for perm in m.permits.all():
         group.permissions.add(perm)
-        grouppermission = GroupPermission()
-        grouppermission.module_id = m.id
-        grouppermission.group_id = group.id
-        grouppermission.permission_id = perm.id
-        grouppermission.save()
+        GroupPermission.objects.get_or_create(
+            group=group,
+            module=m,
+            permission=perm,
+        )
 
-group = Group()
-group.name = 'Cliente'
-group.save()
-print('insertado {}'.format(group.name))
-for m in Module.objects.filter(url__in=['/pos/crm/client/update/profile/', '/pos/crm/sale/client/', '/user/update/password/']).exclude():
-    gm = GroupModule()
-    gm.module = m
-    gm.group = group
-    gm.save()
+group, _created_client = Group.objects.get_or_create(name='Cliente')
+if _created_client:
+    print('insertado {}'.format(group.name))
+else:
+    print('grupo existente {}'.format(group.name))
+for m in Module.objects.filter(url__in=['/pos/crm/client/update/profile/', '/pos/crm/sale/client/', '/user/update/password/']):
+    GroupModule.objects.get_or_create(module=m, group=group)
 
 u, _created_neo = User.objects.update_or_create(
     username='Neo',

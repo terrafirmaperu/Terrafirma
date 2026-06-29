@@ -111,19 +111,50 @@ class CtasCollectListView(CashRegisterRequiredMixin, PermissionMixin, FormView):
                 if not allowed:
                     data['error'] = auth_error
                     return HttpResponse(json.dumps(data), content_type='application/json')
+                from core.security.mixins import SUPERVISOR_QUOTA_EDIT_SESSION_KEY
+                from core.security.supervisor_audit import (
+                    format_quota_plan,
+                    log_supervisor_event,
+                    pop_supervisor_authorizer,
+                )
+                supervisor = pop_supervisor_authorizer(request, SUPERVISOR_QUOTA_EDIT_SESSION_KEY)
                 with transaction.atomic():
-                    ctas = CtasCollect.objects.select_for_update().select_related('sale').get(
-                        pk=int(request.POST['id'])
-                    )
+                    ctas = CtasCollect.objects.select_for_update().select_related(
+                        'sale', 'sale__client__user',
+                    ).get(pk=int(request.POST['id']))
                     if ctas.sale.payment_condition != 'credito':
                         data['error'] = 'Solo se pueden modificar cuotas de ventas a crédito.'
                         return HttpResponse(json.dumps(data), content_type='application/json')
+                    sale = ctas.sale
+                    old_plan = list(sale.quota_plan_override or [])
                     plan = parse_quota_plan_payload(
                         request.POST.get('quota_plan_json', '[]'),
-                        ctas.sale.total,
+                        sale.total,
                     )
-                    apply_quota_plan_to_sale_and_ctas(ctas.sale, ctas, plan)
+                    apply_quota_plan_to_sale_and_ctas(sale, ctas, plan)
                     data = ctas.toJSON()
+                client_label = '—'
+                if sale.client_id and sale.client.user_id:
+                    client_label = sale.client.user.get_full_name() or sale.client.user.username
+                log_supervisor_event(
+                    request,
+                    'action_quota_plan',
+                    category='accion',
+                    detail='CxC #{} · Venta {} · Cliente {}'.format(
+                        ctas.pk,
+                        sale.sale_code or sale.pk,
+                        client_label,
+                    ),
+                    change_summary=(
+                        'Plan de cuotas actualizado. Antes: [{}]. Después: [{}].'
+                    ).format(
+                        format_quota_plan(old_plan),
+                        format_quota_plan(plan),
+                    ),
+                    supervisor_user=supervisor,
+                    object_type='CtasCollect',
+                    object_id=ctas.pk,
+                )
             else:
                 data['error'] = 'No ha ingresado una opción'
         except Exception as e:

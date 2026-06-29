@@ -168,8 +168,8 @@
     <div class="line"></div>
     <p class="center footer-note">Gracias por su preferencia · Conserve este comprobante</p>
     <p class="center footer-note">
-        <strong>Seguimiento proceso</strong> www.terrafirmaperu.com —
-        Su DNI como Usuario y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
+        <strong>Seguimiento proceso</strong> www.terrafirmaperu.com/cliente/ingreso/ —
+        Su DNI como Usuario: <strong>{{ sale.client.user.dni }}</strong> y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
     </p>
 </div>
 {% include 'includes/terrafirma_ticket_autoprint.html' %}

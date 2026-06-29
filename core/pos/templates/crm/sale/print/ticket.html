@@ -196,6 +196,10 @@
         No hay derecho a reclamo ni devolución del producto<br>
         Que tenga un excelente día
     </p>
+    <p class="text-center" style="font-size: 6px; margin-top: 4px;">
+        <strong>Seguimiento proceso</strong> www.terrafirmaperu.com/cliente/ingreso/ —
+        Su DNI como Usuario: <strong>{{ sale.client.user.dni }}</strong> y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
+    </p>
 </div>
 {% include 'includes/terrafirma_ticket_autoprint.html' %}
 </body>

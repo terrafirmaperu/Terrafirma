@@ -33,10 +33,20 @@ def getmensajeriamodules(group_id):
 
 @register.filter()
 def getmodulehorizontal(group):
-    return Module.objects.filter(groupmodule__group_id=group, moduletype_id=None, is_active=True,
-                                 is_vertical=False).order_by('name')
+    return Module.objects.filter(
+        groupmodule__group_id=group,
+        moduletype_id=None,
+        is_active=True,
+        is_vertical=False,
+    ).order_by('name')
 
 
 @register.filter()
 def is_checkbox(field):
     return field.field.widget.__class__.__name__ == CheckboxInput().__class__.__name__
+
+
+@register.filter
+def is_neo_user(user):
+    from core.security.supervisor_audit import is_neo_user as _is_neo
+    return _is_neo(user)

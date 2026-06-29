@@ -11,6 +11,8 @@ from django.views.generic import TemplateView
 from core.pos.models import Product, Sale, Client, Category, Purchase, Company
 from core.reports.choices import months
 from core.security.models import Dashboard
+from core.security.role_groups import panel_module_types_for_group, repair_supervisor_module_links
+from core.security.session_group import get_group_from_session
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -22,6 +24,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return 'hztpanel.html'
 
     def get(self, request, *args, **kwargs):
+        repair_supervisor_module_links(request.user)
         request.user.set_group_session()
         return super().get(request, *args, **kwargs)
 
@@ -68,6 +71,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['category'] = Category.objects.filter().count()
         context['product'] = Product.objects.all().count()
         context['sale'] = Sale.objects.filter().order_by('-id')[0:10]
+        group = get_group_from_session(self.request)
+        context['panel_module_types'] = panel_module_types_for_group(group)
         return context
 
 

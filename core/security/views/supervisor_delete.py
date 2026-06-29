@@ -14,6 +14,7 @@ from core.security.mixins import (
     SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY,
     SUPERVISOR_QUOTA_EDIT_SESSION_KEY,
 )
+from core.security.supervisor_audit import log_supervisor_authorization
 from core.security.supervisor_predio import user_can_authorize_predio_unlock
 
 
@@ -42,6 +43,10 @@ class VerifySupervisorDeleteView(LoginRequiredMixin, View):
             )
         request.session[SUPERVISOR_DELETE_SESSION_KEY] = time.time()
         request.session.modified = True
+        log_supervisor_authorization(
+            request, SUPERVISOR_DELETE_SESSION_KEY, 'authorize_delete', user,
+            extra_detail='Pantalla: {}'.format(request.META.get('HTTP_REFERER', request.path)),
+        )
         return JsonResponse({'success': True})
 
 
@@ -70,6 +75,9 @@ class VerifySupervisorCollectorView(LoginRequiredMixin, View):
             )
         request.session[SUPERVISOR_COLLECTOR_SESSION_KEY] = time.time()
         request.session.modified = True
+        log_supervisor_authorization(
+            request, SUPERVISOR_COLLECTOR_SESSION_KEY, 'authorize_collector', user,
+        )
         return JsonResponse({'success': True})
 
 
@@ -98,6 +106,9 @@ class VerifySupervisorCollectorSaveView(LoginRequiredMixin, View):
             )
         request.session[SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY] = time.time()
         request.session.modified = True
+        log_supervisor_authorization(
+            request, SUPERVISOR_COLLECTOR_SAVE_SESSION_KEY, 'authorize_collector_save', user,
+        )
         return JsonResponse({'success': True})
 
 
@@ -129,6 +140,9 @@ class VerifySupervisorPredioUnlockView(LoginRequiredMixin, View):
             )
         request.session[SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY] = time.time()
         request.session.modified = True
+        log_supervisor_authorization(
+            request, SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY, 'authorize_predio_unlock', user,
+        )
         return JsonResponse({'success': True})
 
 
@@ -157,4 +171,7 @@ class VerifySupervisorQuotaEditView(LoginRequiredMixin, View):
             )
         request.session[SUPERVISOR_QUOTA_EDIT_SESSION_KEY] = time.time()
         request.session.modified = True
+        log_supervisor_authorization(
+            request, SUPERVISOR_QUOTA_EDIT_SESSION_KEY, 'authorize_quota_edit', user,
+        )
         return JsonResponse({'success': True})

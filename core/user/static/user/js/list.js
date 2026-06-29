@@ -2,6 +2,22 @@ var tblUsers;
 var user;
 var fv;
 
+function renderUserAccessToggle(row) {
+    if (row.username === 'Neo') {
+        return '<span class="badge badge-secondary" title="Supervisor del sistema">ON</span>';
+    }
+    var active = !!row.is_active;
+    var btnClass = active ? 'btn-success' : 'btn-danger';
+    var label = active ? 'ON' : 'OFF';
+    var title = active
+        ? 'Acceso activo — clic para bloquear'
+        : 'Acceso bloqueado — clic para activar';
+    return (
+        '<button type="button" class="btn ' + btnClass + ' btn-xs btn-flat btn-user-access-toggle" ' +
+        'rel="toggle_active" title="' + title + '">' + label + '</button>'
+    );
+}
+
 function getData() {
     tblUsers = $('#data').DataTable({
         responsive: true,
@@ -55,7 +71,7 @@ function getData() {
                 orderable: false,
                 data: null,
                 render: function (data, type, row) {
-                    var content = '<div class="btn-group" role="group"><button id="btnGroupDrop1" type="button" class="btn btn-secondary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-align-justify"></i> Opciones</button><div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">';
+                    var content = '<div class="btn-group" role="group"><button type="button" class="btn btn-secondary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-align-justify"></i> Opciones</button><div class="dropdown-menu dropdown-menu-right">';
                     content += '<a class="dropdown-item" href="/user/update/' + row.id + '/"><i class="fas fa-edit"></i> Editar</a>';
                     content += '<a class="dropdown-item" href="/user/delete/' + row.id + '/"><i class="fas fa-trash"></i> Eliminar</a>';
                     content += '<a class="dropdown-item" rel="search_access"><i class="fas fa-user-secret"></i> Ver accesos</a>';
@@ -63,7 +79,11 @@ function getData() {
                     content += '<a class="dropdown-item" rel="reset_password"><i class="fas fa-unlock-alt"></i> Resetear clave</a>';
                     content += '<a class="dropdown-item" rel="change_password"><i class="fas fa-lock"></i> Cambiar password</a>';
                     content += '</div></div>';
-                    return content;
+                    return (
+                        '<div class="d-inline-flex align-items-center justify-content-center flex-wrap" style="gap:4px;">' +
+                        renderUserAccessToggle(row) + content +
+                        '</div>'
+                    );
                 }
             },
         ],
@@ -208,6 +228,27 @@ $(function () {
             var tr = tblUsers.cell($(this).closest('td, li')).index();
             user = tblUsers.row(tr.row).data();
             $('#myModalChangePasswordByUser').modal('show');
+        })
+        .on('click', 'button[rel="toggle_active"]', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var tr = tblUsers.cell($(this).closest('td, li')).index(),
+                row = tblUsers.row(tr.row).data();
+            var msg = row.is_active
+                ? '¿Bloquear el acceso de ' + row.full_name + ' (' + row.username + ')?'
+                : '¿Activar el acceso de ' + row.full_name + ' (' + row.username + ')?';
+            submit_with_ajax(
+                'Acceso al sistema',
+                msg,
+                pathname,
+                {
+                    id: row.id,
+                    action: 'toggle_active'
+                },
+                function () {
+                    tblUsers.ajax.reload(null, false);
+                }
+            );
         })
 
     $('#myModalChangePasswordByUser').on('hidden.bs.modal', function () {

@@ -7,10 +7,10 @@ Registra el tipo de módulo Mensajería (Configuraciones + Mensajes) y la fila d
 
 import os
 
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
 
-from core.security.models import GroupModule, Module, ModuleType
+from core.security.models import Module, ModuleType
 from core.whatsapp.models import WhatsAppApiConfiguration
 
 MODULE_TYPE_NAME = 'Mensajería'
@@ -74,8 +74,8 @@ class Command(BaseCommand):
             for p in Permission.objects.filter(content_type__model=spec['model']):
                 module.permits.add(p)
 
-            for group in Group.objects.all():
-                GroupModule.objects.get_or_create(group=group, module=module)
+        from core.security.role_groups import sync_all_role_groups
+        sync_all_role_groups()
 
         cfg = WhatsAppApiConfiguration.objects.order_by('id').first()
         if cfg is None:
@@ -104,9 +104,6 @@ class Command(BaseCommand):
                 if env_phone:
                     cfg.phone_number_id = env_phone
                     cfg.save(update_fields=['phone_number_id'])
-
-        from django.core.management import call_command
-        call_command('ensure_admin_group_access')
 
         self.stdout.write(
             self.style.SUCCESS(

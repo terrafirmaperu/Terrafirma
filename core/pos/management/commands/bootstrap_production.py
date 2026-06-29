@@ -80,7 +80,7 @@ class Command(BaseCommand):
         except Exception as exc:
             self.stdout.write(self.style.WARNING('WhatsApp: {}'.format(exc)))
 
-        call_command('ensure_admin_group_access')
+        call_command('ensure_role_groups')
 
         self.stdout.write('Usuario supervisor Neo (todos los módulos)...')
         call_command('ensure_neo_superuser')

@@ -61,11 +61,31 @@ class User(AbstractUser):
     def set_group_session(self):
         try:
             request = get_current_request()
-            groups = request.user.groups.all()
-            if groups:
+            if request is None:
+                return
+            groups = list(self.groups.all())
+            by_name = {g.name: g for g in groups}
+            if getattr(self, 'is_superuser', False) or by_name.get('Supervisor'):
+                chosen = (
+                    by_name.get('Supervisor')
+                    or by_name.get('Administrador')
+                    or (groups[0] if groups else None)
+                )
+                if chosen is None:
+                    from django.contrib.auth.models import Group
+                    chosen = Group.objects.filter(name='Supervisor').first()
+                if chosen is None:
+                    return
                 request.session['infobyip'] = self.infobyip(request)
                 from core.security.session_group import set_group_id_in_session
-                set_group_id_in_session(request, groups[0])
+                set_group_id_in_session(request, chosen)
+                return
+            if not groups:
+                return
+            chosen = groups[0]
+            request.session['infobyip'] = self.infobyip(request)
+            from core.security.session_group import set_group_id_in_session
+            set_group_id_in_session(request, chosen)
         except Exception:
             pass
 

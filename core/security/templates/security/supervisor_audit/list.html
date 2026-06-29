@@ -1,0 +1,63 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+{% endblock %}
+{% block content_list_before %}
+    <div class="alert alert-secondary py-2 mb-3">
+        <i class="fas fa-eye"></i>
+        Solo lectura. Cada fila muestra <strong>qué cambio se hizo</strong>, quién lo autorizó y cuándo.
+    </div>
+{% endblock %}
+{% block box_footer_buttons %}
+    <a href="{{ list_url }}" class="btn btn-success btn-flat">
+        <i class="fas fa-sync-alt"></i> Actualizar
+    </a>
+{% endblock %}
+{% block columns %}
+    <th>Fecha y hora</th>
+    <th>Categoría</th>
+    <th>Operación</th>
+    <th>Cambio realizado</th>
+    <th>Usuario en sesión</th>
+    <th>Supervisor</th>
+    <th>IP</th>
+{% endblock %}
+{% block rows %}
+    {% for log in logs %}
+        <tr>
+            <td class="text-nowrap">{{ log.created_at|date:'d/m/Y H:i:s' }}</td>
+            <td class="text-center">{{ log.get_category_display }}</td>
+            <td class="text-nowrap">{{ log.get_event_type_display_label }}</td>
+            <td>
+                <strong>{% firstof log.change_summary log.detail log.summary %}</strong>
+                {% if log.detail and log.change_summary and log.detail != log.change_summary %}
+                    <div class="small text-muted mt-1">{{ log.detail }}</div>
+                {% endif %}
+            </td>
+            <td class="text-nowrap">
+                {% if log.actor_user %}
+                    {{ log.actor_user.get_full_name|default:log.actor_user.username }}
+                    <span class="text-muted small d-block">{{ log.actor_user.username }}</span>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td class="text-nowrap">
+                {% if log.supervisor_user %}
+                    {{ log.supervisor_user.get_full_name|default:log.supervisor_user.username }}
+                    <span class="text-muted small d-block">{{ log.supervisor_user.username }}</span>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td class="text-center">{{ log.ip_address|default:'—' }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="7" class="text-center text-muted">Aún no hay registros.</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+{% block javascript_list %}
+    <script src="{% static 'security/supervisor_audit/js/list.js' %}?v=20260623-cambio" type="text/javascript"></script>
+{% endblock %}

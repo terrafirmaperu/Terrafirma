@@ -69,28 +69,44 @@ class ModuleType(models.Model):
         return self.name
 
     def get_modules_vertical(self):
-        listmodules = []
         try:
             request = get_current_request()
-            group_id = request.user.get_group_id_session()
-            if group_id != 0:
-                listmodules = self.module_set.filter(is_active=True, is_vertical=True,
-                                                     groupmodule__group_id=group_id).order_by('name')
-        except:
+            if request is None:
+                return self.module_set.none()
+            from core.security.session_group import get_group_from_session
+
+            group = get_group_from_session(request)
+            group_id = group.pk if group else request.user.get_group_id_session()
+            if group_id:
+                return self.module_set.filter(
+                    is_active=True,
+                    is_vertical=True,
+                    is_visible=True,
+                    groupmodule__group_id=group_id,
+                ).order_by('name')
+        except Exception:
             pass
-        return listmodules
+        return self.module_set.none()
 
     def get_modules_horizontal(self):
-        listmodules = []
         try:
             request = get_current_request()
-            group_id = request.user.get_group_id_session()
-            if group_id != 0:
-                listmodules = self.module_set.filter(is_active=True, is_vertical=False,
-                                                     groupmodule__group_id=group_id).order_by('name')
-        except:
+            if request is None:
+                return self.module_set.none()
+            from core.security.session_group import get_group_from_session
+
+            group = get_group_from_session(request)
+            group_id = group.pk if group else request.user.get_group_id_session()
+            if group_id:
+                return self.module_set.filter(
+                    is_active=True,
+                    is_vertical=False,
+                    is_visible=True,
+                    groupmodule__group_id=group_id,
+                ).order_by('name')
+        except Exception:
             pass
-        return listmodules
+        return self.module_set.none()
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -357,3 +373,54 @@ class DniApiConfiguration(models.Model):
             ('view_dniapiconfiguration', 'Can view Configuración API DNI'),
             ('change_dniapiconfiguration', 'Can change Configuración API DNI'),
         )
+
+
+class SupervisorAuditLog(models.Model):
+    CATEGORY_CHOICES = (
+        ('autorizacion', 'Autorización'),
+        ('accion', 'Acción'),
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha y hora')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='accion')
+    event_type = models.CharField(max_length=60, verbose_name='Tipo')
+    summary = models.CharField(max_length=255, verbose_name='Resumen')
+    detail = models.TextField(blank=True, default='', verbose_name='Detalle')
+    actor_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='supervisor_audit_actions',
+        verbose_name='Usuario en sesión',
+    )
+    supervisor_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='supervisor_audit_authorizations',
+        verbose_name='Supervisor autorizó',
+    )
+    ip_address = models.CharField(max_length=45, blank=True, default='')
+    request_path = models.CharField(max_length=500, blank=True, default='')
+    object_type = models.CharField(max_length=120, blank=True, default='')
+    object_id = models.CharField(max_length=80, blank=True, default='')
+    change_summary = models.TextField(
+        blank=True,
+        default='',
+        verbose_name='Cambio realizado',
+    )
+
+    def get_event_type_display_label(self):
+        from core.security.supervisor_audit import EVENT_LABELS
+        return EVENT_LABELS.get(self.event_type, self.event_type)
+
+    def __str__(self):
+        return '{} — {}'.format(self.created_at, self.summary)
+
+    class Meta:
+        verbose_name = 'Registro supervisor'
+        verbose_name_plural = 'Registros supervisor'
+        ordering = ['-created_at', '-id']
+        default_permissions = ()

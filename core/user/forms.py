@@ -1,7 +1,12 @@
 from crum import get_current_request
 from django import forms
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import Group
+from django.db.models import Case, IntegerField, Value, When
 from django.forms import ModelForm
+
+from core.security.role_groups import DEFAULT_USER_GROUP_NAMES, assign_supervisor_group_only
+from core.user.neo_owner import NEO_USERNAME
 
 from .models import User
 
@@ -11,6 +16,25 @@ class UserForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['groups'].required = True
         self.fields['first_name'].widget.attrs['autofocus'] = True
+        order = {name: idx for idx, name in enumerate(DEFAULT_USER_GROUP_NAMES)}
+        whens = [When(name=name, then=Value(order[name])) for name in DEFAULT_USER_GROUP_NAMES]
+        self.fields['groups'].queryset = (
+            Group.objects.filter(name__in=DEFAULT_USER_GROUP_NAMES)
+            .annotate(
+                sort_order=Case(
+                    *whens,
+                    default=Value(99),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by('sort_order', 'name')
+        )
+        self.fields['groups'].help_text = (
+            'Supervisor: acceso total (todos los módulos, Mensajería WhatsApp, crear, editar y eliminar). '
+            'Administrador y Asistente: sin Mensajería ni Seguridad completa. '
+            'Administrador: vende y cobra como Asistente, consulta el resto. '
+            'Asistente: solo ventas y cobros. Cliente: portal del cliente.'
+        )
 
     class Meta:
         model = User
@@ -52,6 +76,13 @@ class UserForm(ModelForm):
                 u.groups.clear()
                 for g in self.cleaned_data['groups']:
                     u.groups.add(g)
+
+                if u.username == NEO_USERNAME:
+                    u.is_active = True
+                    u.is_staff = True
+                    u.is_superuser = True
+                    u.save(update_fields=['is_active', 'is_staff', 'is_superuser'])
+                    assign_supervisor_group_only(u)
 
                 self.update_session(u)
             else:

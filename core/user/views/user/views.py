@@ -46,6 +46,16 @@ class UserListView(PermissionMixin, TemplateView):
                 data = []
                 for i in AccessUsers.objects.filter(user_id=request.POST['id']):
                     data.append(i.toJSON())
+            elif action == 'toggle_active':
+                user = User.objects.get(pk=int(request.POST['id']))
+                if user.username == 'Neo':
+                    data['error'] = 'No se puede bloquear al usuario supervisor Neo.'
+                elif user.pk == request.user.pk and user.is_active:
+                    data['error'] = 'No puede bloquearse el acceso a su propia cuenta.'
+                else:
+                    user.is_active = not user.is_active
+                    user.save(update_fields=['is_active'])
+                    data = user.toJSON()
             else:
                 data['error'] = 'No ha ingresado una opción'
         except Exception as e:

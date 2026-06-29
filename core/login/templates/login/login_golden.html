@@ -16,7 +16,11 @@
 <script src="{% static 'login/js/login.js' %}"></script>
 <script type="application/javascript">
     var errors = "";
-    {% if form.errors %}
+    {% if login_errors %}
+        {% for error in login_errors %}
+            errors += "{{ error }}\n";
+        {% endfor %}
+    {% elif form.errors %}
         {% for field in form %}
             {% for error in field.errors %}
                 errors += "{{ error }}\n";
@@ -25,12 +29,14 @@
         {% for error in form.non_field_errors %}
             errors += "{{ error }}\n";
         {% endfor %}
+    {% endif %}
+    if (errors) {
         Swal.fire({
             icon: 'error',
             title: 'Notificación',
             text: errors,
         });
-    {% endif %}
+    }
 </script>
 </body>
 {% endblock %}

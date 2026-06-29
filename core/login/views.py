@@ -14,6 +14,7 @@ from django.views.generic import FormView, RedirectView, TemplateView
 from config import settings
 from core.login.forms import CaseInsensitiveAuthenticationForm, ResetPasswordForm, ChangePasswordForm
 from core.security.models import AccessUsers
+from core.security.role_groups import repair_supervisor_module_links
 from core.user.models import User
 
 
@@ -24,6 +25,9 @@ class LoginAuthView(LoginView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx.setdefault('title', 'Inicio de Sesión — Factora')
+        login_errors = self.request.session.pop('login_errors', None)
+        if login_errors:
+            ctx['login_errors'] = login_errors
         return ctx
 
     def get_form(self, form_class=None):
@@ -47,9 +51,22 @@ class LoginAuthView(LoginView):
             return HttpResponseRedirect(reverse_lazy('login_authenticated'))
         return super().get(request, *args, **kwargs)
 
+    def form_invalid(self, form):
+        errors = []
+        for field in form:
+            for error in field.errors:
+                errors.append(str(error))
+        for error in form.non_field_errors():
+            errors.append(str(error))
+        if not errors:
+            errors.append('Usuario o contraseña incorrectos.')
+        self.request.session['login_errors'] = errors
+        return HttpResponseRedirect(reverse_lazy('login'))
+
     def form_valid(self, form):
         login(self.request, form.get_user())
         if self.request.user.is_authenticated:
+            repair_supervisor_module_links(self.request.user)
             self.request.user.set_group_session()
             AccessUsers(user=self.request.user).save()
         return HttpResponseRedirect(self.get_success_url())

@@ -8,7 +8,41 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.decorators import method_decorator
 
 from config import settings
-from core.security.models import Module
+from core.security.models import GroupPermission, Module
+from core.security.role_groups import user_has_supervisor_access
+
+PERMISSION_DENIED_MSG = 'No tiene permiso para ingresar a este módulo'
+
+
+def user_bypasses_group_permissions(user):
+    return user_has_supervisor_access(user)
+
+
+def _module_for_permission(codename, request_path=''):
+    gp = (
+        GroupPermission.objects.filter(permission__codename=codename)
+        .select_related('module')
+        .first()
+    )
+    if gp:
+        return gp.module
+    if not request_path:
+        return None
+    path = request_path if request_path.endswith('/') else request_path + '/'
+    for module in Module.objects.filter(is_active=True).order_by('-url'):
+        url = module.url or ''
+        if url and path.startswith(url):
+            return module
+    return None
+
+
+def _permission_denied_response(request):
+    messages.error(request, PERMISSION_DENIED_MSG)
+    request.session.pop('url_last', None)
+    request.session.modified = True
+    if request.method == 'POST':
+        return JsonResponse({'error': PERMISSION_DENIED_MSG}, status=403)
+    return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
 
 SUPERVISOR_DELETE_SESSION_KEY = 'supervisor_delete_approved_at'
 SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY = 'supervisor_predio_unlock_approved_at'
@@ -55,7 +89,7 @@ def consume_supervisor_quota_edit(request):
 
 
 def _supervisor_session_valid(request, session_key, window_sec):
-    if getattr(request.user, 'is_superuser', False):
+    if user_has_supervisor_access(request.user):
         return True
     ts = request.session.get(session_key)
     if ts is None:
@@ -103,7 +137,7 @@ class SupervisorCollectorMixin(object):
 
 
 def require_supervisor_collector_save(request):
-    if getattr(request.user, 'is_superuser', False):
+    if user_has_supervisor_access(request.user):
         return None
     ok, err = _consume_supervisor_approval(
         request,
@@ -128,16 +162,25 @@ class ModuleMixin(object):
         set_module_id_in_session(request, None)
         try:
             request.user.set_group_session()
+            if user_bypasses_group_permissions(request.user):
+                module = Module.objects.filter(is_active=True, url=request.path).first()
+                if module:
+                    set_module_id_in_session(request, module)
+                return super().get(request, *args, **kwargs)
             group_id = request.user.get_group_id_session()
-            modules = Module.objects.filter(Q(moduletype__is_active=True) | Q(moduletype__isnull=True)).filter(
-                groupmodule__group_id__in=[group_id], is_active=True, url=request.path, is_visible=True)
+            modules = Module.objects.filter(
+                Q(moduletype__is_active=True) | Q(moduletype__isnull=True),
+            ).filter(
+                groupmodule__group_id__in=[group_id],
+                is_active=True,
+                url=request.path,
+                is_visible=True,
+            )
             if modules.exists():
                 set_module_id_in_session(request, modules[0])
                 return super().get(request, *args, **kwargs)
-            else:
-                messages.error(request, 'No tiene permiso para ingresar a este módulo')
-                return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
-        except:
+            return _permission_denied_response(request)
+        except Exception:
             return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
 
 
@@ -165,25 +208,59 @@ class PermissionMixin(object):
             return request.session['url_last']
         return settings.LOGIN_REDIRECT_URL
 
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
+    def _permission_granted(self, request):
+        if user_bypasses_group_permissions(request.user):
+            return True
+        from core.security.session_group import get_group_from_session
+        group = get_group_from_session(request)
+        if group is None:
+            return False
+        permits = self.get_permits()
+        if not permits:
+            return True
+        for codename in permits:
+            if not group.grouppermission_set.filter(permission__codename=codename).exists():
+                return False
+        return True
+
+    def _bind_module_session(self, request):
         from core.security.session_group import get_group_from_session, set_module_id_in_session
+        permits = self.get_permits()
+        if not permits:
+            return
+        if user_bypasses_group_permissions(request.user):
+            module = _module_for_permission(permits[0], request.path)
+            if module:
+                set_module_id_in_session(request, module)
+            request.session['url_last'] = request.path
+            request.session.modified = True
+            return
+        group = get_group_from_session(request)
+        if group is None:
+            return
+        grouppermission = group.grouppermission_set.filter(
+            permission__codename=permits[0],
+        ).select_related('module').first()
+        if grouppermission:
+            request.session['url_last'] = request.path
+            set_module_id_in_session(request, grouppermission.module)
+            request.session.modified = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        from core.security.session_group import set_module_id_in_session
         set_module_id_in_session(request, None)
         try:
-            group = get_group_from_session(request)
-            if group is not None:
-                permits = self.get_permits()
-                for p in permits:
-                    if not group.grouppermission_set.filter(permission__codename=p).exists():
-                        messages.error(request, 'No tiene permiso para ingresar a este módulo')
-                        return HttpResponseRedirect(self.get_last_url())
-                grouppermission = group.grouppermission_set.filter(permission__codename=permits[0])
-                if grouppermission.exists():
-                    request.session['url_last'] = request.path
-                    set_module_id_in_session(request, grouppermission[0].module)
-                return super().get(request, *args, **kwargs)
-        except:
+            request.user.set_group_session()
+            if not self._permission_granted(request):
+                return _permission_denied_response(request)
+            self._bind_module_session(request)
+            return super().dispatch(request, *args, **kwargs)
+        except Exception:
             return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class SupervisorDeleteApprovalMixin(object):
@@ -191,7 +268,7 @@ class SupervisorDeleteApprovalMixin(object):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
+        if request.method == 'POST' and not user_has_supervisor_access(request.user):
             ts = request.session.get(SUPERVISOR_DELETE_SESSION_KEY)
             now = time.time()
             if ts is None:
@@ -208,6 +285,33 @@ class SupervisorDeleteApprovalMixin(object):
                     {'error': 'La autorización del supervisor expiró. Vuelva a intentar.'},
                     status=403,
                 )
+            from core.security.supervisor_audit import (
+                describe_deleted_object,
+                log_supervisor_event,
+                pop_supervisor_authorizer,
+            )
+            supervisor = pop_supervisor_authorizer(request, SUPERVISOR_DELETE_SESSION_KEY)
+            deleted_obj = None
+            try:
+                deleted_obj = self.get_object()
+            except Exception:
+                deleted_obj = None
+            change = describe_deleted_object(deleted_obj)
+            if deleted_obj is None:
+                change = 'Eliminó registro id={} ({})'.format(
+                    kwargs.get('pk', '—'),
+                    self.__class__.__name__,
+                )
+            log_supervisor_event(
+                request,
+                'action_delete',
+                category='accion',
+                detail='Ruta: {} · Vista: {}'.format(request.path, self.__class__.__name__),
+                change_summary='Eliminó: {}'.format(change),
+                supervisor_user=supervisor,
+                object_type=deleted_obj.__class__.__name__ if deleted_obj else self.__class__.__name__,
+                object_id=getattr(deleted_obj, 'pk', kwargs.get('pk', '')),
+            )
             del request.session[SUPERVISOR_DELETE_SESSION_KEY]
             request.session.modified = True
         return super().dispatch(request, *args, **kwargs)

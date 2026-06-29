@@ -617,6 +617,32 @@ def save_client_properties_from_request(request, client, raw_json):
                 raise ValueError(err or (
                     'Hay predios con contrato generado. Un supervisor debe autorizar su desvinculación.'
                 ))
+            from core.security.mixins import SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY
+            from core.security.supervisor_audit import log_supervisor_event, pop_supervisor_authorizer
+            supervisor = pop_supervisor_authorizer(request, SUPERVISOR_PREDIO_UNLOCK_SESSION_KEY)
+            removed = locked_properties_pending_removal(client, kept_ids)
+            removed_labels = [
+                '{} (producto: {})'.format(
+                    str(prop),
+                    prop.product.name if prop.product_id else '—',
+                )
+                for prop in removed
+            ]
+            log_supervisor_event(
+                request,
+                'action_predio_unlock',
+                category='accion',
+                detail='Cliente {} · código {}'.format(
+                    client.user.get_full_name() or client.user.username,
+                    client.client_code or '—',
+                ),
+                change_summary='Desvinculó predio(s) con contrato: {}'.format(
+                    '; '.join(removed_labels) if removed_labels else '—',
+                ),
+                supervisor_user=supervisor,
+                object_type='Client',
+                object_id=client.pk,
+            )
             allow_locked_removal = True
 
     save_client_properties_from_json(client, raw_json, allow_locked_removal=allow_locked_removal)

@@ -27,6 +27,13 @@
         {% endif %}
         {% endwith %}
         {% endif %}
+        {% if request.user|is_neo_user %}
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{% url 'supervisor_audit_list' %}" class="nav-link" title="Registros de cambios (solo Neo)">
+                <i class="fas fa-clipboard-list"></i> Registros
+            </a>
+        </li>
+        {% endif %}
         <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link"><i class="fas fa-user-shield"></i> Bienvenido {{ request.user.username }}</a>
         </li>

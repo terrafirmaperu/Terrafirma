@@ -114,6 +114,11 @@
         <div class="signature-space"></div>
         <div class="center signature-label">Firma del cliente</div>
     </div>
+
+    <p class="center footer-note" style="margin-top: 4px;">
+        <strong>Seguimiento proceso</strong> www.terrafirmaperu.com/cliente/ingreso/ —
+        Su DNI como Usuario: <strong>{{ sale.client.user.dni }}</strong> y su contraseña el código de cliente{% if sale.client.client_code %}: <strong>{{ sale.client.client_code }}</strong>{% endif %}
+    </p>
 </div>
 
 <div class="no-print">

@@ -37,18 +37,22 @@
                         <div class="card-body" style="display: block;">
                             <div class="container-fluid panel-module">
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    {% for m in session_group.id|getmoduletype %}
+                                    {% for m in panel_module_types %}
                                         <li class="nav-item">
                                             <a class="nav-link{% if forloop.first %} active{% endif %}"
                                                data-toggle="tab" href="#tab{{ forloop.counter }}">
                                                 {{ m.name }}
                                             </a>
                                         </li>
+                                    {% empty %}
+                                        <li class="nav-item">
+                                            <span class="nav-link text-muted">Sin módulos — ejecute ensure_role_groups</span>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                                 <div class="tab-content">
                                     <br>
-                                    {% for mt in session_group.id|getmoduletype %}
+                                    {% for mt in panel_module_types %}
                                         <div id="tab{{ forloop.counter }}"
                                              class="tab-pane{% if forloop.first %} active{% endif %}">
                                             {% for m in mt.get_modules_vertical %}

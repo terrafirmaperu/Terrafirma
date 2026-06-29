@@ -13,8 +13,10 @@ from .views.supervisor_delete import (
     VerifySupervisorPredioUnlockView,
     VerifySupervisorQuotaEditView,
 )
+from .views.supervisor_audit.views import NeoRegistrosListView
 
 urlpatterns = [
+    path('registros/', NeoRegistrosListView.as_view(), name='supervisor_audit_list'),
     path('verify-supervisor-delete/', VerifySupervisorDeleteView.as_view(), name='verify_supervisor_delete'),
     path(
         'verify-supervisor-collector/',

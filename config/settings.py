@@ -67,7 +67,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'core.security',
-    'core.user',
+    'core.user.apps.UserConfig',
     'core.login',
     'core.marketing',
     'core.dashboard',
